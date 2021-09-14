@@ -1,11 +1,18 @@
 import React from "react";
-import Posts from "./posts/Posts";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
-import "../reset-css/reset.css"
+import "../reset-css/reset.css";
 
+import Timeline from "./timeline/Timeline";
 
 export default function App() {
-  return(
-    <Posts />
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/timeline">
+          <Timeline />
+        </Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
