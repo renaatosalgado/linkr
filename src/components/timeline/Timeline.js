@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Header from "../header/Header";
+import picture from "../../assets/logo.png";
 
 export default function Posts() {
   return (
@@ -9,7 +10,23 @@ export default function Posts() {
         <TimelineBox>
           <TimelineBody>
             <Title>timeline</Title>
-            <CreatePost></CreatePost>
+            <CreatePost>
+              <Img>
+                <ProfilePic src={picture} alt="" />
+              </Img>
+              <Form>
+                <p>O que você tem pra favoritar hoje?</p>
+                <Link type="url" placeholder="http://"></Link>
+                <Description
+                  type="text"
+                  placeholder="Muito irado esse link falando de
+                  #javascript"
+                ></Description>
+                <Buttons>
+                  <Publish>Publicar</Publish>
+                </Buttons>
+              </Form>
+            </CreatePost>
             <Post></Post>
             <Post></Post>
             <Post></Post>
@@ -65,6 +82,93 @@ const CreatePost = styled.div`
   height: 209px;
   background-color: #ffffff;
   border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+`;
+
+const Img = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin-top: 16px;
+`;
+
+const Form = styled.form`
+  font-family: "Lato", sans-serif;
+  display: flex;
+  flex-direction: column;
+  font-weight: 300;
+  margin-top: 16px;
+
+  p {
+    color: #707070;
+    font-size: 20px;
+    line-height: 24px;
+    margin-bottom: 10px;
+  }
+`;
+
+const ProfilePic = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 26.5px;
+  margin-right: 18px;
+`;
+
+const Link = styled.input`
+  background-color: #efefef;
+  width: 503px;
+  height: 30px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  line-height: 18px;
+  padding-left: 12px;
+
+  &::placeholder {
+    color: #949494;
+    font-size: 15px;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const Description = styled.textarea`
+  border-radius: 5px;
+  background-color: #efefef;
+  max-height: 66px;
+  max-width: 503px;
+  line-height: 18px;
+  margin-bottom: 5px;
+  padding-top: 8px;
+  padding-left: 12px;
+  resize: none;
+  outline: none;
+  border: none;
+
+  &::placeholder {
+    color: #949494;
+    font-size: 15px;
+  }
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const Publish = styled.button`
+  background-color: #1877f2;
+  width: 112px;
+  height: 31px;
+  color: #ffffff;
+  border-radius: 5px;
+
+  &:hover {
+    cursor: pointer;
+    filter: brightness(108%);
+  }
 `;
 
 const Post = styled.div`
