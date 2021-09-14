@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Header from "../header/Header";
 import picture from "../../assets/logo.png";
 
-export default function Posts() {
+export default function Timeline() {
   return (
     <>
       <Header></Header>

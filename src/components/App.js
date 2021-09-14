@@ -1,11 +1,11 @@
 import React from "react";
-import Posts from "./posts/Posts";
+import Timeline from "./timeline/Timeline";
 
 import "../reset-css/reset.css"
 
 
 export default function App() {
   return(
-    <Posts />
+    <Timeline />
   );
 }
