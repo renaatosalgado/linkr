@@ -5,11 +5,15 @@ import { postCreatePost, postLogin, getPostsList } from "../../services/API";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
+import { FaTrash } from "react-icons/fa";
+import { RiPencilFill } from "react-icons/ri";
+
 export default function Timeline() {
   const [loading, setLoading] = useState(false);
   const [link, setLink] = useState("");
   const [text, setText] = useState("");
-  const [postsList, setPostsList] = useState({});
+  const [postsList, setPostsList] = useState([]);
+  const [hide, setHide] = useState(true);
 
   const [token, setToken] = useState("");
 
@@ -92,15 +96,22 @@ export default function Timeline() {
                   #javascript"
                 ></Description>
                 <Buttons>
-                  <Publish type={"submit"}>
+                  <Publish type={"submit"} disabled={loading ? true : false}>
                     {loading ? "Publicando..." : "Publicar"}
                   </Publish>
                 </Buttons>
               </Form>
             </CreatePost>
-            
             {postsList.map((post, index) => (
               <Post key={index}>
+                <Icons hide={hide}>
+                  <EditIcon>
+                    <RiPencilFill />
+                  </EditIcon>
+                  <DeleteIcon>
+                    <FaTrash />
+                  </DeleteIcon>
+                </Icons>
                 <PostImg>
                   <ProfilePic src={post.user.avatar} alt="" />
                 </PostImg>
@@ -112,7 +123,6 @@ export default function Timeline() {
                 </PostBody>
               </Post>
             ))}
-            
           </TimelineBody>
           <TrendingContainer>
             <TrendingTitle>trending</TrendingTitle>
@@ -334,12 +344,44 @@ const Post = styled.div`
   margin-top: 29px;
   display: flex;
   justify-content: center;
+  position: relative;
 
   @media (max-width: 635px) {
     width: 100%;
     height: 232px;
     border-radius: 0;
     margin-top: 16px;
+  }
+`;
+
+const Icons = styled.div`
+  position: absolute;
+  display: flex;
+  top: 23px;
+  right: 22px;
+  display: ${(props) => (props.hide ? "inherit" : "none")};
+`;
+
+const EditIcon = styled.div`
+  width: 14px;
+  height: 14px;
+  color: #ffffff;
+  margin-right: 15px;
+
+  &:hover {
+    cursor: pointer;
+    color: green;
+  }
+`;
+
+const DeleteIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  color: #ffffff;
+
+  &:hover {
+    cursor: pointer;
+    color: crimson;
   }
 `;
 
