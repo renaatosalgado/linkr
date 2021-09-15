@@ -1,14 +1,15 @@
 import styled from "styled-components";
 import Header from "../header/Header";
 import picture from "../../assets/logo.png";
-import { postCreatePost, postLogin, postSignUp } from "../../services/API";
-import React, { useState, useContext, useEffect } from "react";
+import { postCreatePost, postLogin, getPostsList } from "../../services/API";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 export default function Timeline() {
   const [loading, setLoading] = useState(false);
   const [link, setLink] = useState("");
   const [text, setText] = useState("");
+  const [postsList, setPostsList] = useState({});
 
   const [token, setToken] = useState("");
 
@@ -47,11 +48,14 @@ export default function Timeline() {
     };
 
     postCreatePost(body, config)
-      .then((res) => {
+      .then(() => {
         setLoading(false);
         setText("");
         setLink("");
-        console.log("post", res.data);
+        getPostsList(config).then((res) => {
+          setPostsList(res.data.posts);
+          console.log("posts list", postsList);
+        });
       })
       .catch(() => {
         alert("Houve um erro ao publicar seu link. Repita o procedimento.");
@@ -66,9 +70,9 @@ export default function Timeline() {
           <TimelineBody>
             <Title onClick={login}>timeline</Title>
             <CreatePost>
-              <Img>
+              <CreatePostImg>
                 <ProfilePic src={picture} alt="" />
-              </Img>
+              </CreatePostImg>
               <Form onSubmit={publishPost}>
                 <p>O que você tem pra favoritar hoje?</p>
                 <Link
@@ -94,9 +98,21 @@ export default function Timeline() {
                 </Buttons>
               </Form>
             </CreatePost>
-            <Post></Post>
-            <Post></Post>
-            <Post></Post>
+            
+            {postsList.map((post, index) => (
+              <Post key={index}>
+                <PostImg>
+                  <ProfilePic src={post.user.avatar} alt="" />
+                </PostImg>
+                <PostBody>
+                  <p>{post.user.username}</p>
+                  <PostText>
+                    <p>{post.text}</p>
+                  </PostText>
+                </PostBody>
+              </Post>
+            ))}
+            
           </TimelineBody>
           <TrendingContainer>
             <TrendingTitle>trending</TrendingTitle>
@@ -127,7 +143,7 @@ const TimelineContainer = styled.div`
   display: flex;
   justify-content: center;
 
-  @media(max-width: 635px) {
+  @media (max-width: 635px) {
     padding-top: 100px;
   }
 `;
@@ -171,7 +187,6 @@ const CreatePost = styled.div`
   border-radius: 16px;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
 
   @media (max-width: 635px) {
     width: 100%;
@@ -180,7 +195,7 @@ const CreatePost = styled.div`
   }
 `;
 
-const Img = styled.div`
+const CreatePostImg = styled.div`
   display: flex;
   align-items: flex-start;
   margin-top: 16px;
@@ -303,6 +318,7 @@ const Publish = styled.button`
 
   &:disabled {
     opacity: 0.5;
+    cursor: not-allowed;
   }
 
   @media (max-width: 635px) {
@@ -316,12 +332,66 @@ const Post = styled.div`
   background-color: #171717;
   border-radius: 16px;
   margin-top: 29px;
+  display: flex;
+  justify-content: center;
 
   @media (max-width: 635px) {
     width: 100%;
     height: 232px;
     border-radius: 0;
     margin-top: 16px;
+  }
+`;
+
+const PostImg = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin-top: 16px;
+
+  @media (max-width: 635px) {
+    margin-left: 15px;
+  }
+`;
+
+const PostBody = styled.div`
+  font-family: "Lato", sans-serif;
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+
+  p {
+    color: #ffffff;
+    font-size: 19px;
+    line-height: 23px;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 635px) {
+    width: calc(100% - 30px);
+    margin-top: 10px;
+
+    p {
+      font-size: 17px;
+      margin-bottom: 7px;
+      line-height: 20px;
+    }
+  }
+`;
+
+const PostText = styled.div`
+  width: 503px;
+
+  p {
+    color: #b7b7b7;
+    font-size: 17px;
+  }
+
+  @media (max-width: 635px) {
+    width: 100%;
+
+    p {
+      font-size: 15px;
+    }
   }
 `;
 

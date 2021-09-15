@@ -12,9 +12,14 @@ function postLogin(body) {
   return promise;
 }
 
+function getPostsList(config) {
+  const promise = axios.get(`${BASE_URL}/posts`, config);
+  return promise;
+}
+
 function postCreatePost(body, config) {
   const promise = axios.post(`${BASE_URL}/posts`, body, config);
   return promise;
 }
 
-export { postLogin, postSignUp, postCreatePost };
+export { postLogin, postSignUp, getPostsList, postCreatePost };
