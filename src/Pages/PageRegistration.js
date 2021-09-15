@@ -2,18 +2,47 @@ import { Container, ContainerTitle ,ContainerForm, Title, Description, Input, Bu
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
 import { useState } from 'react';
+import axios from 'axios';
 
 export default function PageRegistration() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
-    const [picture, setPicture] = useState ('');
+    const [pictureUrl, setPictureUrl] = useState ('');
+    const [condition, setCondition] = useState(false);
     const history = useHistory();
 
+    function SendRegistrationInformation(event) {
+        event.preventDefault()
+        const body = {
+            email,
+            password,
+            username,
+            pictureUrl
+        }
 
+        function Error(res) {
+            if (res.response.status === 403){
+                alert('O email inserido já está em uso, cria outro aí 😉')
+            }
+            if (res.response.status === 400) {
+                alert('Insira um email válido, por favor')
+            }
+        }
+        setCondition(true)
+        axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-up', body)
+        .then (res => {
+            console.log(res.data)
+            history.push('/');
+            setCondition(false);
+        })
+        .catch ( res => { console.log (res.response) 
+        Error(res) 
+        setCondition(false)})
+    }
 
     return(
-        <form >
+        <form onSubmit={SendRegistrationInformation}>
             <Container>
                 <ContainerTitle>
                     <Title>linkr</Title>
@@ -26,8 +55,8 @@ export default function PageRegistration() {
                     <Input placeholder='e-mail' type='email' value={email} onChange= {e => setEmail(e.target.value)} required/>
                     <Input placeholder='password' type='password' value={password} onChange= {e => setPassword(e.target.value)} required/>
                     <Input placeholder ='username' type='text' value={username} onChange= {e => setUsername(e.target.value)} required/>
-                    <Input placeholder='picture url' type='url' value={picture} onChange= {e => setPicture(e.target.value)} required/>
-                    <Button type='submit'>Sign Up</Button>
+                    <Input placeholder='picture Url' type='url' value={pictureUrl} onChange= {e => setPictureUrl(e.target.value)} required/>
+                    <Button type='submit' disabled={condition}>Sign Up</Button>
                     <Link to='/'>
                         <Connection>Switch back to log in</Connection>
                     </Link>

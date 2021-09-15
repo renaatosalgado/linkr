@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
@@ -8,6 +7,7 @@ import { Container, ContainerTitle ,ContainerForm, Title, Description, Input, Bu
 export default function PageLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [condition, setCondition] = useState(false)
     const history = useHistory();
 
     function SendLoginInformation(event) {
@@ -28,14 +28,16 @@ export default function PageLogin() {
                 alert('Seus dados não foram encontrados 🤔, se cadastra aí 😉')
             }
         }
-
+        setCondition(true)
         axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body)
         .then (res => {
             console.log(res.data)
-            history.push('');//colocar rota
+            history.push('/timeline')//colocar a rota
+            setCondition(false);
         })
         .catch ( res => { console.log (res.response) 
-        Error(res)})
+        Error(res)
+        setCondition(false)})
     }
 
     return(
@@ -51,7 +53,7 @@ export default function PageLogin() {
                 <ContainerForm>
                     <Input placeholder='e-mail' type='email' value={email} onChange= {e => setEmail(e.target.value)} required/>
                     <Input placeholder='password' type='password' value={password} onChange= {e => setPassword(e.target.value)} required/>
-                    <Button type='submit'>Log In</Button>
+                    <Button type='submit' disabled={condition}>Log In</Button>
                     <Link to='/sign-up'>
                         <Connection>First time? Create an account!</Connection>
                     </Link>
