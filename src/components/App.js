@@ -1,22 +1,24 @@
-import React, { useState } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-import "../reset-css/reset.css";
-
-import Timeline from "./timeline/Timeline";
-
-import UserContext from "../contexts/UserContext";
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import React from "react";
+import "../reset-css/reset.css"
+import PageLogin from "../Pages/PageLogin";
+import PageRegistration from '../Pages/PageRegistration';
+import Timeline from './timeline/Timeline';
 
 export default function App() {
-  const [user, setUser] = useState(null);
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/timeline">
-            <Timeline />
-          </Route>
-        </Switch>
-      </BrowserRouter>
-    </UserContext.Provider>
+  return(
+    <BrowserRouter>
+      <Switch>
+        <Route path='/' exact>
+          <PageLogin/>
+        </Route>
+        <Route path='/sign-up' exact>
+          <PageRegistration/>
+        </Route>
+        <Route path='/timeline'exact>
+          <Timeline/>
+        </Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
