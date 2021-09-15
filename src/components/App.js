@@ -3,7 +3,8 @@ import React from "react";
 import "../reset-css/reset.css"
 import PageLogin from "../Pages/PageLogin";
 import PageRegistration from '../Pages/PageRegistration';
-import Timeline from '../Pages/timeline';
+import Timeline from '../Pages/PageTimeline';
+
 export default function App() {
   return(
     <BrowserRouter>

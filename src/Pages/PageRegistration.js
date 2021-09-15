@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
 import { useState } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default function PageRegistration() {
     const [email, setEmail] = useState('');
@@ -23,21 +24,25 @@ export default function PageRegistration() {
 
         function Error(res) {
             if (res.response.status === 403){
-                alert('O email inserido já está em uso, cria outro aí 😉')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOPS...',
+                    text: 'O email inserido já está em uso, cria outro aí 😉',
+                  })
             }
             if (res.response.status === 400) {
-                alert('Insira um email válido, por favor')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOPS...',
+                    text: 'Insira um email válido, por favor',
+                  })
             }
         }
         setCondition(true)
         axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-up', body)
-        .then (res => {
-            console.log(res.data)
-            history.push('/');
-            setCondition(false);
-        })
-        .catch ( res => { console.log (res.response) 
-        Error(res) 
+        .then (() => { history.push('/');
+        setCondition(false)})
+        .catch ( res => {Error(res) 
         setCondition(false)})
     }
 
