@@ -36,13 +36,10 @@ export default function PageLogin() {
         }
         setCondition(true)
         axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body)
-        .then (res => {
-            console.log(res.data)
-            history.push('/timeline')//colocar a rota
+        .then (() => { history.push('/timeline')
             setCondition(false);
         })
-        .catch ( res => { console.log (res.response) 
-        Error(res)
+        .catch ( res => {Error(res)
         setCondition(false)})
     }
 
