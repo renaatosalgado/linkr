@@ -1,12 +1,43 @@
 import styled from "styled-components";
 import { useState } from "react";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 export default function PageLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const history = useHistory();
+
+    function SendLoginInformation(event) {
+        event.preventDefault()
+        const body = {
+            email,
+            password
+        }
+
+        function Error(res) {
+            if (res.response.status === 400){
+                alert('seu email é invalido')
+            }
+            if(res.response.status === 401){
+                alert ('seus dados estão icorretos')
+            }
+            if(res.response.status === 403){
+                alert('Seus dados não foram encontrados 🤔, se cadastra aí 😉')
+            }
+        }
+
+        axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr/sign-in', body)
+        .then (res => {
+            console.log(res.data)
+            history.push('');//colocar rota
+        })
+        .catch ( res => { console.log (res.response) 
+        Error(res)})
+    }
 
     return(
-        <form>
+        <form onSubmit={SendLoginInformation}>
             <Container>
                 <ContainerTitle>
                     <Title>linkr</Title>
@@ -16,9 +47,9 @@ export default function PageLogin() {
                     </Description>
                 </ContainerTitle>
                 <ContainerForm>
-                    <Input placeholder='e-mail' type='email' value={email} onChange= {(e) => setEmail(e.target.value)}/>
-                    <Input placeholder='password' type='password' value={password} onChange= {(e) => setPassword(e.target.value)}/>
-                    <Button>Log In</Button>
+                    <Input placeholder='e-mail' type='email' value={email} onChange= {e => setEmail(e.target.value)} required/>
+                    <Input placeholder='password' type='password' value={password} onChange= {e => setPassword(e.target.value)}/>
+                    <Button type='submit'>Log In</Button>
                     <Link>First time? Create an account!</Link>
                 </ContainerForm>
             </Container>
