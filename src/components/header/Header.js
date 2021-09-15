@@ -4,7 +4,7 @@ import styled from "styled-components";
 export default function Header() {
   return (
     <HeaderContainer>
-      <p>Linkr</p>
+      <p>linkr</p>
     </HeaderContainer>
   );
 }
@@ -27,4 +27,12 @@ const HeaderContainer = styled.div`
     font-weight: bold;
     font-size: 49px;
   }
+
+  @media(max-width: 635px){
+    p {
+      font-size: 45px;
+    }
+    padding-left: 17px;
+  }
+
 `;
