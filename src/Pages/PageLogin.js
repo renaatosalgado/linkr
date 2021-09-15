@@ -1,6 +1,10 @@
 import styled from "styled-components";
+import { useState } from "react";
 
 export default function PageLogin() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     return(
         <form>
             <Container>
@@ -12,8 +16,8 @@ export default function PageLogin() {
                     </Description>
                 </ContainerTitle>
                 <ContainerForm>
-                    <Input placeholder='e-mail'></Input>
-                    <Input placeholder='password'></Input>
+                    <Input placeholder='e-mail' type='email' value={email} onChange= {(e) => setEmail(e.target.value)}/>
+                    <Input placeholder='password' type='password' value={password} onChange= {(e) => setPassword(e.target.value)}/>
                     <Button>Log In</Button>
                     <Link>First time? Create an account!</Link>
                 </ContainerForm>
@@ -92,7 +96,6 @@ const Input = styled.input`
     height: 65px;
     background-color: #FFFFFF;
     color: #9F9F9F;
-;
     border: none;
     border-radius: 6px;
     font-family: 'Oswald';
@@ -100,6 +103,10 @@ const Input = styled.input`
     font-weight: bold;
     margin-bottom: 10px;
     padding-left: 10px;
+
+    ::placeholder {
+        color: #9F9F9F;
+    }
 
     @media(max-width:600px) {
         height: 55px;
