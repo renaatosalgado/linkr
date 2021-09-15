@@ -1,4 +1,7 @@
-html,
+import { createGlobalStyle } from "styled-components";
+
+const Reset = createGlobalStyle`
+    html,
 body,
 div,
 span,
@@ -151,9 +154,10 @@ select {
 
 /*SPECIFIC FONTS*/
 
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Oswald:wght@700&family=Passion+One:wght@700&display=swap');
-
 /* font-family: 'Lato', sans-serif;
 font-family: 'Oswald', sans-serif;
 font-family: 'Passion One', cursive; */
 
+`;
+
+export default Reset;
