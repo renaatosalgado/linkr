@@ -3,6 +3,7 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Container, ContainerTitle ,ContainerForm, Title, Description, Input, Button, Connection } from './Shared-Styled-Login-Registration';
+import Swal from "sweetalert2";
 
 export default function PageLogin() {
     const [email, setEmail] = useState('');
@@ -19,13 +20,18 @@ export default function PageLogin() {
 
         function Error(res) {
             if (res.response.status === 400){
-                alert('seu email é invalido')
-            }
-            if(res.response.status === 401){
-                alert ('seus dados estão icorretos')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOPS...',
+                    text: 'Seu email é invalido',
+                  })
             }
             if(res.response.status === 403){
-                alert('Seus dados não foram encontrados 🤔, se cadastra aí 😉')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOPS...',
+                    text: 'Seus dados não foram encontrados 🤔, verifica se está tudo certo aí 😉, se não tiver uma conta se cadastre 🙂',
+                  })
             }
         }
         setCondition(true)
