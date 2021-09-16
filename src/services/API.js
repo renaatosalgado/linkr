@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/linkr";
+const BASE_URL = "https://mock-api.bootcamp.respondeai.com.br/api/v3/linkr";
 
 function postSignUp(body) {
   const promise = axios.post(`${BASE_URL}/sign-up`, body);
@@ -22,4 +22,21 @@ function postCreatePost(body, config) {
   return promise;
 }
 
-export { postLogin, postSignUp, getPostsList, postCreatePost };
+function putEditPost(postId, body, config) {
+  const promise = axios.put(`${BASE_URL}/posts/${postId}`, body, config);
+  return promise;
+}
+
+function deleteDeletePost(postId, config) {
+  const promise = axios.delete(`${BASE_URL}/posts/${postId}`, config);
+  return promise;
+}
+
+export {
+  postLogin,
+  postSignUp,
+  getPostsList,
+  postCreatePost,
+  putEditPost,
+  deleteDeletePost,
+};

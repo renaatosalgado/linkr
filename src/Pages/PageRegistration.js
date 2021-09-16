@@ -7,7 +7,7 @@ import {
   Input,
   Button,
   Connection,
-} from '../styled-components/Shared-Styled-Login-Registration'
+} from "../styled-components/Shared-Styled-Login-Registration";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router";
 import { useState } from "react";
@@ -47,7 +47,6 @@ export default function PageRegistration() {
         });
       }
     }
-    console.log(body);
     setCondition(true);
     postSignUp(body)
       .then(() => {

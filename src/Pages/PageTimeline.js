@@ -1,21 +1,16 @@
 import styled from "styled-components";
 import Header from "../components/Header";
-import { postCreatePost, postLogin, getPostsList } from "../services/API";
+import { postCreatePost, getPostsList } from "../services/API";
 import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 
-import NewPost from '../components/Post'
-
-import { FaTrash } from "react-icons/fa";
-import { RiPencilFill } from "react-icons/ri";
+import NewPost from "../components/Post";
 
 export default function PageTimeline() {
   const [loading, setLoading] = useState(false);
   const [link, setLink] = useState("");
   const [text, setText] = useState("");
   const [postsList, setPostsList] = useState([]);
-  const [hide, setHide] = useState(true);
 
   const { user } = useContext(UserContext);
 
@@ -33,6 +28,7 @@ export default function PageTimeline() {
       .catch(() => {
         alert("Houve um erro ao publicar seu link. Repita o procedimento.");
       });
+    //eslint-disable-next-line
   }, []);
 
   function publishPost(event) {
@@ -44,12 +40,6 @@ export default function PageTimeline() {
       link,
     };
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
-
     postCreatePost(body, config)
       .then(() => {
         setLoading(false);
@@ -57,7 +47,6 @@ export default function PageTimeline() {
         setLink("");
         getPostsList(config).then((res) => {
           setPostsList(res.data.posts);
-          console.log("posts list", postsList);
         });
       })
       .catch(() => {
@@ -65,16 +54,18 @@ export default function PageTimeline() {
         setLoading(false);
       });
   }
+ 
   return (
     <>
-      <Header></Header>
+      <Header />
+      
       <TimelineContainer>
         <TimelineBox>
           <TimelineBody>
             <Title>timeline</Title>
             <CreatePost>
               <CreatePostImg>
-                <ProfilePic src={''} alt="" />
+                <ProfilePic src={user.user.avatar} alt="" />
               </CreatePostImg>
               <Form onSubmit={publishPost}>
                 <p>O que você tem pra favoritar hoje?</p>
@@ -102,30 +93,10 @@ export default function PageTimeline() {
               </Form>
             </CreatePost>
             {postsList.map((post, index) => (
-              // TODO: Varificar se já pode tirar esse código
-              /* <Post key={index}>
-                <Icons hide={hide}>
-                  <EditIcon>
-                    <RiPencilFill />
-                  </EditIcon>
-                  <DeleteIcon>
-                    <FaTrash />
-                  </DeleteIcon>
-                </Icons>
-                <PostImg>
-                  <ProfilePic src={post.user.avatar} alt="" />
-                </PostImg>
-                <PostBody>
-                  <p>{post.user.username}</p>
-                  <PostText>
-                    <p>{post.text}</p>
-                  </PostText>
-                </PostBody>
-              </Post> */
-              <NewPost 
+              <NewPost
                 key={index}
                 post={post}
-                hide={hide}
+                setPostsList={setPostsList}
               />
             ))}
           </TimelineBody>
@@ -338,107 +309,6 @@ const Publish = styled.button`
 
   @media (max-width: 635px) {
     height: 22px;
-  }
-`;
-
-const Post = styled.div`
-  width: 611px;
-  height: 276px;
-  background-color: #171717;
-  border-radius: 16px;
-  margin-top: 29px;
-  display: flex;
-  justify-content: center;
-  position: relative;
-
-  @media (max-width: 635px) {
-    width: 100%;
-    height: 232px;
-    border-radius: 0;
-    margin-top: 16px;
-  }
-`;
-
-const Icons = styled.div`
-  position: absolute;
-  display: flex;
-  top: 23px;
-  right: 22px;
-  display: ${(props) => (props.hide ? "inherit" : "none")};
-`;
-
-const EditIcon = styled.div`
-  width: 14px;
-  height: 14px;
-  color: #ffffff;
-  margin-right: 15px;
-
-  &:hover {
-    cursor: pointer;
-    color: green;
-  }
-`;
-
-const DeleteIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  color: #ffffff;
-
-  &:hover {
-    cursor: pointer;
-    color: crimson;
-  }
-`;
-
-const PostImg = styled.div`
-  display: flex;
-  align-items: flex-start;
-  margin-top: 16px;
-
-  @media (max-width: 635px) {
-    margin-left: 15px;
-  }
-`;
-
-const PostBody = styled.div`
-  font-family: "Lato", sans-serif;
-  display: flex;
-  flex-direction: column;
-  margin-top: 16px;
-
-  p {
-    color: #ffffff;
-    font-size: 19px;
-    line-height: 23px;
-    margin-bottom: 10px;
-  }
-
-  @media (max-width: 635px) {
-    width: calc(100% - 30px);
-    margin-top: 10px;
-
-    p {
-      font-size: 17px;
-      margin-bottom: 7px;
-      line-height: 20px;
-    }
-  }
-`;
-
-const PostText = styled.div`
-  width: 503px;
-
-  p {
-    color: #b7b7b7;
-    font-size: 17px;
-  }
-
-  @media (max-width: 635px) {
-    width: 100%;
-
-    p {
-      font-size: 15px;
-    }
   }
 `;
 

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import {
@@ -10,7 +10,7 @@ import {
   Input,
   Button,
   Connection,
-} from '../styled-components/Shared-Styled-Login-Registration'
+} from "../styled-components/Shared-Styled-Login-Registration";
 import Swal from "sweetalert2";
 import UserContext from "../contexts/UserContext";
 
@@ -22,7 +22,7 @@ export default function PageLogin() {
   const [condition, setCondition] = useState(false);
   const history = useHistory();
 
-  const { user, setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   function SendLoginInformation(event) {
     event.preventDefault();
@@ -43,25 +43,23 @@ export default function PageLogin() {
         setCondition(false);
       });
 
-     function Error(res) {
-         console.log(res)
-       if (res.response.status === 400) {
-         Swal.fire({
-           icon: "error",
-           title: "OOPS...",
-           text: "Seu email é invalido",
-         });
-       }
-       if (res.response.status === 403) {
-         Swal.fire({
-           icon: "error",
-           title: "OOPS...",
-           text: "Seus dados não foram encontrados 🤔, verifica se está tudo certo aí 😉, se não tiver uma conta se cadastre 🙂",
-         });
-       }
-     }
-     setCondition(true);
-    console.log(user)
+    function Error(res) {
+      if (res.response.status === 400) {
+        Swal.fire({
+          icon: "error",
+          title: "OOPS...",
+          text: "Seu email é invalido",
+        });
+      }
+      if (res.response.status === 403) {
+        Swal.fire({
+          icon: "error",
+          title: "OOPS...",
+          text: "Seus dados não foram encontrados 🤔, verifica se está tudo certo aí 😉, se não tiver uma conta se cadastre 🙂",
+        });
+      }
+    }
+    setCondition(true);
   }
 
   return (
