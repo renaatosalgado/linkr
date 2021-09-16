@@ -98,6 +98,11 @@ const Button = styled.button`
     font-family: 'Oswald';
     font-size: 27px;
 
+    &:hover{
+        cursor: pointer;
+        filter: brightness(80%);
+    }
+
     @media(max-width:600px){
         height: 55px;
         font-size: 22px;
