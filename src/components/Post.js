@@ -40,8 +40,6 @@ const PerfilPicture = styled.img`
   margin-bottom: 19px;
 `;
 
-const Likes = styled.div``;
-
 // TODO: Colocar Icons na styled components
 const Icons = styled.div`
   position: absolute;
@@ -105,7 +103,7 @@ const HowManyLikes = styled.p`
   color: #ffffff;
 `;
 
-const NewPost = ({ post, setPostsList}) => {
+const NewPost = ({ post, setPostsList }) => {
   const { user } = useContext(UserContext);
   console.log(post, user);
   const config = {

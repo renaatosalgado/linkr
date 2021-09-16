@@ -28,6 +28,7 @@ export default function PageTimeline() {
       .catch(() => {
         alert("Houve um erro ao publicar seu link. Repita o procedimento.");
       });
+      //eslint-disable-next-line
   }, []);
 
   function publishPost(event) {
@@ -90,7 +91,7 @@ export default function PageTimeline() {
               </Form>
             </CreatePost>
             {postsList.map((post, index) => (
-              <NewPost key={index} post={post} setPostsList={setPostsList}/>
+              <NewPost key={index} post={post} setPostsList={setPostsList} />
             ))}
           </TimelineBody>
           <TrendingContainer>
@@ -304,107 +305,6 @@ const Publish = styled.button`
     height: 22px;
   }
 `;
-
-// const Post = styled.div`
-//   width: 611px;
-//   height: 276px;
-//   background-color: #171717;
-//   border-radius: 16px;
-//   margin-top: 29px;
-//   display: flex;
-//   justify-content: center;
-//   position: relative;
-
-//   @media (max-width: 635px) {
-//     width: 100%;
-//     height: 232px;
-//     border-radius: 0;
-//     margin-top: 16px;
-//   }
-// `;
-
-// const Icons = styled.div`
-//   position: absolute;
-//   display: flex;
-//   top: 23px;
-//   right: 22px;
-//   display: ${(props) => (props.hide ? "inherit" : "none")};
-// `;
-
-// const EditIcon = styled.div`
-//   width: 14px;
-//   height: 14px;
-//   color: #ffffff;
-//   margin-right: 15px;
-
-//   &:hover {
-//     cursor: pointer;
-//     color: green;
-//   }
-// `;
-
-// const DeleteIcon = styled.div`
-//   width: 16px;
-//   height: 16px;
-//   color: #ffffff;
-
-//   &:hover {
-//     cursor: pointer;
-//     color: crimson;
-//   }
-// `;
-
-// const PostImg = styled.div`
-//   display: flex;
-//   align-items: flex-start;
-//   margin-top: 16px;
-
-//   @media (max-width: 635px) {
-//     margin-left: 15px;
-//   }
-// `;
-
-// const PostBody = styled.div`
-//   font-family: "Lato", sans-serif;
-//   display: flex;
-//   flex-direction: column;
-//   margin-top: 16px;
-
-//   p {
-//     color: #ffffff;
-//     font-size: 19px;
-//     line-height: 23px;
-//     margin-bottom: 10px;
-//   }
-
-//   @media (max-width: 635px) {
-//     width: calc(100% - 30px);
-//     margin-top: 10px;
-
-//     p {
-//       font-size: 17px;
-//       margin-bottom: 7px;
-//       line-height: 20px;
-//     }
-//   }
-// `;
-
-// const PostText = styled.div`
-//   width: 503px;
-
-//   p {
-//     color: #b7b7b7;
-//     font-size: 17px;
-//   }
-
-//   @media (max-width: 635px) {
-//     width: 100%;
-
-//     p {
-//       font-size: 15px;
-//     }
-//   }
-// `;
 
 const TrendingContainer = styled.div`
   min-width: 301px;
