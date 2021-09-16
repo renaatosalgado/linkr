@@ -5,6 +5,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 
+import NewPost from '../components/Post'
+
 import { FaTrash } from "react-icons/fa";
 import { RiPencilFill } from "react-icons/ri";
 
@@ -100,7 +102,8 @@ export default function PageTimeline() {
               </Form>
             </CreatePost>
             {postsList.map((post, index) => (
-              <Post key={index}>
+              // TODO: Varificar se já pode tirar esse código
+              /* <Post key={index}>
                 <Icons hide={hide}>
                   <EditIcon>
                     <RiPencilFill />
@@ -118,7 +121,12 @@ export default function PageTimeline() {
                     <p>{post.text}</p>
                   </PostText>
                 </PostBody>
-              </Post>
+              </Post> */
+              <NewPost 
+                key={index}
+                post={post}
+                hide={hide}
+              />
             ))}
           </TimelineBody>
           <TrendingContainer>
