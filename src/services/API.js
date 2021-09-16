@@ -27,4 +27,16 @@ function putEditPost(postId, body, config) {
   return promise;
 }
 
-export { postLogin, postSignUp, getPostsList, postCreatePost, putEditPost };
+function deleteDeletePost(postId, config) {
+  const promise = axios.delete(`${BASE_URL}/posts/${postId}`, config);
+  return promise;
+}
+
+export {
+  postLogin,
+  postSignUp,
+  getPostsList,
+  postCreatePost,
+  putEditPost,
+  deleteDeletePost,
+};
