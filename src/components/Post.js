@@ -6,9 +6,9 @@ import { RiPencilFill } from "react-icons/ri";
 
 
 const PostContainer = styled.div`
-    position: relative;
+  position: relative;
   width: 611px;
-  height: 276px;
+  padding-bottom: 20px;
   background-color: #171717;
   border-radius: 16px;
   margin-top: 29px;
@@ -129,7 +129,12 @@ const NewPost = ({ post, hide }) => {
                 <PostDescription>
                     {post.text}
                 </PostDescription>
-                <LinkPreview />
+                <LinkPreview 
+                    link={post.link}
+                    linkTitle={post.linkTitle}
+                    linkDescription={post.linkDescription}
+                    linkImage={post.linkImage}
+                />
             </RightContainer>
         </PostContainer>
     )
