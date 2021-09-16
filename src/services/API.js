@@ -22,4 +22,9 @@ function postCreatePost(body, config) {
   return promise;
 }
 
-export { postLogin, postSignUp, getPostsList, postCreatePost };
+function putEditPost(postId, body, config) {
+  const promise = axios.put(`${BASE_URL}/posts/${postId}`, body, config);
+  return promise;
+}
+
+export { postLogin, postSignUp, getPostsList, postCreatePost, putEditPost };

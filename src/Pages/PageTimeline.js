@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import Header from "../components/Header";
-import { postCreatePost, postLogin, getPostsList } from "../services/API";
+import { postCreatePost, getPostsList, putEditPost } from "../services/API";
 import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 
 import { FaTrash } from "react-icons/fa";
@@ -40,12 +39,6 @@ export default function PageTimeline() {
     const body = {
       text,
       link,
-    };
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
     };
 
     postCreatePost(body, config)
