@@ -28,7 +28,7 @@ export default function PageTimeline() {
       .catch(() => {
         alert("Houve um erro ao publicar seu link. Repita o procedimento.");
       });
-      //eslint-disable-next-line
+    //eslint-disable-next-line
   }, []);
 
   function publishPost(event) {
@@ -54,9 +54,11 @@ export default function PageTimeline() {
         setLoading(false);
       });
   }
+ 
   return (
     <>
-      <Header></Header>
+      <Header />
+      
       <TimelineContainer>
         <TimelineBox>
           <TimelineBody>
@@ -91,7 +93,11 @@ export default function PageTimeline() {
               </Form>
             </CreatePost>
             {postsList.map((post, index) => (
-              <NewPost key={index} post={post} setPostsList={setPostsList} />
+              <NewPost
+                key={index}
+                post={post}
+                setPostsList={setPostsList}
+              />
             ))}
           </TimelineBody>
           <TrendingContainer>

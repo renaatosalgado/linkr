@@ -4,7 +4,7 @@ import LinkPreview from "./LinkPreview";
 import { FaTrash, FaRegHeart } from "react-icons/fa";
 import { RiPencilFill } from "react-icons/ri";
 import UserContext from "../contexts/UserContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { deleteDeletePost, getPostsList } from "../services/API";
 
 const PostContainer = styled.div`
@@ -103,9 +103,99 @@ const HowManyLikes = styled.p`
   color: #ffffff;
 `;
 
+const Overlay = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+  display: ${(props) => (props.reallyDeleteHabit ? "inherit" : "none")};
+`;
+
+const DeleteScreen = styled.div`
+  position: relative;
+  top: calc((100vh - 262px) / 2);
+  left: calc((100vw - 597px) / 2);
+  width: 597px;
+  height: 262px;
+  border-radius: 50px;
+  background-color: #333333;
+  font-family: "Lato", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    text-align: center;
+    font-weight: bold;
+    font-size: 34px;
+    color: #ffffff;
+    margin-bottom: 40px;
+  }
+`;
+
+const OverlayButtons = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const CancelBtn = styled.button`
+  background-color: #ffffff;
+  color: #1877f2;
+  line-height: 22px;
+  width: 134px;
+  height: 37px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 27px;
+
+  &:hover {
+    cursor: pointer;
+    border: 5px solid #1877f2;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const ConfirmBtn = styled.button`
+  background-color: #1877f2;
+  color: #ffffff;
+  line-height: 22px;
+  width: 134px;
+  height: 37px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    border: 5px solid crimson;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
 const NewPost = ({ post, setPostsList }) => {
+  const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
-  console.log(post, user);
+
+  const [reallyDeleteHabit, setReallyDeleteHabit] = useState(false);
+
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -113,43 +203,76 @@ const NewPost = ({ post, setPostsList }) => {
   };
 
   function deletePost(postId) {
-    const answer = window.confirm("Deseja realmente excluir este post?");
+    setLoading(true);
 
-    if (answer) {
-      deleteDeletePost(postId, config).then(() => {
+    deleteDeletePost(postId, config)
+      .then(() => {
+        setLoading(false);
         getPostsList(config).then((res) => setPostsList(res.data.posts));
+        setReallyDeleteHabit(false);
+      })
+      .catch(() => {
+        setLoading(false);
+        setTimeout(() => {
+          alert(
+            "Não foi possível excluir seu post! Por favor, repita o procedimento."
+          );
+        }, 500)        
+        setReallyDeleteHabit(false);
       });
-    }
   }
 
   return (
-    <PostContainer>
-      <Icons hide={post.user.id === user.user.id ? false : true}>
-        <EditIcon>
-          <RiPencilFill />
-        </EditIcon>
-        <DeleteIcon onClick={() => deletePost(post.id)}>
-          <FaTrash />
-        </DeleteIcon>
-      </Icons>
-      <LeftContainer>
-        <PerfilPicture src={post.user.avatar} />
-        <LikeIcon>
-          <FaRegHeart />
-        </LikeIcon>
-        <HowManyLikes>{post.likes.length} likes</HowManyLikes>
-      </LeftContainer>
-      <RightContainer>
-        <UserName>{post.user.username}</UserName>
-        <PostDescription>{post.text}</PostDescription>
-        <LinkPreview
-          link={post.link}
-          linkTitle={post.linkTitle}
-          linkDescription={post.linkDescription}
-          linkImage={post.linkImage}
-        />
-      </RightContainer>
-    </PostContainer>
+    <>
+      <Overlay reallyDeleteHabit={reallyDeleteHabit}>
+        <DeleteScreen>
+          <p>
+            Tem certeza que deseja <br /> excluir essa publicação?
+          </p>
+          <OverlayButtons>
+            <CancelBtn
+              disabled={loading ? true : false}
+              onClick={() => setReallyDeleteHabit(false)}
+            >
+              Não, voltar
+            </CancelBtn>
+            <ConfirmBtn
+              disabled={loading ? true : false}
+              onClick={() => deletePost(post.id)}
+            >
+              {loading ? "Excluindo..." : "Sim, excluir"}
+            </ConfirmBtn>
+          </OverlayButtons>
+        </DeleteScreen>
+      </Overlay>
+      <PostContainer>
+        <Icons hide={post.user.id === user.user.id ? false : true}>
+          <EditIcon>
+            <RiPencilFill />
+          </EditIcon>
+          <DeleteIcon onClick={() => setReallyDeleteHabit(true)}>
+            <FaTrash />
+          </DeleteIcon>
+        </Icons>
+        <LeftContainer>
+          <PerfilPicture src={post.user.avatar} />
+          <LikeIcon>
+            <FaRegHeart />
+          </LikeIcon>
+          <HowManyLikes>{post.likes.length} likes</HowManyLikes>
+        </LeftContainer>
+        <RightContainer>
+          <UserName>{post.user.username}</UserName>
+          <PostDescription>{post.text}</PostDescription>
+          <LinkPreview
+            link={post.link}
+            linkTitle={post.linkTitle}
+            linkDescription={post.linkDescription}
+            linkImage={post.linkImage}
+          />
+        </RightContainer>
+      </PostContainer>
+    </>
   );
 };
 
