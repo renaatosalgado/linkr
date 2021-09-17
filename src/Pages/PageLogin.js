@@ -13,7 +13,6 @@ import {
 } from "../styled-components/Shared-Styled-Login-Registration";
 import Swal from "sweetalert2";
 import UserContext from "../contexts/UserContext";
-
 import { postLogin } from "../services/API";
 
 export default function PageLogin() {
@@ -21,12 +20,10 @@ export default function PageLogin() {
   const [password, setPassword] = useState("");
   const [condition, setCondition] = useState(false);
   const history = useHistory();
-
   const { setUser } = useContext(UserContext);
 
   function SendLoginInformation(event) {
     event.preventDefault();
-
     const body = {
       email,
       password,

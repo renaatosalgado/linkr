@@ -32,6 +32,11 @@ function deleteDeletePost(postId, config) {
   return promise;
 }
 
+function getHashtagTrending(config) {
+  const promisse = axios.get(`${BASE_URL}/hashtags/trending`, config);
+  return promisse; 
+}
+
 export {
   postLogin,
   postSignUp,
@@ -39,4 +44,5 @@ export {
   postCreatePost,
   putEditPost,
   deleteDeletePost,
+  getHashtagTrending,
 };
