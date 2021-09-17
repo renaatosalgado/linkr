@@ -3,8 +3,8 @@ import Header from "../components/Header";
 import { postCreatePost, getPostsList } from "../services/API";
 import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../contexts/UserContext";
-
 import NewPost from "../components/Post";
+import Trending from "../components/Trending";
 
 export default function PageTimeline() {
   const [loading, setLoading] = useState(false);
@@ -100,21 +100,7 @@ export default function PageTimeline() {
               />
             ))}
           </TimelineBody>
-          <TrendingContainer>
-            <TrendingTitle>trending</TrendingTitle>
-            <Hashtags>
-              <p># {"javascript"}</p>
-              <p># {"react"}</p>
-              <p># {"react-native"}</p>
-              <p># {"material"}</p>
-              <p># {"web-dev"}</p>
-              <p># {"mobile"}</p>
-              <p># {"css"}</p>
-              <p># {"html"}</p>
-              <p># {"node"}</p>
-              <p># {"sql"}</p>
-            </Hashtags>
-          </TrendingContainer>
+          <Trending/>
         </TimelineBox>
       </TimelineContainer>
     </>
@@ -310,38 +296,4 @@ const Publish = styled.button`
   @media (max-width: 635px) {
     height: 22px;
   }
-`;
-
-const TrendingContainer = styled.div`
-  min-width: 301px;
-  height: 406px;
-  background-color: #171717;
-  border-radius: 16px;
-  margin-top: 86px;
-  margin-left: 25px;
-
-  @media (max-width: 950px) {
-    display: none;
-  }
-`;
-
-const TrendingTitle = styled.div`
-  font-family: "Oswald", sans-serif;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 27px;
-  border-bottom: 1px solid #484848;
-  padding-bottom: 16px;
-  padding-left: 16px;
-  padding-top: 12px;
-`;
-
-const Hashtags = styled.div`
-  font-family: "Lato", sans-serif;
-  font-size: 19px;
-  font-weight: bold;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  line-height: 23px;
-  padding: 16px 16px 30px 16px;
 `;
