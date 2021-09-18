@@ -99,7 +99,7 @@ export default function PageTimeline() {
               />
             ))}
           </TimelineBody>
-          <Trending/>
+          <Trending />
         </TimelineBox>
       </TimelineContainer>
     </>

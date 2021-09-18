@@ -1,11 +1,13 @@
 import styled from "styled-components";
-
 import LinkPreview from "./LinkPreview";
 import { FaTrash, FaRegHeart } from "react-icons/fa";
+import { IoIosHeartEmpty } from "react-icons/io";
+import { IoIosHeart } from "react-icons/io";
 import { RiPencilFill } from "react-icons/ri";
 import UserContext from "../contexts/UserContext";
 import { useContext, useState } from "react";
 import { deleteDeletePost, getPostsList } from "../services/API";
+import { Link } from "react-router-dom";
 
 const PostContainer = styled.div`
   position: relative;
@@ -193,6 +195,7 @@ const ConfirmBtn = styled.button`
 const NewPost = ({ post, setPostsList }) => {
   const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
+  const [liked, setLiked] = useState(false);
 
   const [reallyDeleteHabit, setReallyDeleteHabit] = useState(false);
 
@@ -217,7 +220,7 @@ const NewPost = ({ post, setPostsList }) => {
           alert(
             "Não foi possível excluir seu post! Por favor, repita o procedimento."
           );
-        }, 500)        
+        }, 500)
         setReallyDeleteHabit(false);
       });
   }
@@ -255,14 +258,21 @@ const NewPost = ({ post, setPostsList }) => {
           </DeleteIcon>
         </Icons>
         <LeftContainer>
-          <PerfilPicture src={post.user.avatar} />
-          <LikeIcon>
-            <FaRegHeart />
+          <Link to={`/user/${post.user.id}`}>
+            <PerfilPicture src={post.user.avatar} />
+          </Link>
+          <LikeIcon >
+            {liked === false ? <IoIosHeartEmpty size="20px" color="#FFF" /> : <IoIosHeart size="20px" color="#AC0000" />}
           </LikeIcon>
-          <HowManyLikes>{post.likes.length} likes</HowManyLikes>
+          <HowManyLikes data-tip data-for='likes'>{post.likes.length === 1 ?
+            `${post.likes.length} like` :
+            `${post.likes.length} likes`}
+          </HowManyLikes>
         </LeftContainer>
         <RightContainer>
-          <UserName>{post.user.username}</UserName>
+          <Link to={`/user/${post.user.id}`}>
+            <UserName>{post.user.username}</UserName>
+          </Link>
           <PostDescription>{post.text}</PostDescription>
           <LinkPreview
             link={post.link}
