@@ -72,7 +72,7 @@ export default function PageTimeline() {
               <CreatePostImg>
                 <ProfilePic src={user.user.avatar} alt="" />
               </CreatePostImg>
-              <Form onSubmit={publishPost}>
+              <Form onSubmit={() => publishPost()}>
                 <p>O que você tem pra favoritar hoje?</p>
                 <Link
                   type="url"
