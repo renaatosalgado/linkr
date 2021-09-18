@@ -1,30 +1,39 @@
 import styled from "styled-components";
 import LinkPreview from "./LinkPreview";
-import { FaTrash, FaRegHeart } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoIosHeart } from "react-icons/io";
 import { RiPencilFill } from "react-icons/ri";
 import UserContext from "../contexts/UserContext";
 import { useContext, useState } from "react";
 import { deleteDeletePost, getPostsList } from "../services/API";
+import Avatar from "./Avatar";
 import { Link } from "react-router-dom";
 
 const PostContainer = styled.div`
   position: relative;
-  width: 611px;
+  width: 610px;
   padding-bottom: 20px;
   background-color: #171717;
   border-radius: 16px;
   margin-top: 29px;
   display: flex;
+  @media (max-width: 635px) {
+    width: 100%;
+    border-radius: 0;
+    margin-top: 16px;
+  }
 `;
 
 const LeftContainer = styled.div`
-  top: 17px;
   padding: 17px 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (max-width: 635px) {
+    padding: 9px 15px;
+  }
 `;
 
 const RightContainer = styled.div`
@@ -33,13 +42,12 @@ const RightContainer = styled.div`
   width: calc(100% - 86px);
   display: flex;
   flex-direction: column;
-`;
 
-const PerfilPicture = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 26.5px;
-  margin-bottom: 19px;
+  @media (max-width: 635px) {
+    padding-top: 10px;
+    padding-right: 18px;
+    width: 306px;
+  }
 `;
 
 // TODO: Colocar Icons na styled components
@@ -81,6 +89,10 @@ const UserName = styled.p`
   font-size: 19px;
   color: #ffffff;
   padding-bottom: 7px;
+
+  @media (max-width: 635px) {
+    font-size: 17px;
+  }
 `;
 
 const PostDescription = styled.p`
@@ -90,10 +102,20 @@ const PostDescription = styled.p`
   font-size: 17px;
   color: #b7b7b7;
   padding-bottom: 7px;
+  word-break: break-word;
+
+  @media (max-width: 635px) {
+    font-size: 15px;
+  }
 `;
 
 const LikeIcon = styled.div`
   color: #ffffff;
+
+  @media (max-width: 635px) {
+    width: 15px;
+    height: 17px;
+  }
 `;
 
 const HowManyLikes = styled.p`
@@ -103,6 +125,10 @@ const HowManyLikes = styled.p`
   font-weight: normal;
   font-size: 11px;
   color: #ffffff;
+
+  @media (max-width: 635px) {
+    font-size: 9px;
+  }
 `;
 
 const Overlay = styled.div`
@@ -192,10 +218,10 @@ const ConfirmBtn = styled.button`
   }
 `;
 
-const NewPost = ({ post, setPostsList }) => {
+const Post = ({ post, setPostsList }) => {
   const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
-  const [liked, setLiked] = useState(false);
+  const [liked] = useState(false);
 
   const [reallyDeleteHabit, setReallyDeleteHabit] = useState(false);
 
@@ -258,9 +284,7 @@ const NewPost = ({ post, setPostsList }) => {
           </DeleteIcon>
         </Icons>
         <LeftContainer>
-          <Link to={`/user/${post.user.id}`}>
-            <PerfilPicture src={post.user.avatar} />
-          </Link>
+          <Avatar src={post.user.avatar} userId={post.user.id}/>
           <LikeIcon >
             {liked === false ? <IoIosHeartEmpty size="20px" color="#FFF" /> : <IoIosHeart size="20px" color="#AC0000" />}
           </LikeIcon>
@@ -286,4 +310,4 @@ const NewPost = ({ post, setPostsList }) => {
   );
 };
 
-export default NewPost;
+export default Post;

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import {
@@ -22,9 +22,19 @@ export default function PageLogin() {
   const history = useHistory();
   const { setUser } = useContext(UserContext);
 
-  if (!!localStorage.getItem('LinkrUserData')){
-    history.push('/timeline');
-  }
+  useEffect(() => {
+    if (!!localStorage.getItem('LinkrUserData')){
+      history.push('/timeline')
+    }
+
+    return () => {
+      setEmail({})
+      setPassword({})
+      setCondition({})
+    }
+    //eslint-disable-next-line
+  }, [])
+  
 
   function SendLoginInformation(event) {
     event.preventDefault();
