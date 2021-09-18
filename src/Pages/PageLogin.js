@@ -22,6 +22,10 @@ export default function PageLogin() {
   const history = useHistory();
   const { setUser } = useContext(UserContext);
 
+  if (!!localStorage.getItem('LinkrUserData')){
+    history.push('/timeline');
+  }
+
   function SendLoginInformation(event) {
     event.preventDefault();
     const body = {
@@ -32,6 +36,7 @@ export default function PageLogin() {
     postLogin(body)
       .then((res) => {
         setUser(res.data);
+        localStorage.setItem('LinkrUserData', JSON.stringify(res.data));
         setCondition(false);
         history.push("/timeline");
       })

@@ -16,8 +16,7 @@ export default function Trending() {
 
   useEffect( () => {
     getHashtagTrending(config)
-    .then( (res) => {setHashtags(res.data.hashtags) 
-    console.log(res)})
+    .then( (res) => {setHashtags(res.data.hashtags)})
     .catch( () => { Error() });
   }, []);
 
