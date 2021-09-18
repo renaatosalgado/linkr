@@ -15,6 +15,11 @@ const NoPostFound = styled.div`
   font-weight: normal;
   font-size: 19px;
   color: #ffffff;
+
+  @media (max-width: 635px) {
+    min-width: 100%;
+    width: 100%;
+  }
 `;
 
 export default NoPostFound
