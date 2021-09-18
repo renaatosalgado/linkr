@@ -5,9 +5,12 @@ import PageRegistration from "../Pages/PageRegistration";
 import PageTimeline from "../Pages/PageTimeline";
 import UserContext from "../contexts/UserContext";
 import Reset from "../styled-components/Reset";
+import { useEffect } from "react";
 
 export default function App() {
-  const [user, setUser] = useState("");
+  const UserData = JSON.parse(localStorage.getItem('LinkrUserData'));
+  const [user, setUser] = useState(UserData);
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <Reset />

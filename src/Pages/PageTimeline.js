@@ -54,11 +54,10 @@ export default function PageTimeline() {
         setLoading(false);
       });
   }
- 
+
   return (
     <>
       <Header />
-      
       <TimelineContainer>
         <TimelineBox>
           <TimelineBody>

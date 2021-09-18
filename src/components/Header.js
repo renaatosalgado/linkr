@@ -23,7 +23,7 @@ export default function Header() {
   }
 
   function logout() {
-    
+    localStorage.removeItem('LinkrUserData');
     history.push("/");
   }
   
