@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import PageLogin from "../Pages/PageLogin";
 import PageRegistration from "../Pages/PageRegistration";
 import PageTimeline from "../Pages/PageTimeline";
+import PageMyPosts from "../Pages/PageMyPosts";
 import UserContext from "../contexts/UserContext";
 import Reset from "../styled-components/Reset";
 import { useEffect } from "react";
@@ -24,6 +25,9 @@ export default function App() {
           </Route>
           <Route path="/timeline" exact>
             <PageTimeline />
+          </Route>
+          <Route path="/my-posts" exact>
+            <PageMyPosts />
           </Route>
         </Switch>
       </BrowserRouter>

@@ -5,6 +5,7 @@ import Loader from 'react-loader-spinner'
 
 
 const CenteredContainer = styled.div`
+    min-width: 610px;
     display: flex;
     justify-content: center;
     align-items: center;

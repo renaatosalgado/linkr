@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 const PostContainer = styled.div`
   position: relative;
-  width: 611px;
+  width: 610px;
   padding-bottom: 20px;
   background-color: #171717;
   border-radius: 16px;

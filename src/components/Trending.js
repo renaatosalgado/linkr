@@ -46,6 +46,7 @@ export default function Trending() {
 
 const TrendingContainer = styled.div`
   width: 100%;
+  min-width: 240px;
   height: 340px;
   background-color: #171717;
   border-radius: 16px;
