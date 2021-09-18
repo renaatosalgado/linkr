@@ -5,9 +5,12 @@ import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../contexts/UserContext";
 import NewPost from "../components/Post";
 import Trending from "../components/Trending";
+import Posts from "../components/Posts";
+import Swal from "sweetalert2";
 
 export default function PageTimeline() {
   const [loading, setLoading] = useState(false);
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true)
   const [link, setLink] = useState("");
   const [text, setText] = useState("");
   const [postsList, setPostsList] = useState([]);
@@ -24,10 +27,14 @@ export default function PageTimeline() {
     getPostsList(config)
       .then((res) => {
         setPostsList(res.data.posts);
+        setIsLoadingPosts(false)
       })
       .catch(() => {
-        alert("Houve um erro ao publicar seu link. Repita o procedimento.");
-      });
+        Swal.fire({
+          icon: "error",
+          title: "OOPS...",
+          text: "Houve uma falha ao obter os posts, por favor atualize a página",
+        })});
     //eslint-disable-next-line
   }, []);
 
@@ -91,13 +98,11 @@ export default function PageTimeline() {
                 </Buttons>
               </Form>
             </CreatePost>
-            {postsList.map((post, index) => (
-              <NewPost
-                key={index}
-                post={post}
-                setPostsList={setPostsList}
-              />
-            ))}
+            <Posts
+              postsList={postsList}
+              isLoadingPosts={isLoadingPosts}
+              setPostsList={setPostsList} 
+            />
           </TimelineBody>
           <Trending/>
         </TimelineBox>

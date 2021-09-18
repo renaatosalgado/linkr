@@ -6,6 +6,8 @@ import { RiPencilFill } from "react-icons/ri";
 import UserContext from "../contexts/UserContext";
 import { useContext, useState } from "react";
 import { deleteDeletePost, getPostsList } from "../services/API";
+import Avatar from "./Avatar";
+import { Link } from "react-router-dom";
 
 const PostContainer = styled.div`
   position: relative;
@@ -15,14 +17,22 @@ const PostContainer = styled.div`
   border-radius: 16px;
   margin-top: 29px;
   display: flex;
+  @media (max-width: 635px) {
+    width: 100%;
+    border-radius: 0;
+    margin-top: 16px;
+  }
 `;
 
 const LeftContainer = styled.div`
-  top: 17px;
   padding: 17px 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (max-width: 635px) {
+    padding: 9px 15px;
+  }
 `;
 
 const RightContainer = styled.div`
@@ -31,6 +41,12 @@ const RightContainer = styled.div`
   width: calc(100% - 86px);
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 635px) {
+    padding-top: 10px;
+    padding-right: 18px;
+    width: 306px;
+  }
 `;
 
 const PerfilPicture = styled.img`
@@ -38,6 +54,12 @@ const PerfilPicture = styled.img`
   height: 50px;
   border-radius: 26.5px;
   margin-bottom: 19px;
+
+  @media (max-width: 635px) {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+  }
 `;
 
 // TODO: Colocar Icons na styled components
@@ -79,6 +101,10 @@ const UserName = styled.p`
   font-size: 19px;
   color: #ffffff;
   padding-bottom: 7px;
+
+  @media (max-width: 635px) {
+    font-size: 17px;
+  }
 `;
 
 const PostDescription = styled.p`
@@ -88,10 +114,20 @@ const PostDescription = styled.p`
   font-size: 17px;
   color: #b7b7b7;
   padding-bottom: 7px;
+  word-break: break-word;
+
+  @media (max-width: 635px) {
+    font-size: 15px;
+  }
 `;
 
 const LikeIcon = styled.div`
   color: #ffffff;
+
+  @media (max-width: 635px) {
+    width: 15px;
+    height: 17px;
+  }
 `;
 
 const HowManyLikes = styled.p`
@@ -101,6 +137,10 @@ const HowManyLikes = styled.p`
   font-weight: normal;
   font-size: 11px;
   color: #ffffff;
+
+  @media (max-width: 635px) {
+    font-size: 9px;
+  }
 `;
 
 const Overlay = styled.div`
@@ -255,14 +295,16 @@ const NewPost = ({ post, setPostsList }) => {
           </DeleteIcon>
         </Icons>
         <LeftContainer>
-          <PerfilPicture src={post.user.avatar} />
+          <Avatar src={post.user.avatar} userId={post.user.id}/>
           <LikeIcon>
             <FaRegHeart />
           </LikeIcon>
           <HowManyLikes>{post.likes.length} likes</HowManyLikes>
         </LeftContainer>
         <RightContainer>
-          <UserName>{post.user.username}</UserName>
+          <Link to={`/users/${post.user.id}`}>
+            <UserName>{post.user.username}</UserName>
+          </Link>
           <PostDescription>{post.text}</PostDescription>
           <LinkPreview
             link={post.link}
