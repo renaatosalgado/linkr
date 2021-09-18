@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import { Link, useHistory } from 'react-router-dom'
 
 
-const LinkPreviewContainer = styled(Link)`
+const LinkPreviewContainer = styled.div`
   height: 155px;
   border: 1px solid #4d4d4d;
   box-sizing: border-box;
@@ -90,7 +89,6 @@ const LinkImg = styled.img`
 `;
 
 const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
-  const history = useHistory()
   const goToLink = () => window.open(link, '_blank')
   return (
     <LinkPreviewContainer onClick={goToLink}>

@@ -8,8 +8,7 @@ import { useHistory, Link } from "react-router-dom";
 export default function Header() {
   const [quickAccess, setQuickAccess] = useState(false)
   const {
-    user,
-    setUser
+    user
   } = useContext(UserContext)
 
   const history = useHistory();
@@ -29,7 +28,7 @@ export default function Header() {
   
   return (
     <HeaderContainer>
-      <p>linkr</p>
+      <Link to="/">linkr</Link>
       <img onClick={showQuickAccess} src={user.user.avatar} alt="foto de perfil" />
       <ChevronIcon quickAccess={quickAccess} onClick={showQuickAccess} size="25px" />
       <DivQuickAccess quickAccess={quickAccess}>
@@ -53,9 +52,9 @@ const HeaderContainer = styled.div`
   top: 0;
   left: 0;
   z-index: 1;
-  position: relative;
 
-  p {
+
+  a {
     font-family: "Passion One", cursive;
     font-weight: bold;
     font-size: 49px;
@@ -87,23 +86,23 @@ const ChevronIcon = styled(FaChevronDown)`
 `;
 
 const DivQuickAccess= styled.div`
-    width: 135px;
-     height: 109px;
-     background-color: #171717;
-    border-bottom-left-radius: 20px;
-    display: flex;
-    flex-direction: column;
-     align-items: center;
-    position: absolute;
-     top: 72px;
-     right: 0;
-     opacity: ${({quickAccess}) => quickAccess ? 1 : 0};
+  width: 135px;
+  height: 109px;
+  background-color: #171717;
+  border-bottom-left-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 72px;
+  right: 0;
+  display: ${({quickAccess}) => quickAccess ? 'inherit' : 'none'};
 
-     h3, a {
-     font-size: 17px;
-     color: #FFFFFF;
-     font-weight: bold;
-     margin-top: 12px;
-     font-family: 'Lato', sans-serif;
-   }
+  h3, a {
+    font-size: 17px;
+    color: #FFFFFF;
+    font-weight: bold;
+    margin-top: 12px;
+    font-family: 'Lato', sans-serif;
+  }
 `;

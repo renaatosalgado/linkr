@@ -18,6 +18,7 @@ export default function Trending() {
     getHashtagTrending(config)
     .then( (res) => {setHashtags(res.data.hashtags)})
     .catch( () => { Error() });
+    //eslint-disable-next-line
   }, []);
 
   function Error() {

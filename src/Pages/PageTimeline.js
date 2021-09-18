@@ -3,7 +3,6 @@ import Header from "../components/Header";
 import { postCreatePost, getPostsList } from "../services/API";
 import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../contexts/UserContext";
-import NewPost from "../components/Post";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
 import Swal from "sweetalert2";
@@ -104,7 +103,7 @@ export default function PageTimeline() {
               setPostsList={setPostsList} 
             />
           </TimelineBody>
-          <Trending/>
+          <Trending />
         </TimelineBox>
       </TimelineContainer>
     </>

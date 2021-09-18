@@ -18,7 +18,7 @@ const CenteredLoader = () => {
         </CenteredContainer>
     )
 }  
-const Posts = ({ postsList, isLoadingPosts, setPostsList }) => {
+const Posts = ({ postsList, isLoadingPosts, setPostsList }) => { 
     return (
         isLoadingPosts ? <CenteredLoader /> : 
             postsList.length === 0 ? <NoPostFound>Nenhum post encontrado</NoPostFound> :

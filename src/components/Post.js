@@ -1,7 +1,8 @@
 import styled from "styled-components";
-
 import LinkPreview from "./LinkPreview";
-import { FaTrash, FaRegHeart } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
+import { IoIosHeartEmpty } from "react-icons/io";
+import { IoIosHeart } from "react-icons/io";
 import { RiPencilFill } from "react-icons/ri";
 import UserContext from "../contexts/UserContext";
 import { useContext, useState } from "react";
@@ -46,19 +47,6 @@ const RightContainer = styled.div`
     padding-top: 10px;
     padding-right: 18px;
     width: 306px;
-  }
-`;
-
-const PerfilPicture = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 26.5px;
-  margin-bottom: 19px;
-
-  @media (max-width: 635px) {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
   }
 `;
 
@@ -230,9 +218,10 @@ const ConfirmBtn = styled.button`
   }
 `;
 
-const NewPost = ({ post, setPostsList }) => {
+const Post = ({ post, setPostsList }) => {
   const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
+  const [liked] = useState(false);
 
   const [reallyDeleteHabit, setReallyDeleteHabit] = useState(false);
 
@@ -257,7 +246,7 @@ const NewPost = ({ post, setPostsList }) => {
           alert(
             "Não foi possível excluir seu post! Por favor, repita o procedimento."
           );
-        }, 500)        
+        }, 500)
         setReallyDeleteHabit(false);
       });
   }
@@ -296,13 +285,16 @@ const NewPost = ({ post, setPostsList }) => {
         </Icons>
         <LeftContainer>
           <Avatar src={post.user.avatar} userId={post.user.id}/>
-          <LikeIcon>
-            <FaRegHeart />
+          <LikeIcon >
+            {liked === false ? <IoIosHeartEmpty size="20px" color="#FFF" /> : <IoIosHeart size="20px" color="#AC0000" />}
           </LikeIcon>
-          <HowManyLikes>{post.likes.length} likes</HowManyLikes>
+          <HowManyLikes data-tip data-for='likes'>{post.likes.length === 1 ?
+            `${post.likes.length} like` :
+            `${post.likes.length} likes`}
+          </HowManyLikes>
         </LeftContainer>
         <RightContainer>
-          <Link to={`/users/${post.user.id}`}>
+          <Link to={`/user/${post.user.id}`}>
             <UserName>{post.user.username}</UserName>
           </Link>
           <PostDescription>{post.text}</PostDescription>
@@ -318,4 +310,4 @@ const NewPost = ({ post, setPostsList }) => {
   );
 };
 
-export default NewPost;
+export default Post;
