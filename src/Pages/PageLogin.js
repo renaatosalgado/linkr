@@ -23,9 +23,11 @@ export default function PageLogin() {
   const { setUser } = useContext(UserContext);
 
   useEffect(() => {
+    let mounted = true
     if (!!localStorage.getItem('LinkrUserData')){
-      history.push('/timeline');
+      if (mounted) history.push('/timeline');
     }
+    return () => mounted = false
     //eslint-disable-next-line
   }, [])
   

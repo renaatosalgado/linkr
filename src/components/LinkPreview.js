@@ -89,9 +89,9 @@ const LinkImg = styled.img`
 `;
 
 const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
-  const goToLink = () => window.open(link, '_blank')
+
   return (
-    <LinkPreviewContainer onClick={goToLink}>
+    <LinkPreviewContainer onClick={() => window.open(link, '_blank')}>
       <LeftContainer>
         <LinkTitle>{linkTitle}</LinkTitle>
         <LinkDescription>{linkDescription}</LinkDescription>
