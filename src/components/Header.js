@@ -30,8 +30,10 @@ export default function Header() {
     <HeaderContainer>
       <Link to="/">linkr</Link>
       <img onClick={showQuickAccess} src={user.user.avatar} alt="foto de perfil" />
-      <ChevronIcon quickAccess={quickAccess} onClick={showQuickAccess} size="25px" />
-      <DivQuickAccess quickAccess={quickAccess}>
+      <ChevronIcon
+        transfrom={quickAccess ? 'rotate(180deg)' : 'rotate(0deg)'}
+        onClick={showQuickAccess} size="25px" />
+      <DivQuickAccess display={quickAccess ? 'inherit' : 'none'}>
         <Link to="/my-posts">My posts</Link>
         <Link to="/my-likes">My likes</Link>
         <h3 onClick={logout}>Logout</h3>
@@ -82,7 +84,7 @@ const ChevronIcon = styled(FaChevronDown)`
   position: absolute;
   right: 86.31px;
   top: 32.38px;
-  transform: ${({quickAccess}) => quickAccess ? "rotate(180deg)" : "rotate(0deg)"};
+  transform: ${({transfrom}) => transfrom};
 `;
 
 const DivQuickAccess= styled.div`
@@ -96,7 +98,7 @@ const DivQuickAccess= styled.div`
   position: absolute;
   top: 72px;
   right: 0;
-  display: ${({quickAccess}) => quickAccess ? 'inherit' : 'none'};
+  display: ${({display}) => display};
 
   h3, a {
     font-size: 17px;
