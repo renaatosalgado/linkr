@@ -8,7 +8,7 @@ import Posts from "../components/Posts";
 import Swal from "sweetalert2";
 
 export default function PageTimeline() {
-  const [isLoadingPosts, setIsLoadingPosts] = useState(true)
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
   const [postsList, setPostsList] = useState([]);
 
   const { user } = useContext(UserContext);
@@ -23,18 +23,17 @@ export default function PageTimeline() {
     getPostsSomeUser(user.user.id, config)
       .then((res) => {
         setPostsList(res.data.posts);
-        setIsLoadingPosts(false)
+        setIsLoadingPosts(false);
       })
       .catch(() => {
         Swal.fire({
           icon: "error",
           title: "OOPS...",
           text: "Houve uma falha ao obter os posts, por favor atualize a página",
-        })});
+        });
+      });
     //eslint-disable-next-line
   }, []);
-
-
 
   return (
     <>
@@ -46,10 +45,10 @@ export default function PageTimeline() {
             <Posts
               postsList={postsList}
               isLoadingPosts={isLoadingPosts}
-              setPostsList={setPostsList} 
+              setPostsList={setPostsList}
             />
           </TimelineBody>
-          <Trending/>
+          <Trending />
         </TimelineBox>
       </TimelineContainer>
     </>

@@ -14,10 +14,14 @@ export default function Trending() {
     },
   };
 
-  useEffect( () => {
+  useEffect(() => {
     getHashtagTrending(config)
-    .then( (res) => {setHashtags(res.data.hashtags)})
-    .catch( () => { Error() });
+      .then((res) => {
+        setHashtags(res.data.hashtags);
+      })
+      .catch(() => {
+        Error();
+      });
     //eslint-disable-next-line
   }, []);
 
@@ -33,7 +37,7 @@ export default function Trending() {
     <TrendingContainer>
       <TrendingTitle>trending</TrendingTitle>
       <Hashtags>
-        {hashtags.map(({name, id}) => {
+        {hashtags.map(({ name, id }) => {
           return (
             <Link key={id} to={`/hashtag/${name}`}>
               <p>{`#${name}`}</p>
@@ -57,7 +61,7 @@ const TrendingContainer = styled.div`
   @media (max-width: 950px) {
     display: none;
   }
-`
+`;
 const TrendingTitle = styled.div`
   font-family: "Oswald", sans-serif;
   color: #ffffff;
@@ -67,7 +71,7 @@ const TrendingTitle = styled.div`
   padding-bottom: 16px;
   padding-left: 16px;
   padding-top: 12px;
-`
+`;
 const Hashtags = styled.div`
   font-family: "Lato", sans-serif;
   font-size: 19px;
@@ -76,4 +80,4 @@ const Hashtags = styled.div`
   color: #ffffff;
   line-height: 23px;
   padding: 20px 16px;
-`
+`;

@@ -10,7 +10,7 @@ import PageSomeUser from "../Pages/PageSomeUser";
 import PageMyLikes from "../Pages/PageMyLikes";
 
 export default function App() {
-  const UserData = JSON.parse(localStorage.getItem('LinkrUserData'));
+  const UserData = JSON.parse(localStorage.getItem("LinkrUserData"));
   const [user, setUser] = useState(UserData);
 
   return (

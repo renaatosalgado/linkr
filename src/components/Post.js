@@ -246,7 +246,7 @@ const Post = ({ post, setPostsList }) => {
           alert(
             "Não foi possível excluir seu post! Por favor, repita o procedimento."
           );
-        }, 500)
+        }, 500);
         setReallyDeleteHabit(false);
       });
   }
@@ -284,13 +284,18 @@ const Post = ({ post, setPostsList }) => {
           </DeleteIcon>
         </Icons>
         <LeftContainer>
-          <Avatar src={post.user.avatar} userId={post.user.id}/>
-          <LikeIcon >
-            {liked === false ? <IoIosHeartEmpty size="20px" color="#FFF" /> : <IoIosHeart size="20px" color="#AC0000" />}
+          <Avatar src={post.user.avatar} userId={post.user.id} />
+          <LikeIcon>
+            {liked === false ? (
+              <IoIosHeartEmpty size="20px" color="#FFF" />
+            ) : (
+              <IoIosHeart size="20px" color="#AC0000" />
+            )}
           </LikeIcon>
-          <HowManyLikes data-tip data-for='likes'>{post.likes.length === 1 ?
-            `${post.likes.length} like` :
-            `${post.likes.length} likes`}
+          <HowManyLikes data-tip data-for="likes">
+            {post.likes.length === 1
+              ? `${post.likes.length} like`
+              : `${post.likes.length} likes`}
           </HowManyLikes>
         </LeftContainer>
         <RightContainer>

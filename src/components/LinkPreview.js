@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-
 const LinkPreviewContainer = styled.div`
   height: 155px;
   border: 1px solid #4d4d4d;
@@ -89,9 +88,8 @@ const LinkImg = styled.img`
 `;
 
 const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
-
   return (
-    <LinkPreviewContainer onClick={() => window.open(link, '_blank')}>
+    <LinkPreviewContainer onClick={() => window.open(link, "_blank")}>
       <LeftContainer>
         <LinkTitle>{linkTitle}</LinkTitle>
         <LinkDescription>{linkDescription}</LinkDescription>

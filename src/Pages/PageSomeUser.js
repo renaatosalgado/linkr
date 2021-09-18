@@ -5,41 +5,35 @@ import UserContext from "../contexts/UserContext";
 import { getPostsSomeUser } from "../services/API";
 import { useParams } from "react-router-dom";
 import Trending from "../components/Trending";
-import Posts from "../components/Posts"
-
+import Posts from "../components/Posts";
 
 export default function PageSomeUser() {
   //eslint-disable-next-line
-  const [liked] = useState(false)
+  const [liked] = useState(false);
   const [postsSomeUser, setPostsSomeUser] = useState(null);
-  const [isLoadingPosts, setIsLoadingPosts] = useState(true)
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
 
+  const { id } = useParams();
 
-  const {
-    id
-  } = useParams();
-
-  const {
-    user
-  } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const config = {
     headers: {
-      "Authorization": `Bearer ${user.token}`,
-    }
+      Authorization: `Bearer ${user.token}`,
+    },
   };
 
   useEffect(() => {
     getPostsSomeUser(id, config)
       .then((res) => {
         setPostsSomeUser(res.data.posts);
-        setIsLoadingPosts(false)
+        setIsLoadingPosts(false);
       })
       .catch((res) => {
         console.log("erro!");
       });
-      //eslint-disable-next-line
-  }, [])
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <>
@@ -48,12 +42,12 @@ export default function PageSomeUser() {
         <TimelineBox>
           <TimelineBody>
             <Title>{postsSomeUser ? postsSomeUser[0].user.username : ""}</Title>
-            
-              <Posts
-                postsList={postsSomeUser}
-                isLoadingPosts={isLoadingPosts}
-                setPostsList={setPostsSomeUser}
-              />
+
+            <Posts
+              postsList={postsSomeUser}
+              isLoadingPosts={isLoadingPosts}
+              setPostsList={setPostsSomeUser}
+            />
           </TimelineBody>
           <Trending />
         </TimelineBox>
@@ -62,48 +56,47 @@ export default function PageSomeUser() {
   );
 }
 
-
 const TimelineContainer = styled.div`
- width: 100%;
- min-height: 100vh;
- background-color: #333333;
- padding-top: 125px;
- display: flex;
- justify-content: center;
- 
- @media (max-width: 635px) {
-   padding-top: 100px;
- }
+  width: 100%;
+  min-height: 100vh;
+  background-color: #333333;
+  padding-top: 125px;
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: 635px) {
+    padding-top: 100px;
+  }
 `;
 
 const TimelineBox = styled.div`
- display: flex;
- padding-bottom: 30px;
- margin: 0 auto;
- 
- @media (max-width: 635px) {
-   width: 100%;
- }
+  display: flex;
+  padding-bottom: 30px;
+  margin: 0 auto;
+
+  @media (max-width: 635px) {
+    width: 100%;
+  }
 `;
 
 const Title = styled.div`
- font-family: "Oswald", sans-serif;
- font-size: 43px;
- color: #ffffff;
- margin-bottom: 43px;
- 
- @media (max-width: 635px) {
-   font-size: 33px;
-   margin-left: 17px;
-   margin-bottom: 30px;
- }
+  font-family: "Oswald", sans-serif;
+  font-size: 43px;
+  color: #ffffff;
+  margin-bottom: 43px;
+
+  @media (max-width: 635px) {
+    font-size: 33px;
+    margin-left: 17px;
+    margin-bottom: 30px;
+  }
 `;
 
 const TimelineBody = styled.div`
- width: 611px;
- margin: 0 auto;
- 
- @media (max-width: 635px) {
-   width: 100%;
- }
+  width: 611px;
+  margin: 0 auto;
+
+  @media (max-width: 635px) {
+    width: 100%;
+  }
 `;

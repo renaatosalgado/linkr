@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom';
-import styled from 'styled-components'
-
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 const PerfilPicture = styled.img`
   width: 50px;
@@ -16,11 +15,11 @@ const PerfilPicture = styled.img`
 `;
 
 const Avatar = ({ src, userId }) => {
-    return (
-        <Link to={`/user/${userId}`}>
-            <PerfilPicture src={src}/>
-        </Link>
-    )
-}
+  return (
+    <Link to={`/user/${userId}`}>
+      <PerfilPicture src={src} />
+    </Link>
+  );
+};
 
-export default Avatar
+export default Avatar;

@@ -1,5 +1,4 @@
-import styled from 'styled-components'
-
+import styled from "styled-components";
 
 const NoPostFound = styled.div`
   width: 611px;
@@ -22,4 +21,4 @@ const NoPostFound = styled.div`
   }
 `;
 
-export default NoPostFound
+export default NoPostFound;

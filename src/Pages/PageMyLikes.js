@@ -4,57 +4,53 @@ import { useContext, useState, useEffect } from "react";
 import UserContext from "../contexts/UserContext";
 import { getPostsLiked } from "../services/API";
 import Trending from "../components/Trending";
-import Posts from '../components/Posts'
-
+import Posts from "../components/Posts";
 
 export default function PageMyLikes() {
-    const {
-        user
-    } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
-    const [postsLikedList, setPostsLikedList] = useState([]);
-    const [isLoadingPosts, setIsLoadingPosts] = useState(true)
+  const [postsLikedList, setPostsLikedList] = useState([]);
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
+  //eslint-disable-next-line
+  const [liked] = useState(false);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+
+  useEffect(() => {
+    getPostsLiked(config)
+      .then((res) => {
+        setPostsLikedList(res.data.posts);
+        setIsLoadingPosts(false);
+      })
+      .catch(() => {
+        console.log("erro!");
+      });
     //eslint-disable-next-line
-    const [liked] = useState(false)
+  }, []);
 
-    const config = {
-        headers: {
-            "Authorization": `Bearer ${user.token}`,
-        }
-    };
-
-    useEffect(() => {
-        getPostsLiked(config)
-            .then((res) => {
-                setPostsLikedList(res.data.posts);
-                setIsLoadingPosts(false)
-            })
-            .catch(() => {
-                console.log("erro!");
-            });
-            //eslint-disable-next-line
-    }, [])
-
-    return (
-        <>
-            <Header></Header>
-            <TimelineContainer>
-                <TimelineBox>
-                    <TimelineBody>
-                        <Title>My likes</Title>
-                        <Posts
-                            postsList={postsLikedList}
-                            isLoadingPosts={isLoadingPosts}
-                            setPostsList={setPostsLikedList}
-                        />
-                    </TimelineBody>
-                    <Trending />
-                </TimelineBox>
-            </TimelineContainer>
-        </>
-    );
+  return (
+    <>
+      <Header></Header>
+      <TimelineContainer>
+        <TimelineBox>
+          <TimelineBody>
+            <Title>My likes</Title>
+            <Posts
+              postsList={postsLikedList}
+              isLoadingPosts={isLoadingPosts}
+              setPostsList={setPostsLikedList}
+            />
+          </TimelineBody>
+          <Trending />
+        </TimelineBox>
+      </TimelineContainer>
+    </>
+  );
 }
-
 
 const TimelineContainer = styled.div`
   width: 100%;
