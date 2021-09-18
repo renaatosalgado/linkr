@@ -8,8 +8,7 @@ import { useHistory, Link } from "react-router-dom";
 export default function Header() {
   const [quickAccess, setQuickAccess] = useState(false)
   const {
-    user,
-    setUser
+    user
   } = useContext(UserContext)
 
   const history = useHistory();
@@ -29,7 +28,7 @@ export default function Header() {
   
   return (
     <HeaderContainer>
-      <p>linkr</p>
+      <Link to="/">linkr</Link>
       <img onClick={showQuickAccess} src={user.user.avatar} alt="foto de perfil" />
       <ChevronIcon quickAccess={quickAccess} onClick={showQuickAccess} size="25px" />
       <DivQuickAccess quickAccess={quickAccess}>
@@ -55,7 +54,7 @@ const HeaderContainer = styled.div`
   z-index: 1;
   position: relative;
 
-  p {
+  a {
     font-family: "Passion One", cursive;
     font-weight: bold;
     font-size: 49px;

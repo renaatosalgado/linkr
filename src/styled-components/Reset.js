@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import styled from "styled-components";
 
 const Reset = createGlobalStyle`
     html,
@@ -152,6 +153,8 @@ select {
   font: inherit;
 }
 
+
+
 /*SPECIFIC FONTS*/
 
 /* font-family: 'Lato', sans-serif;
@@ -159,5 +162,42 @@ font-family: 'Oswald', sans-serif;
 font-family: 'Passion One', cursive; */
 
 `;
+
+const Icons = styled.div`
+  position: absolute;
+  display: flex;
+  top: 23px;
+  right: 22px;
+  display: ${(props) => (props.hide ? "none" : "inherit")};
+`;
+
+const EditIcon = styled.div`
+  width: 14px;
+  height: 14px;
+  color: #ffffff;
+  margin-right: 15px;
+
+  &:hover {
+    cursor: pointer;
+    color: green;
+  }
+`;
+
+const DeleteIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  color: #ffffff;
+
+  &:hover {
+    cursor: pointer;
+    color: crimson;
+  }
+`;
+
+export {
+  Icons,
+  EditIcon,
+  DeleteIcon
+}
 
 export default Reset;
