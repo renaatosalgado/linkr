@@ -35,7 +35,7 @@ export default function PageTimeline() {
           text: "Houve uma falha ao obter os posts, por favor atualize a página",
         });
       });
-    //eslint-disable-next-line
+      //eslint-disable-next-line
   }, []);
 
   function publishPost(event) {
@@ -73,7 +73,7 @@ export default function PageTimeline() {
               <CreatePostImg>
                 <ProfilePic src={user.user.avatar} alt="" />
               </CreatePostImg>
-              <Form onSubmit={() => publishPost()}>
+              <Form onSubmit={publishPost}>
                 <p>O que você tem pra favoritar hoje?</p>
                 <Link
                   type="url"
@@ -289,7 +289,7 @@ const Publish = styled.button`
 
   &:hover {
     cursor: pointer;
-    filter: brightness(108%);
+    filter: brightness(90%);
   }
 
   &:disabled {

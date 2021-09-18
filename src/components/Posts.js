@@ -17,7 +17,7 @@ const CenteredContainer = styled.div`
 const CenteredLoader = () => {
   return (
     <CenteredContainer>
-      <Loader type="ThreeDots" color="#151515" height={70} width={70} />
+      <Loader type="ThreeDots" color="#ffffff" height={100} width={100} />
     </CenteredContainer>
   );
 };
@@ -28,7 +28,11 @@ const Posts = ({ postsList, isLoadingPosts, setPostsList }) => {
     <NoPostFound>Nenhum post encontrado</NoPostFound>
   ) : (
     postsList.map((post, index) => (
-      <Post key={index} post={post} setPostsList={setPostsList} />
+      <Post
+        key={index}
+        post={post}
+        setPostsList={setPostsList}
+      />
     ))
   );
 };

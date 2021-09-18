@@ -43,6 +43,7 @@ export default function PageMyLikes() {
               postsList={postsLikedList}
               isLoadingPosts={isLoadingPosts}
               setPostsList={setPostsLikedList}
+              apiRequest={getPostsLiked}
             />
           </TimelineBody>
           <Trending />

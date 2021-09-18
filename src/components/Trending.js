@@ -18,6 +18,7 @@ export default function Trending() {
     getHashtagTrending(config)
       .then((res) => {
         setHashtags(res.data.hashtags);
+        console.log(res)
       })
       .catch(() => {
         Error();
@@ -80,4 +81,9 @@ const Hashtags = styled.div`
   color: #ffffff;
   line-height: 23px;
   padding: 20px 16px;
+
+  p:hover {
+    color: #1877f2;
+    cursor: pointer;
+  }
 `;

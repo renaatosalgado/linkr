@@ -26,7 +26,9 @@ export default function Header() {
 
   return (
     <HeaderContainer>
-      <Link to="/">linkr</Link>
+      <Link to="/">
+        <p>linkr</p>
+      </Link>
       <img
         onClick={showQuickAccess}
         src={user.user.avatar}
@@ -74,6 +76,15 @@ const HeaderContainer = styled.div`
     border-radius: 50%;
   }
 
+  img:hover {
+    cursor: pointer;
+  }
+
+  p:hover {
+    color: #1877f2;
+    cursor: pointer;
+  }
+
   @media (max-width: 635px) {
     p {
       font-size: 45px;
@@ -87,6 +98,11 @@ const ChevronIcon = styled(FaChevronDown)`
   right: 86.31px;
   top: 32.38px;
   transform: ${({ transfrom }) => transfrom};
+
+  &:hover {
+    color: #1877f2;
+    cursor: pointer;
+  }
 `;
 
 const DivQuickAccess = styled.div`
@@ -109,5 +125,11 @@ const DivQuickAccess = styled.div`
     font-weight: bold;
     margin-top: 12px;
     font-family: "Lato", sans-serif;
+  }
+
+  h3:hover,
+  a:hover {
+    cursor: pointer;
+    color: #1877f2;
   }
 `;

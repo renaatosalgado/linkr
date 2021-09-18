@@ -239,6 +239,7 @@ const Post = ({ post, setPostsList }) => {
         setLoading(false);
         getPostsList(config).then((res) => setPostsList(res.data.posts));
         setReallyDeleteHabit(false);
+        window.location.reload()
       })
       .catch(() => {
         setLoading(false);

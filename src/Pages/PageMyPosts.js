@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 
 export default function PageTimeline() {
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
-  const [postsList, setPostsList] = useState([]);
+  const [myPosts, setMyPosts] = useState(null);
 
   const { user } = useContext(UserContext);
 
@@ -22,7 +22,8 @@ export default function PageTimeline() {
   useEffect(() => {
     getPostsSomeUser(user.user.id, config)
       .then((res) => {
-        setPostsList(res.data.posts);
+        console.log('my posts', res.data.posts)
+        setMyPosts(res.data.posts);
         setIsLoadingPosts(false);
       })
       .catch(() => {
@@ -43,9 +44,9 @@ export default function PageTimeline() {
           <TimelineBody>
             <Title>my posts</Title>
             <Posts
-              postsList={postsList}
+              postsList={myPosts}
               isLoadingPosts={isLoadingPosts}
-              setPostsList={setPostsList}
+              setPostsList={setMyPosts}
             />
           </TimelineBody>
           <Trending />
