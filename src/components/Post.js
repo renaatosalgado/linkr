@@ -5,8 +5,8 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { IoIosHeart } from "react-icons/io";
 import { RiPencilFill } from "react-icons/ri";
 import UserContext from "../contexts/UserContext";
-import { useContext, useEffect, useRef, useState } from "react";
-import { deleteDeletePost, getPostsList, putEditPost } from "../services/API";
+import { useContext, useRef, useState } from "react";
+import { deleteDeletePost, putEditPost } from "../services/API";
 import Avatar from "./Avatar";
 import { Link } from "react-router-dom";
 
