@@ -58,7 +58,7 @@ const Icons = styled.div`
   right: 22px;
   display: ${(props) => (props.hide ? "none" : "inherit")};
 
-  @media(max-width: 635px) {
+  @media (max-width: 635px) {
     top: 10px;
     right: 10px;
   }
@@ -169,7 +169,7 @@ const DeleteScreen = styled.div`
     margin-bottom: 40px;
   }
 
-  @media(max-width: 635px) {
+  @media (max-width: 635px) {
     width: 100%;
     left: 0;
     border-radius: 0;
@@ -228,8 +228,33 @@ const ConfirmBtn = styled.button`
   }
 `;
 
-const Post = ({ post, setPostsList }) => {
+const EditingInput = styled.input`
+  width: 100%;
+  border-radius: 7px;
+  font-size: 17px;
+  color: #4c4c4c;
+  line-height: 17px;
+  margin-bottom: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 9px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    opacity: 0.75;
+    background-color: #ffffff;
+    cursor: not-allowed;
+  }
+`;
+
+const Post = ({ post }) => {
   const [loading, setLoading] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [text, setText] = useState(post.text);
+  const [newText, setNewtext] = useState(text);
   const { user } = useContext(UserContext);
   const [liked] = useState(false);
 
@@ -241,9 +266,44 @@ const Post = ({ post, setPostsList }) => {
     },
   };
 
+  const inputRef = useRef();
+  console.log(inputRef.current);
+
+  function analyseKeys(event) {
+    if (event.keyCode === 27) {
+      editPost();
+    } else if (event.keyCode === 13) {
+      setLoading(true);
+      const body = {
+        text: newText,
+      };
+      putEditPost(post.id, body, config)
+        .then((res) => {
+          setText(res.data.post.text);
+          setEditing(false);
+          setLoading(false);
+        })
+        .catch(() => {
+          alert(
+            "Não foi possível salvar as alterações. Por favor, repita o procedimento."
+          );
+          setEditing(true);
+          setLoading(false);
+        });
+    }
+  }
+
   function editPost() {
-    
-    post.text.focus();
+    setTimeout(() => {
+      inputRef.current.focus();
+    }, 500);
+
+    if (editing) {
+      setEditing(false);
+      setNewtext(text);
+    } else {
+      setEditing(true);
+    }
   }
 
   function deletePost(postId) {
@@ -253,7 +313,7 @@ const Post = ({ post, setPostsList }) => {
       .then(() => {
         setLoading(false);
         setReallyDeleteHabit(false);
-        window.location.reload()
+        window.location.reload();
       })
       .catch(() => {
         setLoading(false);
@@ -317,7 +377,18 @@ const Post = ({ post, setPostsList }) => {
           <Link to={`/user/${post.user.id}`}>
             <UserName>{post.user.username}</UserName>
           </Link>
-          <PostDescription>{post.text}</PostDescription>
+          {editing ? (
+            <EditingInput
+              ref={inputRef}
+              disabled={loading ? true : false}
+              onKeyDown={analyseKeys}
+              type="text"
+              value={newText}
+              onChange={(e) => setNewtext(e.target.value)}
+            ></EditingInput>
+          ) : (
+            <PostDescription>{text}</PostDescription>
+          )}
           <LinkPreview
             link={post.link}
             linkTitle={post.linkTitle}
