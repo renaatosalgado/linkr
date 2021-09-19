@@ -35,7 +35,7 @@ export default function PageTimeline() {
           text: "Houve uma falha ao obter os posts, por favor atualize a página",
         });
       });
-      //eslint-disable-next-line
+    //eslint-disable-next-line
   }, []);
 
   function publishPost(event) {
@@ -115,7 +115,7 @@ const TimelineContainer = styled.div`
   width: 100%;
   min-height: 100vh;
   background-color: #333333;
-  padding-top: 125px;
+  padding-top: 150px;
   display: flex;
   justify-content: center;
 
@@ -138,7 +138,7 @@ const Title = styled.div`
   font-family: "Oswald", sans-serif;
   font-size: 43px;
   color: #ffffff;
-  margin-bottom: 43px;
+  margin-bottom: 50px;
 
   @media (max-width: 635px) {
     font-size: 33px;

@@ -45,6 +45,10 @@ function getPostsLiked(config) {
   return axios.get(`${BASE_URL}/posts/liked`, config);
 }
 
+function getHashtagPost(hashtag, config) {
+  return axios.get(`${BASE_URL}/hashtags/${hashtag}/posts`, config);
+}
+
 export {
   postLogin,
   postSignUp,
@@ -55,4 +59,5 @@ export {
   getHashtagTrending,
   getPostsSomeUser,
   getPostsLiked,
+  getHashtagPost,
 };

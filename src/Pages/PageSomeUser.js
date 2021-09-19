@@ -41,7 +41,9 @@ export default function PageSomeUser() {
       <TimelineContainer>
         <TimelineBox>
           <TimelineBody>
-            <Title>{postsSomeUser ? `${postsSomeUser[0].user.username}'s posts` : ""}</Title>
+            <Title>
+              {postsSomeUser ? `${postsSomeUser[0].user.username}'s posts` : ""}
+            </Title>
 
             <Posts
               postsList={postsSomeUser}
@@ -60,7 +62,7 @@ const TimelineContainer = styled.div`
   width: 100%;
   min-height: 100vh;
   background-color: #333333;
-  padding-top: 125px;
+  padding-top: 150px;
   display: flex;
   justify-content: center;
 
