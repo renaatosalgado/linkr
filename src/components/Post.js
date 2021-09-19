@@ -259,6 +259,44 @@ const EditingInput = styled.input`
   }
 `;
 
+const TextWithClickableHashTags = ({ renderHashtag, text }) => {
+  
+  let splittedText = text.split('#')
+  splittedText = splittedText.map((string, index) => {
+    return (
+      index > 0 ? `#${string}` : string
+    )
+  })
+
+
+  const mapHashTagToLink = (string, index) => {
+    if (string === '' || index === 0) return <>{string}</>
+    const firstSpaceIndex = string.indexOf(' ')
+    if (firstSpaceIndex >= 0) {
+      let hastagText = string.slice(0, firstSpaceIndex)
+      return (
+        <>
+          <Link
+            key={index} to={`/hashtag/${hastagText.slice(1)}`}>
+              {hastagText.toLowerCase()}
+          </Link>
+          {string.slice(firstSpaceIndex)}
+        </>
+      )
+    } else {
+      return <Link key={index} to={`/hashtag/${string.slice(1)}`}>{string}</Link>
+    }
+  }
+
+  return (
+    <PostDescription>
+      {
+        splittedText.map(mapHashTagToLink)
+      }
+    </PostDescription>
+  )
+}
+
 const Post = ({ post }) => {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -301,13 +339,12 @@ const Post = ({ post }) => {
   }
 
   function editPost() {
-    setTimeout(() => {
-      inputRef.current.focus();
-    }, 500);
-
     if (editing) {
       setEditing(false);
       setNewtext(text);
+      setTimeout(() => {
+        inputRef.current.focus();
+      }, 100);
     } else {
       setEditing(true);
     }
@@ -458,7 +495,7 @@ const Post = ({ post }) => {
               onChange={(e) => setNewtext(e.target.value)}
             ></EditingInput>
           ) : (
-            <PostDescription>{text}</PostDescription>
+            <TextWithClickableHashTags text={post.text} />
           )}
           <LinkPreview
             link={post.link}
