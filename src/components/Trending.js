@@ -18,7 +18,6 @@ export default function Trending() {
     getHashtagTrending(config)
       .then((res) => {
         setHashtags(res.data.hashtags);
-        console.log(res)
       })
       .catch(() => {
         Error();

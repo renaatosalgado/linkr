@@ -38,7 +38,7 @@ export default function PageMyLikes() {
       <TimelineContainer>
         <TimelineBox>
           <TimelineBody>
-            <Title>My likes</Title>
+            <Title>my likes</Title>
             <Posts
               postsList={postsLikedList}
               isLoadingPosts={isLoadingPosts}

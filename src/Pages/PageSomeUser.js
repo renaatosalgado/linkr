@@ -41,7 +41,7 @@ export default function PageSomeUser() {
       <TimelineContainer>
         <TimelineBox>
           <TimelineBody>
-            <Title>{postsSomeUser ? postsSomeUser[0].user.username : ""}</Title>
+            <Title>{postsSomeUser ? `${postsSomeUser[0].user.username}'s posts` : ""}</Title>
 
             <Posts
               postsList={postsSomeUser}

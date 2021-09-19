@@ -22,7 +22,6 @@ export default function PageTimeline() {
   useEffect(() => {
     getPostsSomeUser(user.user.id, config)
       .then((res) => {
-        console.log('my posts', res.data.posts)
         setMyPosts(res.data.posts);
         setIsLoadingPosts(false);
       })

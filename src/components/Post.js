@@ -5,8 +5,8 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { IoIosHeart } from "react-icons/io";
 import { RiPencilFill } from "react-icons/ri";
 import UserContext from "../contexts/UserContext";
-import { useContext, useState } from "react";
-import { deleteDeletePost, getPostsList } from "../services/API";
+import { useContext, useEffect, useRef, useState } from "react";
+import { deleteDeletePost, getPostsList, putEditPost } from "../services/API";
 import Avatar from "./Avatar";
 import { Link } from "react-router-dom";
 
@@ -57,6 +57,11 @@ const Icons = styled.div`
   top: 23px;
   right: 22px;
   display: ${(props) => (props.hide ? "none" : "inherit")};
+
+  @media(max-width: 635px) {
+    top: 10px;
+    right: 10px;
+  }
 `;
 
 const EditIcon = styled.div`
@@ -137,7 +142,6 @@ const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-
   background-color: rgba(255, 255, 255, 0.8);
   z-index: 1;
   display: ${(props) => (props.reallyDeleteHabit ? "inherit" : "none")};
@@ -163,6 +167,12 @@ const DeleteScreen = styled.div`
     font-size: 34px;
     color: #ffffff;
     margin-bottom: 40px;
+  }
+
+  @media(max-width: 635px) {
+    width: 100%;
+    left: 0;
+    border-radius: 0;
   }
 `;
 
@@ -231,13 +241,17 @@ const Post = ({ post, setPostsList }) => {
     },
   };
 
+  function editPost() {
+    
+    post.text.focus();
+  }
+
   function deletePost(postId) {
     setLoading(true);
 
     deleteDeletePost(postId, config)
       .then(() => {
         setLoading(false);
-        getPostsList(config).then((res) => setPostsList(res.data.posts));
         setReallyDeleteHabit(false);
         window.location.reload()
       })
@@ -277,7 +291,7 @@ const Post = ({ post, setPostsList }) => {
       </Overlay>
       <PostContainer>
         <Icons hide={post.user.id === user.user.id ? false : true}>
-          <EditIcon>
+          <EditIcon onClick={editPost}>
             <RiPencilFill />
           </EditIcon>
           <DeleteIcon onClick={() => setReallyDeleteHabit(true)}>
