@@ -36,7 +36,7 @@ export default function PageTimeline() {
         });
       });
     //eslint-disable-next-line
-  }, []);
+  }, [postsList]);
 
   function publishPost(event) {
     event.preventDefault();

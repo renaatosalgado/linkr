@@ -6,9 +6,10 @@ import { IoIosHeart } from "react-icons/io";
 import { RiPencilFill } from "react-icons/ri";
 import UserContext from "../contexts/UserContext";
 import { useContext, useRef, useState } from "react";
-import { deleteDeletePost, putEditPost } from "../services/API";
+import { deleteDeletePost, putEditPost, postLikeDislike } from "../services/API";
 import Avatar from "./Avatar";
 import { Link } from "react-router-dom";
+import ReactTooltip from "react-tooltip";
 
 const PostContainer = styled.div`
   position: relative;
@@ -30,6 +31,14 @@ const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  .__react_component_tooltip.show {
+    font-size: 13px;
+    color: #505050;
+    font-family: 'Lato', sans-serif;
+    opacity: 0.9 ;
+    background-color: white;
+
+  }
 
   @media (max-width: 635px) {
     padding: 9px 15px;
@@ -256,8 +265,6 @@ const Post = ({ post }) => {
   const [text, setText] = useState(post.text);
   const [newText, setNewtext] = useState(text);
   const { user } = useContext(UserContext);
-  const [liked] = useState(false);
-
   const [reallyDeleteHabit, setReallyDeleteHabit] = useState(false);
 
   const config = {
@@ -325,6 +332,68 @@ const Post = ({ post }) => {
         setReallyDeleteHabit(false);
       });
   }
+   
+  const [likesState, setLikesState] = useState(post.likes.map(like => {
+    return {
+      userId: like.userId,
+      username: like["user.username"]
+    }
+  })); 
+
+  const isLiked = false !== likesState.map((like) => like.userId).includes(user.user.id);
+
+  function like() {   
+    if (isLiked) {
+      postLikeDislike("dislike", post.id, config).then(resp => {
+          setLikesState(resp.data.post.likes)             
+      }).catch(err => {
+          console.log(err)
+      });
+  } else {
+      postLikeDislike("like", post.id, config).then(resp => {
+        setLikesState(resp.data.post.likes)         
+      }).catch(err => {
+          console.log("erro!")
+      });
+    }
+  }
+
+  function createTooltip(){
+    let tooltip = "";
+    const likesIdsList = likesState.map(like => like.userId)
+    const isLikedOnServer = likesIdsList.includes(user.user.id);
+    if(isLikedOnServer){
+        const indexOfUser = likesIdsList.indexOf(user.user.id);
+        const OtherUsers = likesState.map((like, i) => i === indexOfUser ? null : like.username)
+            .filter((username) => !!username);
+        tooltip += `Você`;
+        if(likesState.length > 1){
+            tooltip += `, ${OtherUsers[0]}`;
+        }
+        if (likesState.length === 3) {
+          tooltip += ` e outra pessoa`
+        }
+        
+    }else{
+        if(likesState.length > 0){
+            tooltip += ` ${likesState[0].username}`;
+        }
+        if(likesState.length === 2){
+          tooltip += ` e ${likesState[1].username}`;
+      }
+        if(likesState.length > 2){
+            tooltip += `, ${likesState[1].username}`;
+        }
+        if (likesState.length === 3) {
+          tooltip += ` e outra pessoa`
+        }
+    }
+    if(likesState.length > 3){
+        tooltip += ` e outras ${likesState.length - 2} pessoas`;
+    }
+    return tooltip;
+  }
+
 
   return (
     <>
@@ -360,18 +429,20 @@ const Post = ({ post }) => {
         </Icons>
         <LeftContainer>
           <Avatar src={post.user.avatar} userId={post.user.id} />
-          <LikeIcon>
-            {liked === false ? (
-              <IoIosHeartEmpty size="20px" color="#FFF" />
-            ) : (
+          <LikeIcon onClick={like}>
+            {isLiked ? (
               <IoIosHeart size="20px" color="#AC0000" />
-            )}
+            ) : (
+              <IoIosHeartEmpty size="20px" color="#FFF" />
+            )}           
           </LikeIcon>
-          <HowManyLikes data-tip data-for="likes">
-            {post.likes.length === 1
-              ? `${post.likes.length} like`
+          <HowManyLikes data-tip={createTooltip()}>
+            {post.likes.length === 0 ? "" : post.likes.length === 1 ?
+              `${post.likes.length} like`
               : `${post.likes.length} likes`}
           </HowManyLikes>
+          <ReactTooltip place="bottom" type="light" effect="float" >
+          </ReactTooltip>
         </LeftContainer>
         <RightContainer>
           <Link to={`/user/${post.user.id}`}>
