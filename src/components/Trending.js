@@ -18,6 +18,7 @@ export default function Trending() {
     getHashtagTrending(config)
     .then( (res) => {setHashtags(res.data.hashtags)})
     .catch( () => { Error() });
+    //eslint-disable-next-line
   }, []);
 
   function Error() {
@@ -46,6 +47,7 @@ export default function Trending() {
 
 const TrendingContainer = styled.div`
   width: 100%;
+  min-width: 240px;
   height: 340px;
   background-color: #171717;
   border-radius: 16px;
