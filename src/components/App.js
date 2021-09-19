@@ -37,7 +37,7 @@ export default function App() {
           <Route path="/my-likes" exact>
             <PageMyLikes />
           </Route>
-          <Route path="/hashtag/:hashtag">
+          <Route path="/hashtag/:hashtag" exact>
             <PageHashtag />
           </Route>
         </Switch>

@@ -10,7 +10,7 @@ const NoPostFound = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: Lato;
+  font-family: 'Lato';
   font-style: normal;
   font-weight: normal;
   font-size: 19px;
