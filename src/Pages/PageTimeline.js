@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 
 export default function PageTimeline() {
   const [loading, setLoading] = useState(false);
-  const [isLoadingPosts, setIsLoadingPosts] = useState(true)
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
   const [link, setLink] = useState("");
   const [text, setText] = useState("");
   const [postsList, setPostsList] = useState([]);
@@ -26,14 +26,15 @@ export default function PageTimeline() {
     getPostsList(config)
       .then((res) => {
         setPostsList(res.data.posts);
-        setIsLoadingPosts(false)
+        setIsLoadingPosts(false);
       })
       .catch(() => {
         Swal.fire({
           icon: "error",
           title: "OOPS...",
           text: "Houve uma falha ao obter os posts, por favor atualize a página",
-        })});
+        });
+      });
     //eslint-disable-next-line
   }, []);
 
@@ -72,7 +73,7 @@ export default function PageTimeline() {
               <CreatePostImg>
                 <ProfilePic src={user.user.avatar} alt="" />
               </CreatePostImg>
-              <Form onSubmit={() => publishPost()}>
+              <Form onSubmit={publishPost}>
                 <p>O que você tem pra favoritar hoje?</p>
                 <Link
                   type="url"
@@ -100,7 +101,7 @@ export default function PageTimeline() {
             <Posts
               postsList={postsList}
               isLoadingPosts={isLoadingPosts}
-              setPostsList={setPostsList} 
+              setPostsList={setPostsList}
             />
           </TimelineBody>
           <Trending />
@@ -288,7 +289,7 @@ const Publish = styled.button`
 
   &:hover {
     cursor: pointer;
-    filter: brightness(108%);
+    filter: brightness(90%);
   }
 
   &:disabled {

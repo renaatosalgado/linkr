@@ -27,6 +27,7 @@ export default function PageHashtag() {
         setIsLoadingPosts(false)
         console.log(res)})
       .catch( () => { Error() });
+      //eslint-disable-next-line
     }, [hashtag]);
   
     function Error() {

@@ -152,15 +152,6 @@ textarea,
 select {
   font: inherit;
 }
-
-
-
-/*SPECIFIC FONTS*/
-
-/* font-family: 'Lato', sans-serif;
-font-family: 'Oswald', sans-serif;
-font-family: 'Passion One', cursive; */
-
 `;
 
 const Icons = styled.div`
@@ -194,10 +185,12 @@ const DeleteIcon = styled.div`
   }
 `;
 
-export {
-  Icons,
-  EditIcon,
-  DeleteIcon
-}
+/*SPECIFIC FONTS*/
+
+/* font-family: 'Lato', sans-serif;
+font-family: 'Oswald', sans-serif;
+font-family: 'Passion One', cursive; */
+
+export { Icons, EditIcon, DeleteIcon };
 
 export default Reset;

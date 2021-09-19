@@ -5,8 +5,8 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { IoIosHeart } from "react-icons/io";
 import { RiPencilFill } from "react-icons/ri";
 import UserContext from "../contexts/UserContext";
-import { useContext, useState } from "react";
-import { deleteDeletePost, getPostsList } from "../services/API";
+import { useContext, useRef, useState } from "react";
+import { deleteDeletePost, putEditPost } from "../services/API";
 import Avatar from "./Avatar";
 import { Link } from "react-router-dom";
 
@@ -57,6 +57,11 @@ const Icons = styled.div`
   top: 23px;
   right: 22px;
   display: ${(props) => (props.hide ? "none" : "inherit")};
+
+  @media (max-width: 635px) {
+    top: 10px;
+    right: 10px;
+  }
 `;
 
 const EditIcon = styled.div`
@@ -137,7 +142,6 @@ const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-
   background-color: rgba(255, 255, 255, 0.8);
   z-index: 1;
   display: ${(props) => (props.reallyDeleteHabit ? "inherit" : "none")};
@@ -163,6 +167,12 @@ const DeleteScreen = styled.div`
     font-size: 34px;
     color: #ffffff;
     margin-bottom: 40px;
+  }
+
+  @media (max-width: 635px) {
+    width: 100%;
+    left: 0;
+    border-radius: 0;
   }
 `;
 
@@ -218,8 +228,33 @@ const ConfirmBtn = styled.button`
   }
 `;
 
-const Post = ({ post, setPostsList }) => {
+const EditingInput = styled.input`
+  width: 100%;
+  border-radius: 7px;
+  font-size: 17px;
+  color: #4c4c4c;
+  line-height: 17px;
+  margin-bottom: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 9px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    opacity: 0.75;
+    background-color: #ffffff;
+    cursor: not-allowed;
+  }
+`;
+
+const Post = ({ post }) => {
   const [loading, setLoading] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [text, setText] = useState(post.text);
+  const [newText, setNewtext] = useState(text);
   const { user } = useContext(UserContext);
   const [liked] = useState(false);
 
@@ -231,14 +266,54 @@ const Post = ({ post, setPostsList }) => {
     },
   };
 
+  const inputRef = useRef();
+  console.log(inputRef.current);
+
+  function analyseKeys(event) {
+    if (event.keyCode === 27) {
+      editPost();
+    } else if (event.keyCode === 13) {
+      setLoading(true);
+      const body = {
+        text: newText,
+      };
+      putEditPost(post.id, body, config)
+        .then((res) => {
+          setText(res.data.post.text);
+          setEditing(false);
+          setLoading(false);
+        })
+        .catch(() => {
+          alert(
+            "Não foi possível salvar as alterações. Por favor, repita o procedimento."
+          );
+          setEditing(true);
+          setLoading(false);
+        });
+    }
+  }
+
+  function editPost() {
+    setTimeout(() => {
+      inputRef.current.focus();
+    }, 500);
+
+    if (editing) {
+      setEditing(false);
+      setNewtext(text);
+    } else {
+      setEditing(true);
+    }
+  }
+
   function deletePost(postId) {
     setLoading(true);
 
     deleteDeletePost(postId, config)
       .then(() => {
         setLoading(false);
-        getPostsList(config).then((res) => setPostsList(res.data.posts));
         setReallyDeleteHabit(false);
+        window.location.reload();
       })
       .catch(() => {
         setLoading(false);
@@ -246,7 +321,7 @@ const Post = ({ post, setPostsList }) => {
           alert(
             "Não foi possível excluir seu post! Por favor, repita o procedimento."
           );
-        }, 500)
+        }, 500);
         setReallyDeleteHabit(false);
       });
   }
@@ -276,7 +351,7 @@ const Post = ({ post, setPostsList }) => {
       </Overlay>
       <PostContainer>
         <Icons hide={post.user.id === user.user.id ? false : true}>
-          <EditIcon>
+          <EditIcon onClick={editPost}>
             <RiPencilFill />
           </EditIcon>
           <DeleteIcon onClick={() => setReallyDeleteHabit(true)}>
@@ -284,20 +359,36 @@ const Post = ({ post, setPostsList }) => {
           </DeleteIcon>
         </Icons>
         <LeftContainer>
-          <Avatar src={post.user.avatar} userId={post.user.id}/>
-          <LikeIcon >
-            {liked === false ? <IoIosHeartEmpty size="20px" color="#FFF" /> : <IoIosHeart size="20px" color="#AC0000" />}
+          <Avatar src={post.user.avatar} userId={post.user.id} />
+          <LikeIcon>
+            {liked === false ? (
+              <IoIosHeartEmpty size="20px" color="#FFF" />
+            ) : (
+              <IoIosHeart size="20px" color="#AC0000" />
+            )}
           </LikeIcon>
-          <HowManyLikes data-tip data-for='likes'>{post.likes.length === 1 ?
-            `${post.likes.length} like` :
-            `${post.likes.length} likes`}
+          <HowManyLikes data-tip data-for="likes">
+            {post.likes.length === 1
+              ? `${post.likes.length} like`
+              : `${post.likes.length} likes`}
           </HowManyLikes>
         </LeftContainer>
         <RightContainer>
           <Link to={`/user/${post.user.id}`}>
             <UserName>{post.user.username}</UserName>
           </Link>
-          <PostDescription>{post.text}</PostDescription>
+          {editing ? (
+            <EditingInput
+              ref={inputRef}
+              disabled={loading ? true : false}
+              onKeyDown={analyseKeys}
+              type="text"
+              value={newText}
+              onChange={(e) => setNewtext(e.target.value)}
+            ></EditingInput>
+          ) : (
+            <PostDescription>{text}</PostDescription>
+          )}
           <LinkPreview
             link={post.link}
             linkTitle={post.linkTitle}

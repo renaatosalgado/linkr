@@ -11,7 +11,7 @@ import PageMyLikes from "../Pages/PageMyLikes";
 import PageHashtag from "../Pages/PageHashtag";
 
 export default function App() {
-  const UserData = JSON.parse(localStorage.getItem('LinkrUserData'));
+  const UserData = JSON.parse(localStorage.getItem("LinkrUserData"));
   const [user, setUser] = useState(UserData);
 
   return (

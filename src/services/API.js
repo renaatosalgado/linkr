@@ -34,7 +34,7 @@ function deleteDeletePost(postId, config) {
 
 function getHashtagTrending(config) {
   const promisse = axios.get(`${BASE_URL}/hashtags/trending`, config);
-  return promisse; 
+  return promisse;
 }
 
 function getPostsSomeUser(id, config) {
@@ -43,7 +43,7 @@ function getPostsSomeUser(id, config) {
 
 function getPostsLiked(config) {
   return axios.get(`${BASE_URL}/posts/liked`, config);
-} 
+}
 
 function getHashtagPost(hashtag, config) {
   return axios.get(`${BASE_URL}/hashtags/${hashtag}/posts`, config);
@@ -59,5 +59,5 @@ export {
   getHashtagTrending,
   getPostsSomeUser,
   getPostsLiked,
-  getHashtagPost
+  getHashtagPost,
 };
