@@ -39,11 +39,15 @@ function getHashtagTrending(config) {
 
 function getPostsSomeUser(id, config) {
   return axios.get(`${BASE_URL}/users/${id}/posts`, config);
- }
+}
 
- function getPostsLiked(config) {
+function getPostsLiked(config) {
   return axios.get(`${BASE_URL}/posts/liked`, config);
 } 
+
+function getHashtagPost(hashtag, config) {
+  return axios.get(`${BASE_URL}/hashtags/${hashtag}/posts`, config);
+}
 
 export {
   postLogin,
@@ -54,5 +58,6 @@ export {
   deleteDeletePost,
   getHashtagTrending,
   getPostsSomeUser,
-  getPostsLiked
+  getPostsLiked,
+  getHashtagPost
 };

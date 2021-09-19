@@ -67,7 +67,7 @@ const TimelineContainer = styled.div`
  width: 100%;
  min-height: 100vh;
  background-color: #333333;
- padding-top: 125px;
+ padding-top: 150px;
  display: flex;
  justify-content: center;
  
