@@ -8,8 +8,6 @@ import Trending from "../components/Trending";
 import Posts from "../components/Posts";
 
 export default function PageSomeUser() {
-  //eslint-disable-next-line
-  const [liked] = useState(false);
   const [postsSomeUser, setPostsSomeUser] = useState(null);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
 
@@ -32,8 +30,7 @@ export default function PageSomeUser() {
       .catch((res) => {
         console.log("erro!");
       });
-    //eslint-disable-next-line
-  }, []);
+  }, [postsSomeUser]);
 
   return (
     <>

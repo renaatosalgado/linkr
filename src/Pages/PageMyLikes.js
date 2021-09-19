@@ -11,8 +11,7 @@ export default function PageMyLikes() {
 
   const [postsLikedList, setPostsLikedList] = useState([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
-  //eslint-disable-next-line
-  const [liked] = useState(false);
+ 
 
   const config = {
     headers: {
@@ -29,8 +28,7 @@ export default function PageMyLikes() {
       .catch(() => {
         console.log("erro!");
       });
-    //eslint-disable-next-line
-  }, []);
+  }, [postsLikedList]);
 
   return (
     <>

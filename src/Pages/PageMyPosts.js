@@ -32,8 +32,7 @@ export default function PageTimeline() {
           text: "Houve uma falha ao obter os posts, por favor atualize a página",
         });
       });
-    //eslint-disable-next-line
-  }, []);
+  }, [myPosts]);
 
   return (
     <>
