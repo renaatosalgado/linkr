@@ -8,6 +8,7 @@ import UserContext from "../contexts/UserContext";
 import Reset from "../styled-components/Reset";
 import PageSomeUser from "../Pages/PageSomeUser";
 import PageMyLikes from "../Pages/PageMyLikes";
+import PageHashtag from "../Pages/PageHashtag";
 
 export default function App() {
   const UserData = JSON.parse(localStorage.getItem('LinkrUserData'));
@@ -35,6 +36,9 @@ export default function App() {
           </Route>
           <Route path="/my-likes" exact>
             <PageMyLikes />
+          </Route>
+          <Route path="/hashtag/:hashtag">
+            <PageHashtag />
           </Route>
         </Switch>
       </BrowserRouter>
