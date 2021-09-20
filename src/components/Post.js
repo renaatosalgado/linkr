@@ -37,7 +37,13 @@ const LeftContainer = styled.div`
     font-family: 'Lato', sans-serif;
     opacity: 0.9 ;
     background-color: white;
-
+    max-width: 300px;
+    padding: 6px;
+    overflow-wrap: break-word;
+    @media (max-width: 635px) {
+      max-width: 60px;
+      text-align: center;
+    }
   }
 
   @media (max-width: 635px) {
@@ -103,9 +109,12 @@ const UserName = styled.p`
   font-size: 19px;
   color: #ffffff;
   padding-bottom: 7px;
+  max-width: 455px;
+  word-break: break-word;
 
   @media (max-width: 635px) {
     font-size: 17px;
+    max-width: 57vw;
   }
 `;
 
@@ -259,7 +268,7 @@ const EditingInput = styled.input`
   }
 `;
 
-const TextWithClickableHashTags = ({ renderHashtag, text }) => {
+const TextWithClickableHashTags = ({ renderHashtag, text}) => {
   
   let splittedText = text.split('#')
   splittedText = splittedText.map((string, index) => {
@@ -297,7 +306,7 @@ const TextWithClickableHashTags = ({ renderHashtag, text }) => {
   )
 }
 
-const Post = ({ post }) => {
+const Post = ({ post, postRender, id  }) => {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(post.text);
@@ -380,15 +389,25 @@ const Post = ({ post }) => {
   const isLiked = false !== likesState.map((like) => like.userId).includes(user.user.id);
 
   function like() {   
-    if (isLiked) {
+    if (id ===1) {
       postLikeDislike("dislike", post.id, config).then(resp => {
-          setLikesState(resp.data.post.likes)             
+          setLikesState(resp.data.post.likes)
+          postRender();             
       }).catch(err => {
           console.log(err)
       });
+    }    
+    if (isLiked) {
+        postLikeDislike("dislike", post.id, config).then(resp => {
+            setLikesState(resp.data.post.likes)
+            postRender();             
+        }).catch(err => {
+            console.log(err)
+        });
   } else {
       postLikeDislike("like", post.id, config).then(resp => {
-        setLikesState(resp.data.post.likes)         
+        setLikesState(resp.data.post.likes)    
+        postRender();     
       }).catch(err => {
           console.log("erro!")
       });
@@ -404,12 +423,12 @@ const Post = ({ post }) => {
         const OtherUsers = likesState.map((like, i) => i === indexOfUser ? null : like.username)
             .filter((username) => !!username);
         tooltip += `Você`;
-        if(likesState.length > 1){
-            tooltip += `, ${OtherUsers[0]}`;
+        if(likesState.length === 2){
+            tooltip += ` e ${OtherUsers[0]}`;
         }
-        if (likesState.length === 3) {
-          tooltip += ` e outra pessoa`
-        }
+        if(likesState.length > 2){
+          tooltip += `, ${likesState[1].username}`;
+      }
         
     }else{
         if(likesState.length > 0){
@@ -421,9 +440,9 @@ const Post = ({ post }) => {
         if(likesState.length > 2){
             tooltip += `, ${likesState[1].username}`;
         }
-        if (likesState.length === 3) {
-          tooltip += ` e outra pessoa`
-        }
+    }
+    if (likesState.length === 3) {
+      tooltip += ` e outra pessoa`
     }
     if(likesState.length > 3){
         tooltip += ` e outras ${likesState.length - 2} pessoas`;
@@ -467,7 +486,7 @@ const Post = ({ post }) => {
         <LeftContainer>
           <Avatar src={post.user.avatar} userId={post.user.id} />
           <LikeIcon onClick={like}>
-            {isLiked ? (
+            {id === 1 ? <IoIosHeart size="20px" color="#AC0000" /> : isLiked ? (
               <IoIosHeart size="20px" color="#AC0000" />
             ) : (
               <IoIosHeartEmpty size="20px" color="#FFF" />

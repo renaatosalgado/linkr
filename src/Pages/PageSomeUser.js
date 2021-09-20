@@ -83,10 +83,13 @@ const Title = styled.div`
   font-size: 43px;
   color: #ffffff;
   margin-bottom: 43px;
+  max-width: 595px;
+  word-break: break-word;
 
   @media (max-width: 635px) {
     font-size: 33px;
     margin-left: 17px;
+    max-width: 95.5vw;
     margin-bottom: 30px;
   }
 `;

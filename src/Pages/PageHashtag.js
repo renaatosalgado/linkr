@@ -20,15 +20,29 @@ export default function PageHashtag() {
         Authorization: `Bearer ${user.token}`,
       },
     };
-  
-    useEffect( () => {
+
+    function postRender() {
       getHashtagPost(hashtag, config)
       .then( (res) => {setHashtagPost(res.data.posts)
         setIsLoadingPosts(false)
         console.log(res)})
       .catch( () => { Error() });
-      //eslint-disable-next-line
-    }, [hashtag]);
+    }
+
+    useEffect(() => {
+      if (user) {
+        postRender()
+      }
+    }, [user, hashtag])
+    
+    // useEffect( () => {
+    //   getHashtagPost(hashtag, config)
+    //   .then( (res) => {setHashtagPost(res.data.posts)
+    //     setIsLoadingPosts(false)
+    //     console.log(res)})
+    //   .catch( () => { Error() });
+    //   //eslint-disable-next-line
+    // }, [hashtag, hashtagPost]);
   
     function Error() {
       Swal.fire({
@@ -53,6 +67,7 @@ export default function PageHashtag() {
                         <Post
                             key={post.id}
                             post={post}
+                            postRender={postRender}
                         />
                     ))
         );
@@ -102,11 +117,14 @@ const Title = styled.div`
   font-size: 43px;
   color: #ffffff;
   margin-bottom: 50px;
+  max-width: 595px;
+  word-break: break-word;
 
   @media (max-width: 635px) {
     font-size: 33px;
     margin-left: 17px;
     margin-bottom: 30px;
+    max-width: 95.5vw;
   }
 `;
 

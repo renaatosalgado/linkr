@@ -60,13 +60,11 @@ const HeaderContainer = styled.div`
   top: 0;
   left: 0;
   z-index: 1;
-
   a {
     font-family: "Passion One", cursive;
     font-weight: bold;
     font-size: 49px;
   }
-
   img {
     width: 53px;
     height: 53px;
@@ -75,16 +73,13 @@ const HeaderContainer = styled.div`
     right: 17px;
     border-radius: 50%;
   }
-
   img:hover {
     cursor: pointer;
   }
-
   p:hover {
     color: #1877f2;
     cursor: pointer;
   }
-
   @media (max-width: 635px) {
     p {
       font-size: 45px;
@@ -98,7 +93,6 @@ const ChevronIcon = styled(FaChevronDown)`
   right: 86.31px;
   top: 32.38px;
   transform: ${({ transfrom }) => transfrom};
-
   &:hover {
     color: #1877f2;
     cursor: pointer;
@@ -117,7 +111,6 @@ const DivQuickAccess = styled.div`
   top: 72px;
   right: 0;
   display: ${({ display }) => display};
-
   h3,
   a {
     font-size: 17px;
@@ -126,7 +119,6 @@ const DivQuickAccess = styled.div`
     margin-top: 12px;
     font-family: "Lato", sans-serif;
   }
-
   h3:hover,
   a:hover {
     cursor: pointer;
