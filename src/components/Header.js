@@ -33,7 +33,7 @@ export default function Header() {
 
   return (
     <HeaderContainer ref={ref}>
-      <Link to="/">
+      <Link to="/timeline">
         <p>linkr</p>
       </Link>
       <img

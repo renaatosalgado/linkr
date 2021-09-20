@@ -33,6 +33,7 @@ export default function PageHashtag() {
       if (user) {
         postRender()
       }
+      //eslint-disable-next-line
     }, [user, hashtag])
     
     // useEffect( () => {
@@ -55,7 +56,7 @@ export default function PageHashtag() {
     const CenteredLoader = () => {
         return (
             <CenteredContainer>
-                <Loader type="ThreeDots" color="#151515" height={70} width={70}/>
+                <Loader type="ThreeDots" color="#ffffff" height={100} width={100}/>
             </CenteredContainer>
         )
     }  

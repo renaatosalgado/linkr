@@ -14,7 +14,7 @@ export default function PageTimeline() {
   const [link, setLink] = useState("");
   const [text, setText] = useState("");
   const [postsList, setPostsList] = useState([]);
-  const history = useHistory()
+  const history = useHistory();
 
   const { user } = useContext(UserContext);
 
@@ -54,10 +54,7 @@ export default function PageTimeline() {
         setLoading(false);
         setText("");
         setLink("");
-        getPostsList(config).then((res) => {
-          setPostsList(res.data.posts);
-          history.push('')
-        });
+        history.push("/timeline");
       })
       .catch(() => {
         alert("Houve um erro ao publicar seu link. Repita o procedimento.");

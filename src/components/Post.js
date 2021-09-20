@@ -6,7 +6,11 @@ import { IoIosHeart } from "react-icons/io";
 import { RiPencilFill } from "react-icons/ri";
 import UserContext from "../contexts/UserContext";
 import { useContext, useRef, useState } from "react";
-import { deleteDeletePost, putEditPost, postLikeDislike } from "../services/API";
+import {
+  deleteDeletePost,
+  putEditPost,
+  postLikeDislike,
+} from "../services/API";
 import Avatar from "./Avatar";
 import { Link } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
@@ -34,8 +38,8 @@ const LeftContainer = styled.div`
   .__react_component_tooltip.show {
     font-size: 13px;
     color: #505050;
-    font-family: 'Lato', sans-serif;
-    opacity: 0.9 ;
+    font-family: "Lato", sans-serif;
+    opacity: 0.9;
     background-color: white;
     max-width: 300px;
     padding: 6px;
@@ -268,45 +272,40 @@ const EditingInput = styled.input`
   }
 `;
 
-const TextWithClickableHashTags = ({ renderHashtag, text}) => {
-  
-  let splittedText = text.split('#')
+const TextWithClickableHashTags = ({ renderHashtag, text }) => {
+  let splittedText = text.split("#");
   splittedText = splittedText.map((string, index) => {
-    return (
-      index > 0 ? `#${string}` : string
-    )
-  })
-
+    return index > 0 ? `#${string}` : string;
+  });
 
   const mapHashTagToLink = (string, index) => {
-    if (string === '' || index === 0) return <>{string}</>
-    const firstSpaceIndex = string.indexOf(' ')
+    if (string === "" || index === 0) return <>{string}</>;
+    const firstSpaceIndex = string.indexOf(" ");
     if (firstSpaceIndex >= 0) {
-      let hastagText = string.slice(0, firstSpaceIndex)
+      let hastagText = string.slice(0, firstSpaceIndex);
       return (
         <>
-          <Link
-            key={index} to={`/hashtag/${hastagText.slice(1)}`}>
-              {hastagText.toLowerCase()}
+          <Link key={index} to={`/hashtag/${hastagText.slice(1)}`}>
+            {hastagText.toLowerCase()}
           </Link>
           {string.slice(firstSpaceIndex)}
         </>
-      )
+      );
     } else {
-      return <Link key={index} to={`/hashtag/${string.slice(1)}`}>{string}</Link>
+      return (
+        <Link key={index} to={`/hashtag/${string.slice(1)}`}>
+          {string}
+        </Link>
+      );
     }
-  }
+  };
 
   return (
-    <PostDescription>
-      {
-        splittedText.map(mapHashTagToLink)
-      }
-    </PostDescription>
-  )
-}
+    <PostDescription>{splittedText.map(mapHashTagToLink)}</PostDescription>
+  );
+};
 
-const Post = ({ post, postRender, id  }) => {
+const Post = ({ post, postRender, id }) => {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(post.text);
@@ -351,11 +350,11 @@ const Post = ({ post, postRender, id  }) => {
     if (editing) {
       setEditing(false);
       setNewtext(text);
+    } else {
+      setEditing(true);
       setTimeout(() => {
         inputRef.current.focus();
       }, 100);
-    } else {
-      setEditing(true);
     }
   }
 
@@ -378,78 +377,86 @@ const Post = ({ post, postRender, id  }) => {
         setReallyDeleteHabit(false);
       });
   }
-   
-  const [likesState, setLikesState] = useState(post.likes.map(like => {
-    return {
-      userId: like.userId,
-      username: like["user.username"]
-    }
-  })); 
 
-  const isLiked = false !== likesState.map((like) => like.userId).includes(user.user.id);
+  const [likesState, setLikesState] = useState(
+    post.likes.map((like) => {
+      return {
+        userId: like.userId,
+        username: like["user.username"],
+      };
+    })
+  );
 
-  function like() {   
-    if (id ===1) {
-      postLikeDislike("dislike", post.id, config).then(resp => {
-          setLikesState(resp.data.post.likes)
-          postRender();             
-      }).catch(err => {
-          console.log(err)
-      });
-    }    
-    if (isLiked) {
-        postLikeDislike("dislike", post.id, config).then(resp => {
-            setLikesState(resp.data.post.likes)
-            postRender();             
-        }).catch(err => {
-            console.log(err)
+  const isLiked =
+    false !== likesState.map((like) => like.userId).includes(user.user.id);
+
+  function like() {
+    if (id === 1) {
+      postLikeDislike("dislike", post.id, config)
+        .then((resp) => {
+          setLikesState(resp.data.post.likes);
+          postRender();
+        })
+        .catch((err) => {
+          console.log(err);
         });
-  } else {
-      postLikeDislike("like", post.id, config).then(resp => {
-        setLikesState(resp.data.post.likes)    
-        postRender();     
-      }).catch(err => {
-          console.log("erro!")
-      });
+    }
+    if (isLiked) {
+      postLikeDislike("dislike", post.id, config)
+        .then((resp) => {
+          setLikesState(resp.data.post.likes);
+          postRender();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      postLikeDislike("like", post.id, config)
+        .then((resp) => {
+          setLikesState(resp.data.post.likes);
+          postRender();
+        })
+        .catch((err) => {
+          console.log("erro!");
+        });
     }
   }
 
-  function createTooltip(){
+  function createTooltip() {
     let tooltip = "";
-    const likesIdsList = likesState.map(like => like.userId)
+    const likesIdsList = likesState.map((like) => like.userId);
     const isLikedOnServer = likesIdsList.includes(user.user.id);
-    if(isLikedOnServer){
-        const indexOfUser = likesIdsList.indexOf(user.user.id);
-        const OtherUsers = likesState.map((like, i) => i === indexOfUser ? null : like.username)
-            .filter((username) => !!username);
-        tooltip += `Você`;
-        if(likesState.length === 2){
-            tooltip += ` e ${OtherUsers[0]}`;
-        }
-        if(likesState.length > 2){
-          tooltip += `, ${likesState[1].username}`;
+    if (isLikedOnServer) {
+      const indexOfUser = likesIdsList.indexOf(user.user.id);
+      const OtherUsers = likesState
+        .map((like, i) => (i === indexOfUser ? null : like.username))
+        .filter((username) => !!username);
+      tooltip += `Você`;
+      if (likesState.length === 2) {
+        tooltip += ` e ${OtherUsers[0]}`;
       }
-        
-    }else{
-        if(likesState.length > 0){
-            tooltip += ` ${likesState[0].username}`;
-        }
-        if(likesState.length === 2){
-          tooltip += ` e ${likesState[1].username}`;
+      if (likesState.length > 2) {
+        tooltip += `, ${likesState[1].username}`;
       }
-        if(likesState.length > 2){
-            tooltip += `, ${likesState[1].username}`;
-        }
+    } else {
+      if (likesState.length > 0) {
+        tooltip += ` ${likesState[0].username}`;
+      }
+      if (likesState.length === 2) {
+        tooltip += ` e ${likesState[1].username}`;
+      }
+      if (likesState.length > 2) {
+        tooltip += `, ${likesState[1].username}`;
+      }
     }
     if (likesState.length === 3) {
-      tooltip += ` e outra pessoa`
+      tooltip += ` e outra pessoa`;
     }
-    if(likesState.length > 3){
-        tooltip += ` e outras ${likesState.length - 2} pessoas`;
+    if (likesState.length > 3) {
+      tooltip += ` e outras ${likesState.length - 2} pessoas`;
     }
     return tooltip;
   }
-
 
   return (
     <>
@@ -486,19 +493,26 @@ const Post = ({ post, postRender, id  }) => {
         <LeftContainer>
           <Avatar src={post.user.avatar} userId={post.user.id} />
           <LikeIcon onClick={like}>
-            {id === 1 ? <IoIosHeart size="20px" color="#AC0000" /> : isLiked ? (
+            {id === 1 ? (
+              <IoIosHeart size="20px" color="#AC0000" />
+            ) : isLiked ? (
               <IoIosHeart size="20px" color="#AC0000" />
             ) : (
               <IoIosHeartEmpty size="20px" color="#FFF" />
-            )}           
+            )}
           </LikeIcon>
           <HowManyLikes data-tip={createTooltip()}>
-            {post.likes.length === 0 ? "" : post.likes.length === 1 ?
-              `${post.likes.length} like`
+            {post.likes.length === 0
+              ? ""
+              : post.likes.length === 1
+              ? `${post.likes.length} like`
               : `${post.likes.length} likes`}
           </HowManyLikes>
-          <ReactTooltip place="bottom" type="light" effect="float" >
-          </ReactTooltip>
+          <ReactTooltip
+            place="bottom"
+            type="light"
+            effect="float"
+          ></ReactTooltip>
         </LeftContainer>
         <RightContainer>
           <Link to={`/user/${post.user.id}`}>
