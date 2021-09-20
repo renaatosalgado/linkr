@@ -320,7 +320,6 @@ const Post = ({ post, postRender, id }) => {
   };
 
   const inputRef = useRef();
-  console.log(inputRef.current);
 
   function analyseKeys(event) {
     if (event.keyCode === 27) {
