@@ -2,44 +2,51 @@ import React from "react";
 import styled from "styled-components";
 import { FaChevronDown } from "react-icons/fa";
 import UserContext from "../contexts/UserContext";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 
 export default function Header() {
   const [quickAccess, setQuickAccess] = useState(false);
   const { user } = useContext(UserContext);
+  let ref = useRef();
 
   const history = useHistory();
 
-  function showQuickAccess() {
-    if (quickAccess) {
-      setQuickAccess(false);
-    } else {
-      setQuickAccess(true);
-    }
-  }
 
   function logout() {
     localStorage.removeItem("LinkrUserData");
     history.push("/");
   }
 
+
+  useEffect(() => {
+    function OutsideClick(e) {
+        if (quickAccess && ref.current && !ref.current.contains(e.target)) {
+          setQuickAccess(false)
+        }
+    }
+    document.addEventListener("mousedown", OutsideClick)
+    return () => {
+        document.removeEventListener("mousedown", OutsideClick)
+    }
+}, [quickAccess])
+
   return (
-    <HeaderContainer>
+    <HeaderContainer ref={ref}>
       <Link to="/">
         <p>linkr</p>
       </Link>
       <img
-        onClick={showQuickAccess}
+        onClick={() => setQuickAccess(!quickAccess)}
         src={user.user.avatar}
         alt="foto de perfil"
       />
       <ChevronIcon
         transfrom={quickAccess ? "rotate(180deg)" : "rotate(0deg)"}
-        onClick={showQuickAccess}
+        onClick={() => setQuickAccess(!quickAccess)}
         size="25px"
       />
-      <DivQuickAccess display={quickAccess ? "inherit" : "none"}>
+      <DivQuickAccess ref={ref} display={quickAccess ? "inherit" : "none"}>
         <Link to="/my-posts">My posts</Link>
         <Link to="/my-likes">My likes</Link>
         <h3 onClick={logout}>Logout</h3>

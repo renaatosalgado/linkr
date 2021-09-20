@@ -13,23 +13,31 @@ export default function PageMyLikes() {
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
  
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  };
+  
 
-  useEffect(() => {
+  function postRender() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
     getPostsLiked(config)
       .then((res) => {
         setPostsLikedList(res.data.posts);
         setIsLoadingPosts(false);
+        console.log("foi")
       })
       .catch(() => {
         console.log("erro!");
       });
-  }, [postsLikedList]);
+  }
 
+  useEffect(() => {
+    if (user) {
+      postRender()
+    }
+  }, [user])
+ 
   return (
     <>
       <Header></Header>
@@ -42,6 +50,8 @@ export default function PageMyLikes() {
               isLoadingPosts={isLoadingPosts}
               setPostsList={setPostsLikedList}
               apiRequest={getPostsLiked}
+              postRender={postRender}
+              id={1}
             />
           </TimelineBody>
           <Trending />
