@@ -25,7 +25,6 @@ export default function PageMyLikes() {
       .then((res) => {
         setPostsLikedList(res.data.posts);
         setIsLoadingPosts(false);
-        console.log("foi")
       })
       .catch(() => {
         console.log("erro!");
@@ -36,6 +35,7 @@ export default function PageMyLikes() {
     if (user) {
       postRender()
     }
+    //eslint-disable-next-line
   }, [user])
  
   return (

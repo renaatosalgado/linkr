@@ -44,6 +44,7 @@ const LeftContainer = styled.div`
     max-width: 300px;
     padding: 6px;
     overflow-wrap: break-word;
+
     @media (max-width: 635px) {
       max-width: 60px;
       text-align: center;
@@ -138,6 +139,10 @@ const PostDescription = styled.p`
 
 const LikeIcon = styled.div`
   color: #ffffff;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   @media (max-width: 635px) {
     width: 15px;
@@ -309,10 +314,10 @@ const Post = ({ post, postRender, id }) => {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(post.text);
-  const [newText, setNewtext] = useState(text);
+  const [newText, setNewtext] = useState(post.text);
   const { user } = useContext(UserContext);
   const [reallyDeleteHabit, setReallyDeleteHabit] = useState(false);
-
+  
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -527,7 +532,7 @@ const Post = ({ post, postRender, id }) => {
               onChange={(e) => setNewtext(e.target.value)}
             ></EditingInput>
           ) : (
-            <TextWithClickableHashTags text={post.text} />
+            <TextWithClickableHashTags text={post.text} key={post.id}/>
           )}
           <LinkPreview
             link={post.link}

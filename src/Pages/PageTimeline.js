@@ -6,7 +6,7 @@ import UserContext from "../contexts/UserContext";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
 import Swal from "sweetalert2";
-import { useHistory } from "react-router";
+
 
 export default function PageTimeline() {
   const [loading, setLoading] = useState(false);
@@ -14,7 +14,6 @@ export default function PageTimeline() {
   const [link, setLink] = useState("");
   const [text, setText] = useState("");
   const [postsList, setPostsList] = useState([]);
-  const history = useHistory();
 
   const { user } = useContext(UserContext);
 
@@ -50,11 +49,11 @@ export default function PageTimeline() {
     };
 
     postCreatePost(body, config)
-      .then(() => {
+      .then((res) => {
         setLoading(false);
         setText("");
         setLink("");
-        history.push("/timeline");
+        window.location.reload();
       })
       .catch(() => {
         alert("Houve um erro ao publicar seu link. Repita o procedimento.");
