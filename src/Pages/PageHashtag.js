@@ -6,88 +6,90 @@ import { getHashtagPost } from "../services/API";
 import Swal from "sweetalert2";
 import UserContext from "../contexts/UserContext";
 import { useContext, useState, useEffect } from "react";
-import Post from "../components/Post"
-import NoPostFound from "../styled-components/NoPostsFound"
-import Loader from 'react-loader-spinner'
+import Post from "../components/Post";
+import NoPostFound from "../styled-components/NoPostsFound";
+import Loader from "react-loader-spinner";
 
 export default function PageHashtag() {
-    const { hashtag } = useParams();
-    const { user } = useContext(UserContext);
-    const [hashtagPost, setHashtagPost] = useState([]);
-    const [isLoadingPosts, setIsLoadingPosts] = useState(true)
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+  const { hashtag } = useParams();
+  const { user } = useContext(UserContext);
+  const [hashtagPost, setHashtagPost] = useState([]);
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
 
-    function postRender() {
-      getHashtagPost(hashtag, config)
-      .then( (res) => {setHashtagPost(res.data.posts)
-        setIsLoadingPosts(false)
-        console.log(res)})
-      .catch( () => { Error() });
-    }
-
-    useEffect(() => {
-      if (user) {
-        postRender()
-      }
-      //eslint-disable-next-line
-    }, [user, hashtag])
-    
-    // useEffect( () => {
-    //   getHashtagPost(hashtag, config)
-    //   .then( (res) => {setHashtagPost(res.data.posts)
-    //     setIsLoadingPosts(false)
-    //     console.log(res)})
-    //   .catch( () => { Error() });
-    //   //eslint-disable-next-line
-    // }, [hashtag, hashtagPost]);
-  
-    function Error() {
-      Swal.fire({
-        icon: "error",
-        title: "OOPS...",
-        text: "Parece que ocorreu um erro 🤔, tenta de novo aí 🙂",
+  function postRender() {
+    getHashtagPost(hashtag, config)
+      .then((res) => {
+        setHashtagPost(res.data.posts);
+        setIsLoadingPosts(false);
+        console.log(res);
+      })
+      .catch(() => {
+        Error();
       });
-    }
+  }
 
-    const CenteredLoader = () => {
-        return (
-            <CenteredContainer>
-                <Loader type="ThreeDots" color="#ffffff" height={100} width={100}/>
-            </CenteredContainer>
-        )
-    }  
-    const HashtagPost = () => { 
-        return (
-            isLoadingPosts ? <CenteredLoader /> : 
-                hashtagPost.length === 0 ? <NoPostFound>Nenhum post encontrado</NoPostFound> :
-                    hashtagPost.map(post => (
-                        <Post
-                            key={post.id}
-                            post={post}
-                            postRender={postRender}
-                        />
-                    ))
-        );
+  useEffect(() => {
+    if (user) {
+      postRender();
     }
+    //eslint-disable-next-line
+  }, [user, hashtag]);
 
+  // useEffect( () => {
+  //   getHashtagPost(hashtag, config)
+  //   .then( (res) => {setHashtagPost(res.data.posts)
+  //     setIsLoadingPosts(false)
+  //     console.log(res)})
+  //   .catch( () => { Error() });
+  //   //eslint-disable-next-line
+  // }, [hashtag, hashtagPost]);
+
+  function Error() {
+    Swal.fire({
+      icon: "error",
+      title: "OOPS...",
+      text: "Parece que ocorreu um erro 🤔, tenta de novo aí 🙂",
+    });
+  }
+
+  const CenteredLoader = () => {
     return (
-        <>
-          <Header/>
-          <TimelineContainer>
-            <TimelineBox>
-              <TimelineBody>
-                <Title>{`# ${hashtag}`}</Title>
-                <HashtagPost />
-              </TimelineBody>
-              <Trending />
-            </TimelineBox>
-          </TimelineContainer>
-        </>
+      <CenteredContainer>
+        <Loader type="ThreeDots" color="#ffffff" height={100} width={100} />
+      </CenteredContainer>
     );
+  };
+  const HashtagPost = () => {
+    return isLoadingPosts ? (
+      <CenteredLoader />
+    ) : hashtagPost.length === 0 ? (
+      <NoPostFound>Nenhum post encontrado</NoPostFound>
+    ) : (
+      hashtagPost.map((post) => (
+        <Post key={post.id} post={post} postRender={postRender} />
+      ))
+    );
+  };
+
+  return (
+    <>
+      <Header />
+      <TimelineContainer>
+        <TimelineBox>
+          <TimelineBody>
+            <Title>{`# ${hashtag}`}</Title>
+            <HashtagPost />
+          </TimelineBody>
+          <Trending />
+        </TimelineBox>
+      </TimelineContainer>
+    </>
+  );
 }
 
 const TimelineContainer = styled.div`
@@ -139,12 +141,12 @@ const TimelineBody = styled.div`
 `;
 
 const CenteredContainer = styled.div`
-    min-width: 610px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  min-width: 610px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    @media (max-width: 635px) {
-        min-width: 100%;
-    }
-`
+  @media (max-width: 635px) {
+    min-width: 100%;
+  }
+`;

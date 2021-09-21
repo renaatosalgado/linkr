@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import getYouTubeID from "get-youtube-id";
+import { useEffect, useState } from "react";
 
 const LinkPreviewContainer = styled.div`
   height: 155px;
@@ -30,7 +32,7 @@ const LinkTitle = styled.p`
 `;
 
 const LinkDescription = styled.p`
-  font-family: Lato;
+  font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 11px;
@@ -45,7 +47,7 @@ const LinkDescription = styled.p`
 `;
 
 const LinkAnchor = styled.p`
-  font-family: Lato;
+  font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 11px;
@@ -87,8 +89,60 @@ const LinkImg = styled.img`
   }
 `;
 
+const YoutubeContainer = styled.div`
+  background-color: #171717;
+
+  p {
+    color: #b7b7b7;
+    font-size: 17px;
+    line-height: 20.4px;
+    font-family: "Lato", sans-serif;
+    margin-top: 6px;
+    word-break: break-word;
+  }
+
+  @media (max-width: 635px) {
+    p {
+      font-size: 12px;
+    }
+  }
+`;
+
+const YoutubePlayer = styled.iframe`
+  width: 100%;
+  height: 281px;
+  margin-top: 5px;
+
+  @media (max-width: 635px) {
+    width: 100%;
+    height: 161px;
+    margin-top: 2px;
+  }
+`;
+
 const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
-  return (
+  const [youtubeId, setYoutubeId] = useState("");
+
+  useEffect(() => {
+    if (link.includes("youtube.com")) {
+      setYoutubeId(getYouTubeID(`${link}`));
+      console.log("link", link);
+    }
+    //eslint-disable-next-line
+  }, []);
+
+  return link.includes("youtube.com") ? (
+    <YoutubeContainer>
+      <YoutubePlayer
+        src={`https://www.youtube.com/embed/${youtubeId}`}
+        title={linkTitle}
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></YoutubePlayer>
+      <p>{link}</p>
+    </YoutubeContainer>
+  ) : (
     <LinkPreviewContainer onClick={() => window.open(link, "_blank")}>
       <LeftContainer>
         <LinkTitle>{linkTitle}</LinkTitle>
