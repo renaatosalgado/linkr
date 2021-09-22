@@ -4,10 +4,13 @@ import { Link } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import { getHashtagTrending } from "../services/API";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router";
 
 export default function Trending() {
   const { user } = useContext(UserContext);
   const [hashtags, setHashtags] = useState([]);
+  const [hashtagSearch, sethashtagSearch] = useState('');
+  const history = useHistory('');
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -33,6 +36,26 @@ export default function Trending() {
     });
   }
 
+  function HashtagSearch(event){
+    if(event.keyCode === 13 && hashtagSearch.length !== 0) {
+      history.push(`/hashtag/${hashtagSearch.toLowerCase()}`)
+      sethashtagSearch('');
+    }
+    if(hashtagSearch.includes(' ')){
+      Swal.fire({
+        icon: "error",
+        title: "OOPS...",
+        text: "Não pode ter espaçamento 🙂",
+      });
+    }
+    if(hashtagSearch.length === 0){
+      return;
+    }
+    if(event.keyCode === 8){
+      return;
+    }
+  }
+
   return (
     <TrendingContainer>
       <TrendingTitle>trending</TrendingTitle>
@@ -45,6 +68,16 @@ export default function Trending() {
           );
         })}
       </Hashtags>
+      <Search>
+        <input 
+          placeholder='type a hashtag'
+          type='text'
+          value={hashtagSearch}
+          onChange={e => sethashtagSearch(e.target.value)}
+          onKeyUp={HashtagSearch}
+        />
+        <p>#</p>
+      </Search>  
     </TrendingContainer>
   );
 }
@@ -52,7 +85,7 @@ export default function Trending() {
 const TrendingContainer = styled.div`
   width: 100%;
   min-width: 240px;
-  height: 340px;
+  height: 365px;
   background-color: #171717;
   border-radius: 16px;
   margin-top: 86px;
@@ -79,10 +112,46 @@ const Hashtags = styled.div`
   letter-spacing: 0.05em;
   color: #ffffff;
   line-height: 23px;
-  padding: 20px 16px;
+  padding: 20px 16px 10px 16px;
 
   p:hover {
     color: #1877f2;
     cursor: pointer;
   }
 `;
+const Search = styled.div `
+  position: relative;
+
+  p {
+    left: 5px;
+    color: #FFFFFF;
+    font-family: 'Lato';
+    font-size: 19px;
+    font-weight: bold;
+    position: absolute;
+    top: 8px;
+    left: 25px;
+  }
+
+  input {
+    width: 90%;
+    height: 35px;
+    margin: 0 15px;
+    padding-left: 30px;
+    padding-bottom: 4px;
+    background-color: #252525;
+    border-radius: 8px;
+    color: #FFFFFF;
+    outline: none;
+    font-family: 'Lato';
+    font-style: italic;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: 0.05em;
+
+    ::placeholder {
+      color: #575757;
+    }
+  }
+`
