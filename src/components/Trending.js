@@ -4,11 +4,15 @@ import { Link } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import { getHashtagTrending } from "../services/API";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router";
+import { within } from "@testing-library/react";
 
 export default function Trending() {
   const { user } = useContext(UserContext);
   const [hashtags, setHashtags] = useState([]);
   const [hashtagSearch, sethashtagSearch] = useState('');
+  const [search, setSeach] = useState(false);
+  const history = useHistory('');
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -36,10 +40,18 @@ export default function Trending() {
 
   function HashtagSearch(event) {
     if(event.keyCode === 13) {
-      console.log('ue');
+      setSeach(false);
+      history.push(`/hashtag/${hashtagSearch.toLowerCase()}`)
     }
-
-    
+    if(hashtagSearch.includes(' ')) {
+      alert('ue, não pode ter espaçamento');
+    }
+    if(hashtagSearch.length === null){
+      return;
+    } 
+    if(hashtagSearch === ''){
+      setSeach(false);
+    }
   }
 
   return (
@@ -61,6 +73,7 @@ export default function Trending() {
           value={hashtagSearch}
           onChange={e => sethashtagSearch(e.target.value)}
           onKeyUp={HashtagSearch}
+          disabled={search}
         />
         <p>#</p>
       </Search>  
