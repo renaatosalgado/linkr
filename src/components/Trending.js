@@ -5,13 +5,11 @@ import UserContext from "../contexts/UserContext";
 import { getHashtagTrending } from "../services/API";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router";
-import { within } from "@testing-library/react";
 
 export default function Trending() {
   const { user } = useContext(UserContext);
   const [hashtags, setHashtags] = useState([]);
   const [hashtagSearch, sethashtagSearch] = useState('');
-  const [search, setSeach] = useState(false);
   const history = useHistory('');
   const config = {
     headers: {
@@ -38,19 +36,23 @@ export default function Trending() {
     });
   }
 
-  function HashtagSearch(event) {
-    if(event.keyCode === 13) {
-      setSeach(false);
+  function HashtagSearch(event){
+    if(event.keyCode === 13 && hashtagSearch.length !== 0) {
       history.push(`/hashtag/${hashtagSearch.toLowerCase()}`)
+      sethashtagSearch('');
     }
-    if(hashtagSearch.includes(' ')) {
-      alert('ue, não pode ter espaçamento');
+    if(hashtagSearch.includes(' ')){
+      Swal.fire({
+        icon: "error",
+        title: "OOPS...",
+        text: "Não pode ter espaçamento 🙂",
+      });
     }
-    if(hashtagSearch.length === null){
+    if(hashtagSearch.length === 0){
       return;
-    } 
-    if(hashtagSearch === ''){
-      setSeach(false);
+    }
+    if(event.keyCode === 8){
+      return;
     }
   }
 
@@ -73,7 +75,6 @@ export default function Trending() {
           value={hashtagSearch}
           onChange={e => sethashtagSearch(e.target.value)}
           onKeyUp={HashtagSearch}
-          disabled={search}
         />
         <p>#</p>
       </Search>  
