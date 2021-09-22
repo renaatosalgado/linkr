@@ -20,15 +20,16 @@ import ReactTooltip from "react-tooltip";
 const PostContainer = styled.div`
   position: relative;
   width: 610px;
-  padding-bottom: 20px;
+  padding-bottom: ${(props) => (props.isReposted ? "0" : "16px")};
   background-color: #171717;
   border-radius: 16px;
-  margin-top: 29px;
+  margin-top: ${(props) => (props.isReposted ? "0" : "38px")};
   display: flex;
+
   @media (max-width: 635px) {
     width: 100%;
     border-radius: 0;
-    margin-top: 16px;
+    //margin-top: 16px;
   }
 `;
 
@@ -237,7 +238,7 @@ const CancelBtn = styled.button`
 
   &:hover {
     cursor: pointer;
-    border: 5px solid #1877f2;
+    filter: brightness(90%);
   }
 
   &:disabled {
@@ -259,7 +260,7 @@ const ConfirmBtn = styled.button`
 
   &:hover {
     cursor: pointer;
-    border: 5px solid #f5f5f5;
+    filter: brightness(90%);
   }
 
   &:disabled {
@@ -312,6 +313,40 @@ const RepostIcon = styled.div`
   }
 `;
 
+const RepostContainer = styled.div`
+  width: 610px;
+  height: 53px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  background-color: #1e1e1e;
+  position: relative;
+  top: 53px;
+  display: ${(props) => (props.isReposted ? "inherit" : "none")};
+
+  @media(max-width: 635px) {
+    width: 100%;
+  }
+`;
+
+const RepostHeader = styled.div`
+  color: #ffffff;
+  font-family: "Lato";
+  font-size: 11px;
+  line-height: 13.2px;
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+  padding-top: 8px;
+
+  p {
+    margin-left: 6px;
+  }
+
+  @media(max-width: 635px) {
+    padding-top: 8px;
+  }
+`;
+
 const TextWithClickableHashTags = ({ renderHashtag, text }) => {
   let splittedText = text.split("#");
   splittedText = splittedText.map((string, index) => {
@@ -361,6 +396,7 @@ const Post = ({ post, postRender, id }) => {
   };
 
   const inputRef = useRef();
+  
 
   function analyseKeys(event) {
     if (event.keyCode === 27) {
@@ -500,7 +536,7 @@ const Post = ({ post, postRender, id }) => {
 
   function sharePost(postId) {
     postRepost(postId, config).then((res) => {
-      console.log(res);
+      console.log(res.data.post.repostedBy.username);
       window.location.reload();
     });
   }
@@ -524,7 +560,7 @@ const Post = ({ post, postRender, id }) => {
             <ConfirmBtn
               disabled={loading ? true : false}
               onClick={() => {
-                deletePost(post.id)
+                deletePost(post.id);
                 setReallyDeletePost(false);
               }}
             >
@@ -548,7 +584,7 @@ const Post = ({ post, postRender, id }) => {
             <ConfirmBtn
               disabled={loading ? true : false}
               onClick={() => {
-                sharePost(post.id)
+                sharePost(post.id);
                 setReallyRepost(false);
               }}
             >
@@ -557,6 +593,14 @@ const Post = ({ post, postRender, id }) => {
           </OverlayButtons>
         </OverlayScreen>
       </RepostOverlay>
+
+      <RepostContainer isReposted={ post.repostedBy ? true : false}>
+          <RepostHeader>
+            <BiRepost size="25px"/>
+            <p>{`Re-posted by ${post.repostedBy ? (post.repostedBy.username === user.user.username ? "you" : post.repostedBy.username) : ""}`}</p>
+          </RepostHeader>
+      </RepostContainer>
+
       <PostContainer>
         <Icons hide={post.user.id === user.user.id ? false : true}>
           <EditIcon onClick={editPost}>
@@ -566,6 +610,7 @@ const Post = ({ post, postRender, id }) => {
             <FaTrash />
           </DeleteIcon>
         </Icons>
+
         <LeftContainer>
           <Avatar src={post.user.avatar} userId={post.user.id} />
           <LikeIcon onClick={like}>
@@ -589,9 +634,7 @@ const Post = ({ post, postRender, id }) => {
             type="light"
             effect="float"
           ></ReactTooltip>
-          <RepostIcon onClick={() => {
-            setReallyRepost(true) 
-            console.log('cliquei no repost', reallyRepost)}}>
+          <RepostIcon onClick={() => setReallyRepost(true)}>
             <BiRepost size="25px" />
             {post.repostCount === 0
               ? "re-post"
