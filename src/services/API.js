@@ -53,6 +53,11 @@ function postLikeDislike(type, id, config) {
   return axios.post(`${BASE_URL}/posts/${id}/${type}`,{}, config);
 }
 
+function postRepost(postId, config) {
+  const promise = axios.post(`${BASE_URL}/posts/${postId}/share`, "", config);
+  return promise;
+}
+
 export {
   postLogin,
   postSignUp,
@@ -64,5 +69,6 @@ export {
   getPostsSomeUser,
   getPostsLiked,
   getHashtagPost,
-  postLikeDislike
+  postLikeDislike,
+  postRepost
 };

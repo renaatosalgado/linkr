@@ -4,6 +4,7 @@ import { FaTrash } from "react-icons/fa";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoIosHeart } from "react-icons/io";
 import { RiPencilFill } from "react-icons/ri";
+import { BiRepost } from "react-icons/bi";
 import UserContext from "../contexts/UserContext";
 import { useContext, useRef, useState } from "react";
 import {
@@ -277,6 +278,22 @@ const EditingInput = styled.input`
   }
 `;
 
+const RepostIcon = styled.div`
+  color: #ffffff;
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11px;
+  font-family: 'Lato';
+  line-height: 13px;
+
+  &:hover {
+    cursor: pointer;
+    color: #1877f2;
+  }
+`
+
 const TextWithClickableHashTags = ({ renderHashtag, text }) => {
   let splittedText = text.split("#");
   splittedText = splittedText.map((string, index) => {
@@ -317,7 +334,7 @@ const Post = ({ post, postRender, id }) => {
   const [newText, setNewtext] = useState(post.text);
   const { user } = useContext(UserContext);
   const [reallyDeleteHabit, setReallyDeleteHabit] = useState(false);
-  
+
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -462,6 +479,10 @@ const Post = ({ post, postRender, id }) => {
     return tooltip;
   }
 
+  function sharePost() {
+    alert('repostou!')
+  }
+
   return (
     <>
       <Overlay reallyDeleteHabit={reallyDeleteHabit}>
@@ -517,6 +538,12 @@ const Post = ({ post, postRender, id }) => {
             type="light"
             effect="float"
           ></ReactTooltip>
+          <RepostIcon onClick={() => sharePost(post.id)}>
+              <BiRepost size="25px"/>
+              {
+                `0 re-posts`
+              }
+          </RepostIcon>
         </LeftContainer>
         <RightContainer>
           <Link to={`/user/${post.user.id}`}>
@@ -532,7 +559,7 @@ const Post = ({ post, postRender, id }) => {
               onChange={(e) => setNewtext(e.target.value)}
             ></EditingInput>
           ) : (
-            <TextWithClickableHashTags text={post.text} key={post.id}/>
+            <TextWithClickableHashTags text={post.text} key={post.id} />
           )}
           <LinkPreview
             link={post.link}
