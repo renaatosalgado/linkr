@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 export default function Trending() {
   const { user } = useContext(UserContext);
   const [hashtags, setHashtags] = useState([]);
+  const [hashtagSearch, sethashtagSearch] = useState('');
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -33,6 +34,14 @@ export default function Trending() {
     });
   }
 
+  function HashtagSearch(event) {
+    if(event.keyCode === 13) {
+      console.log('ue');
+    }
+
+    
+  }
+
   return (
     <TrendingContainer>
       <TrendingTitle>trending</TrendingTitle>
@@ -48,6 +57,10 @@ export default function Trending() {
       <Search>
         <input 
           placeholder='type a hashtag'
+          type='text'
+          value={hashtagSearch}
+          onChange={e => sethashtagSearch(e.target.value)}
+          onKeyUp={HashtagSearch}
         />
         <p>#</p>
       </Search>  
