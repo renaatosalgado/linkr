@@ -126,7 +126,6 @@ const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
   useEffect(() => {
     if (link.includes("youtube.com")) {
       setYoutubeId(getYouTubeID(`${link}`));
-      console.log("link", link);
     }
     //eslint-disable-next-line
   }, []);

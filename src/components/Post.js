@@ -11,6 +11,7 @@ import {
   deleteDeletePost,
   putEditPost,
   postLikeDislike,
+  postRepost,
 } from "../services/API";
 import Avatar from "./Avatar";
 import { Link } from "react-router-dom";
@@ -164,7 +165,7 @@ const HowManyLikes = styled.p`
   }
 `;
 
-const Overlay = styled.div`
+const DeleteOverlay = styled.div`
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -172,10 +173,21 @@ const Overlay = styled.div`
   left: 0;
   background-color: rgba(255, 255, 255, 0.8);
   z-index: 1;
-  display: ${(props) => (props.reallyDeleteHabit ? "inherit" : "none")};
+  display: ${(props) => (props.reallyDeletePost ? "inherit" : "none")};
 `;
 
-const DeleteScreen = styled.div`
+const RepostOverlay = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 2;
+  display: ${(props) => (props.reallyRepost ? "inherit" : "none")};
+`;
+
+const OverlayScreen = styled.div`
   position: relative;
   top: calc((100vh - 262px) / 2);
   left: calc((100vw - 597px) / 2);
@@ -247,7 +259,7 @@ const ConfirmBtn = styled.button`
 
   &:hover {
     cursor: pointer;
-    border: 5px solid crimson;
+    border: 5px solid #f5f5f5;
   }
 
   &:disabled {
@@ -280,19 +292,25 @@ const EditingInput = styled.input`
 
 const RepostIcon = styled.div`
   color: #ffffff;
-  margin-top: 22px;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-size: 11px;
-  font-family: 'Lato';
+  font-family: "Lato";
   line-height: 13px;
+  text-align: center;
 
   &:hover {
     cursor: pointer;
     color: #1877f2;
   }
-`
+
+  @media (max-width: 635px) {
+    font-size: 9px;
+    line-height: 11px;
+  }
+`;
 
 const TextWithClickableHashTags = ({ renderHashtag, text }) => {
   let splittedText = text.split("#");
@@ -333,7 +351,8 @@ const Post = ({ post, postRender, id }) => {
   const [text, setText] = useState(post.text);
   const [newText, setNewtext] = useState(post.text);
   const { user } = useContext(UserContext);
-  const [reallyDeleteHabit, setReallyDeleteHabit] = useState(false);
+  const [reallyDeletePost, setReallyDeletePost] = useState(false);
+  const [reallyRepost, setReallyRepost] = useState(false);
 
   const config = {
     headers: {
@@ -359,7 +378,7 @@ const Post = ({ post, postRender, id }) => {
         })
         .catch(() => {
           alert(
-            "Não foi possível salvar as alterações. Por favor, repita o procedimento."
+            "It was not possible to save your changes. Please, repeat the procedure."
           );
           setEditing(true);
           setLoading(false);
@@ -385,17 +404,17 @@ const Post = ({ post, postRender, id }) => {
     deleteDeletePost(postId, config)
       .then(() => {
         setLoading(false);
-        setReallyDeleteHabit(false);
+        setReallyDeletePost(false);
         window.location.reload();
       })
       .catch(() => {
         setLoading(false);
         setTimeout(() => {
           alert(
-            "Não foi possível excluir seu post! Por favor, repita o procedimento."
+            "It was not possible to delete you post! Please, repeat the procedure."
           );
         }, 500);
-        setReallyDeleteHabit(false);
+        setReallyDeletePost(false);
       });
   }
 
@@ -479,39 +498,71 @@ const Post = ({ post, postRender, id }) => {
     return tooltip;
   }
 
-  function sharePost() {
-    alert('repostou!')
+  function sharePost(postId) {
+    postRepost(postId, config).then((res) => {
+      console.log(res);
+      window.location.reload();
+    });
   }
 
   return (
     <>
-      <Overlay reallyDeleteHabit={reallyDeleteHabit}>
-        <DeleteScreen>
+      <DeleteOverlay reallyDeletePost={reallyDeletePost}>
+        <OverlayScreen>
           <p>
-            Tem certeza que deseja <br /> excluir essa publicação?
+            Are you sure about <br /> deleting this post?
           </p>
           <OverlayButtons>
             <CancelBtn
               disabled={loading ? true : false}
-              onClick={() => setReallyDeleteHabit(false)}
+              onClick={() => {
+                setReallyDeletePost(false);
+              }}
             >
-              Não, voltar
+              No, cancel
             </CancelBtn>
             <ConfirmBtn
               disabled={loading ? true : false}
-              onClick={() => deletePost(post.id)}
+              onClick={() => {
+                deletePost(post.id)
+                setReallyDeletePost(false);
+              }}
             >
-              {loading ? "Excluindo..." : "Sim, excluir"}
+              {loading ? "Deleting..." : "Yes, delete!"}
             </ConfirmBtn>
           </OverlayButtons>
-        </DeleteScreen>
-      </Overlay>
+        </OverlayScreen>
+      </DeleteOverlay>
+      <RepostOverlay reallyRepost={reallyRepost}>
+        <OverlayScreen>
+          <p>
+            Do you want to re-post <br /> this link?
+          </p>
+          <OverlayButtons>
+            <CancelBtn
+              disabled={loading ? true : false}
+              onClick={() => setReallyRepost(false)}
+            >
+              No, cancel
+            </CancelBtn>
+            <ConfirmBtn
+              disabled={loading ? true : false}
+              onClick={() => {
+                sharePost(post.id)
+                setReallyRepost(false);
+              }}
+            >
+              {loading ? "Sharing..." : "Yes, share!"}
+            </ConfirmBtn>
+          </OverlayButtons>
+        </OverlayScreen>
+      </RepostOverlay>
       <PostContainer>
         <Icons hide={post.user.id === user.user.id ? false : true}>
           <EditIcon onClick={editPost}>
             <RiPencilFill />
           </EditIcon>
-          <DeleteIcon onClick={() => setReallyDeleteHabit(true)}>
+          <DeleteIcon onClick={() => setReallyDeletePost(true)}>
             <FaTrash />
           </DeleteIcon>
         </Icons>
@@ -538,11 +589,15 @@ const Post = ({ post, postRender, id }) => {
             type="light"
             effect="float"
           ></ReactTooltip>
-          <RepostIcon onClick={() => sharePost(post.id)}>
-              <BiRepost size="25px"/>
-              {
-                `0 re-posts`
-              }
+          <RepostIcon onClick={() => {
+            setReallyRepost(true) 
+            console.log('cliquei no repost', reallyRepost)}}>
+            <BiRepost size="25px" />
+            {post.repostCount === 0
+              ? "re-post"
+              : post.repostCount === 1
+              ? `${post.repostCount} re-post`
+              : `${post.repostCount} re-posts`}
           </RepostIcon>
         </LeftContainer>
         <RightContainer>

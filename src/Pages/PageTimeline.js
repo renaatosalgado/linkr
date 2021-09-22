@@ -28,6 +28,7 @@ export default function PageTimeline() {
       .then((res) => {
         setPostsList(res.data.posts);
         setIsLoadingPosts(false);
+        //console.log('listando', res.data.posts)
       })
       .catch(() => {
         Swal.fire({
@@ -54,9 +55,10 @@ export default function PageTimeline() {
         setText("");
         setLink("");
         window.location.reload();
+        
       })
       .catch(() => {
-        alert("Houve um erro ao publicar seu link. Repita o procedimento.");
+        alert("There was an error while posting your link. Repeat the procedure.");
         setLoading(false);
       });
   }
@@ -73,7 +75,7 @@ export default function PageTimeline() {
                 <ProfilePic src={user.user.avatar} alt="" />
               </CreatePostImg>
               <Form onSubmit={publishPost}>
-                <p>O que você tem pra favoritar hoje?</p>
+                <p>What do you have to share today?</p>
                 <Link
                   type="url"
                   placeholder="http://"
@@ -87,12 +89,11 @@ export default function PageTimeline() {
                   disabled={loading ? true : false}
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  placeholder="Muito irado esse link falando de
-                  #javascript"
+                  placeholder="Very cool this link talking about #javascript"
                 ></Description>
                 <Buttons>
                   <Publish type={"submit"} disabled={loading ? true : false}>
-                    {loading ? "Publicando..." : "Publicar"}
+                    {loading ? "Publishing..." : "Publish"}
                   </Publish>
                 </Buttons>
               </Form>
