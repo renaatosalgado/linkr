@@ -323,7 +323,7 @@ const RepostContainer = styled.div`
   top: 53px;
   display: ${(props) => (props.isReposted ? "inherit" : "none")};
 
-  @media(max-width: 635px) {
+  @media (max-width: 635px) {
     width: 100%;
   }
 `;
@@ -340,9 +340,11 @@ const RepostHeader = styled.div`
 
   p {
     margin-left: 6px;
+    word-break: break-all;
+    font-weight: bold;
   }
 
-  @media(max-width: 635px) {
+  @media (max-width: 635px) {
     padding-top: 8px;
   }
 `;
@@ -396,7 +398,6 @@ const Post = ({ post, postRender, id }) => {
   };
 
   const inputRef = useRef();
-  
 
   function analyseKeys(event) {
     if (event.keyCode === 27) {
@@ -594,11 +595,17 @@ const Post = ({ post, postRender, id }) => {
         </OverlayScreen>
       </RepostOverlay>
 
-      <RepostContainer isReposted={ post.repostedBy ? true : false}>
-          <RepostHeader>
-            <BiRepost size="25px"/>
-            <p>{`Re-posted by ${post.repostedBy ? (post.repostedBy.username === user.user.username ? "you" : post.repostedBy.username) : ""}`}</p>
-          </RepostHeader>
+      <RepostContainer isReposted={post.repostedBy ? true : false}>
+        <RepostHeader>
+          <BiRepost size="25px" />
+          <p>{`Re-posted by ${
+            post.repostedBy
+              ? post.repostedBy.username === user.user.username
+                ? "you"
+                : post.repostedBy.username
+              : ""
+          }`}</p>
+        </RepostHeader>
       </RepostContainer>
 
       <PostContainer>
