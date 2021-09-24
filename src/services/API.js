@@ -65,6 +65,10 @@ function getUsersThatIFollow(config) {
   return axios.get(`${BASE_URL}/users/follows`, config)
 }
 
+function getPostsFromUsersThatIFollow(config) {
+  return axios.get(`${BASE_URL}/following/posts`, config)
+}
+
 export {
   postLogin,
   postSignUp,
@@ -79,5 +83,6 @@ export {
   postLikeDislike,
   followUser,
   unfollowUser,
-  getUsersThatIFollow
+  getUsersThatIFollow,
+  getPostsFromUsersThatIFollow
 };

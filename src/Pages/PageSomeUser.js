@@ -93,7 +93,7 @@ const TimelineContainer = styled.div`
 const TimelineBox = styled.div`
   display: flex;
   padding-bottom: 30px;
-  margin: 0 auto 0 110px;
+  margin: 0 auto;
 
   @media (max-width: 635px) {
     width: 100%;
