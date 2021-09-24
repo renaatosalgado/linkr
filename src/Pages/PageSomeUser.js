@@ -32,6 +32,7 @@ export default function PageSomeUser() {
       .catch((res) => {
         console.log("erro!");
       });
+      //eslint-disable-next-line
   }, [postsSomeUser]);
 
 

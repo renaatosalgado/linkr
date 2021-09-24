@@ -69,6 +69,11 @@ function getPostsFromUsersThatIFollow(config) {
   return axios.get(`${BASE_URL}/following/posts`, config)
 }
 
+function postRepost(postId, config) {
+  const promise = axios.post(`${BASE_URL}/posts/${postId}/share`, "", config);
+  return promise;
+}
+
 export {
   postLogin,
   postSignUp,
@@ -84,5 +89,6 @@ export {
   followUser,
   unfollowUser,
   getUsersThatIFollow,
-  getPostsFromUsersThatIFollow
+  getPostsFromUsersThatIFollow,
+  postRepost
 };
