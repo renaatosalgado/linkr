@@ -1,9 +1,8 @@
 import styled from 'styled-components'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import Loader from 'react-loader-spinner'
 import { followUser, unfollowUser, getUsersThatIFollow } from '../services/API'
 import UserContext from "../contexts/UserContext";
-import { useEffect } from 'react/cjs/react.development';
 import { useParams } from "react-router-dom";
 import Swal from 'sweetalert2';
 
