@@ -11,9 +11,17 @@ import { DebounceInput } from "react-debounce-input";
 export default function Header() {
   const [quickAccess, setQuickAccess] = useState(false);
   const { user } = useContext(UserContext);
+  const [searchName, setSearchName] = useState("");
+  const [foundUser, serFoundUser] = useState([]);
   let ref = useRef();
 
   const history = useHistory();
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
 
   function logout() {
     localStorage.removeItem("LinkrUserData");
@@ -33,7 +41,7 @@ export default function Header() {
   }, [quickAccess]);
 
   const searchUser = () => {
-    getSearchUser();
+    getSearchUser(searchName, config).then((res) => console.log(res));
   };
 
   return (
@@ -43,10 +51,38 @@ export default function Header() {
       </Link>
 
       <SearchContainer>
-        <SearchInput placeholder="Search for people and friends"></SearchInput>
-        <SearchIcon>
+        <DebounceInput
+          minLength={3}
+          debounceTimeout={300}
+          onChange={(e) => setSearchName(e.target.value)}
+          value={searchName}
+          element={SearchInput}
+          placeholder="Search for people and friends"
+          required
+        />
+        <SearchIcon onClick={searchUser}>
           <AiOutlineSearch size="25px" />
         </SearchIcon>
+        <FoundUsers>
+          <SingleUser>
+            <SingleUserAvatar>
+              <img src={user.user.avatar} alt="profile" />
+            </SingleUserAvatar>
+            <p>Testando um usuário 1</p>
+          </SingleUser>
+          <SingleUser>
+            <SingleUserAvatar>
+              <img src={user.user.avatar} alt="profile" />
+            </SingleUserAvatar>
+            <p>Testando um usuário 2</p>
+          </SingleUser>
+          <SingleUser>
+            <SingleUserAvatar>
+              <img src={user.user.avatar} alt="profile" />
+            </SingleUserAvatar>
+            <p>Testando um usuário 3</p>
+          </SingleUser>
+        </FoundUsers>
       </SearchContainer>
 
       <img
@@ -157,6 +193,9 @@ const DivQuickAccess = styled.div`
 const SearchContainer = styled.div`
   position: relative;
   margin: 0 auto;
+  font-family: "Lato";
+  font-size: 19px;
+  line-height: 22.8px;
 `;
 
 const SearchInput = styled.input`
@@ -164,6 +203,18 @@ const SearchInput = styled.input`
   min-width: 563px;
   height: 45px;
   border-radius: 8px;
+  padding-left: 17px;
+  z-index: 3;
+
+  &::placeholder {
+    font-size: 19px;
+    line-height: 22.8px;
+    color: #c6c6c6;
+  }
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const SearchIcon = styled.div`
@@ -175,5 +226,42 @@ const SearchIcon = styled.div`
   &:hover {
     cursor: pointer;
     color: #1877f2;
+  }
+`;
+
+const FoundUsers = styled.div`
+  width: 563px;
+  background-color: #e7e7e7;
+  border-radius: 8px;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  z-index: 1;
+  //display: none;
+`;
+
+const SingleUser = styled.div`
+  position: relative;
+  height: 45px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  color: #515151;
+
+  p {
+    margin-left: 30px;
+  }
+`;
+
+const SingleUserAvatar = styled.div`
+  width: 39px;
+  height: 39px;
+  img {
+    width: 39px;
+    height: 39px;
+    border-radius: 50%;
+    //position: absolute;
+    top: calc((45px - 39px) / 2);
+    left: 17px;
   }
 `;

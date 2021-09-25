@@ -75,7 +75,7 @@ function postRepost(postId, config) {
 }
 
 function getSearchUser(userName, config) {
-  const promise = axios.get(`${BASE_URL}/search?username=${userName}`, config);
+  const promise = axios.get(`${BASE_URL}/search`, {params: {username: userName}}, config);
   return promise;
 }
 
