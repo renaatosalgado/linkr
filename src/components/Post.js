@@ -163,7 +163,8 @@ const HowManyLikes = styled.p`
   font-weight: normal;
   font-size: 11px;
   color: #ffffff;
-
+  cursor: pointer;
+  
   @media (max-width: 635px) {
     font-size: 9px;
   }
