@@ -4,6 +4,9 @@ import { FaChevronDown } from "react-icons/fa";
 import UserContext from "../contexts/UserContext";
 import { useContext, useState, useRef, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
+import { getSearchUser } from "../services/API";
+import { AiOutlineSearch } from "react-icons/ai";
+import { DebounceInput } from "react-debounce-input";
 
 export default function Header() {
   const [quickAccess, setQuickAccess] = useState(false);
@@ -12,30 +15,40 @@ export default function Header() {
 
   const history = useHistory();
 
-
   function logout() {
     localStorage.removeItem("LinkrUserData");
     history.push("/");
   }
 
-
   useEffect(() => {
     function OutsideClick(e) {
-        if (quickAccess && ref.current && !ref.current.contains(e.target)) {
-          setQuickAccess(false)
-        }
+      if (quickAccess && ref.current && !ref.current.contains(e.target)) {
+        setQuickAccess(false);
+      }
     }
-    document.addEventListener("mousedown", OutsideClick)
+    document.addEventListener("mousedown", OutsideClick);
     return () => {
-        document.removeEventListener("mousedown", OutsideClick)
-    }
-}, [quickAccess])
+      document.removeEventListener("mousedown", OutsideClick);
+    };
+  }, [quickAccess]);
+
+  const searchUser = () => {
+    getSearchUser();
+  };
 
   return (
     <HeaderContainer ref={ref}>
       <Link to="/timeline">
         <p>linkr</p>
       </Link>
+
+      <SearchContainer>
+        <SearchInput placeholder="Search for people and friends"></SearchInput>
+        <SearchIcon>
+          <AiOutlineSearch size="25px" />
+        </SearchIcon>
+      </SearchContainer>
+
       <img
         onClick={() => setQuickAccess(!quickAccess)}
         src={user.user.avatar}
@@ -136,6 +149,30 @@ const DivQuickAccess = styled.div`
 
   h3:hover,
   a:hover {
+    cursor: pointer;
+    color: #1877f2;
+  }
+`;
+
+const SearchContainer = styled.div`
+  position: relative;
+  margin: 0 auto;
+`;
+
+const SearchInput = styled.input`
+  background-color: #ffffff;
+  min-width: 563px;
+  height: 45px;
+  border-radius: 8px;
+`;
+
+const SearchIcon = styled.div`
+  color: #c6c6c6;
+  position: absolute;
+  top: 11px;
+  right: 15px;
+
+  &:hover {
     cursor: pointer;
     color: #1877f2;
   }

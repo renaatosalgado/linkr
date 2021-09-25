@@ -74,6 +74,11 @@ function postRepost(postId, config) {
   return promise;
 }
 
+function getSearchUser(userName, config) {
+  const promise = axios.get(`${BASE_URL}/search?username=${userName}`, config);
+  return promise;
+}
+
 export {
   postLogin,
   postSignUp,
@@ -90,5 +95,6 @@ export {
   unfollowUser,
   getUsersThatIFollow,
   getPostsFromUsersThatIFollow,
-  postRepost
+  postRepost,
+  getSearchUser
 };
