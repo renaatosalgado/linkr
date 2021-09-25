@@ -6,6 +6,7 @@ import UserContext from "../contexts/UserContext";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
 import Swal from "sweetalert2";
+import { IoLocationOutline } from "react-icons/io5"
 
 
 export default function PageTimeline() {
@@ -14,6 +15,8 @@ export default function PageTimeline() {
   const [link, setLink] = useState("");
   const [text, setText] = useState("");
   const [postsList, setPostsList] = useState([]);
+  const [locationState, setLocationState] = useState(false)
+  const [coordinates, setCoordinates] = useState("")
 
   const { user } = useContext(UserContext);
 
@@ -40,6 +43,22 @@ export default function PageTimeline() {
     //eslint-disable-next-line
   }, [postsList]);
 
+  function activeLocation () {
+    if ("geolocation" in navigator) {
+      setLocationState(!locationState)
+      navigator.geolocation.getCurrentPosition(function(position) {
+        setCoordinates(!locationState ? position.coords : "")
+        console.log(coordinates)
+      }, function(error){
+        console.log(error)
+      })      
+    }
+    else {
+      alert("Não foi possível encontrar a localização")
+      setLocationState(false)
+    }
+  }
+
   function publishPost(event) {
     event.preventDefault();
     setLoading(true);
@@ -47,6 +66,10 @@ export default function PageTimeline() {
     const body = {
       text,
       link,
+      geolocation: {
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude
+      }
     };
 
     postCreatePost(body, config)
@@ -54,6 +77,7 @@ export default function PageTimeline() {
         setLoading(false);
         setText("");
         setLink("");
+        setLocationState(!locationState)
         window.location.reload();
         
       })
@@ -92,6 +116,10 @@ export default function PageTimeline() {
                   placeholder="Very cool this link talking about #javascript"
                 ></Description>
                 <Buttons>
+                  <LocationButton locationState={locationState}  onClick={activeLocation}>
+                    <LocationICon />
+                    {locationState ? "Localização ativada" : "Localização desativada"}
+                  </LocationButton>
                   <Publish type={"submit"} disabled={loading ? true : false}>
                     {loading ? "Publishing..." : "Publish"}
                   </Publish>
@@ -102,6 +130,7 @@ export default function PageTimeline() {
               postsList={postsList}
               isLoadingPosts={isLoadingPosts}
               setPostsList={setPostsList}
+              coordinates={coordinates}
             />
           </TimelineBody>
           <Trending />
@@ -276,7 +305,7 @@ const Description = styled.textarea`
 
 const Buttons = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 
 const Publish = styled.button`
@@ -300,4 +329,22 @@ const Publish = styled.button`
   @media (max-width: 635px) {
     height: 22px;
   }
+`;
+
+const LocationButton = styled.div`
+  background-color: #ffffff;
+  color: ${({locationState}) => locationState ? "#238700" : "#949494"};
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  width: 160px;
+  display: flex;
+  align-items: center;
+  &:hover {
+    cursor: pointer;
+  } 
+`;
+
+const LocationICon = styled(IoLocationOutline)`
+  width: 18px;
+  height: 18px;
 `;

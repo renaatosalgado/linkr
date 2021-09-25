@@ -21,7 +21,7 @@ const CenteredLoader = () => {
     </CenteredContainer>
   );
 };
-const Posts = ({ postsList, isLoadingPosts, setPostsList, postRender, id }) => {
+const Posts = ({ postsList, isLoadingPosts, setPostsList, postRender, id, coordinates }) => {
   return isLoadingPosts ? (
     <CenteredLoader />
   ) : postsList.length === 0 ? (
@@ -34,6 +34,7 @@ const Posts = ({ postsList, isLoadingPosts, setPostsList, postRender, id }) => {
         setPostsList={setPostsList}
         postRender={postRender}
         id={id}
+        coordinates={coordinates}
       />
     ))
   );
