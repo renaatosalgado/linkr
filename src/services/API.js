@@ -53,6 +53,22 @@ function postLikeDislike(type, id, config) {
   return axios.post(`${BASE_URL}/posts/${id}/${type}`,{}, config);
 }
 
+function followUser(userId, config) {
+  return axios.post(`${BASE_URL}/users/${userId}/follow`, {}, config)
+}
+
+function unfollowUser(userId, config) {
+  return axios.post(`${BASE_URL}/users/${userId}/unfollow`, {}, config)
+}
+
+function getUsersThatIFollow(config) {
+  return axios.get(`${BASE_URL}/users/follows`, config)
+}
+
+function getPostsFromUsersThatIFollow(config) {
+  return axios.get(`${BASE_URL}/following/posts`, config)
+}
+
 function postRepost(postId, config) {
   const promise = axios.post(`${BASE_URL}/posts/${postId}/share`, "", config);
   return promise;
@@ -70,5 +86,9 @@ export {
   getPostsLiked,
   getHashtagPost,
   postLikeDislike,
+  followUser,
+  unfollowUser,
+  getUsersThatIFollow,
+  getPostsFromUsersThatIFollow,
   postRepost
 };

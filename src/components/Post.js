@@ -452,7 +452,7 @@ const TextWithClickableHashTags = ({ renderHashtag, text }) => {
       let hastagText = string.slice(0, firstSpaceIndex);
       return (
         <>
-          <Link key={index} to={`/hashtag/${hastagText.slice(1)}`}>
+          <Link key={`hashtag-${index}`} to={`/hashtag/${hastagText.slice(1)}`}>
             {hastagText.toLowerCase()}
           </Link>
           {string.slice(firstSpaceIndex)}

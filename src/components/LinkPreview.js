@@ -42,7 +42,7 @@ const LinkTitle = styled.p`
 
 const LinkDescription = styled.p`
   line-height: 1.5;
-  padding-bottom: 3px;
+  padding-bottom: 2px;
   font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: normal;

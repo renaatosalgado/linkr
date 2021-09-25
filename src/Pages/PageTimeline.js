@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import Header from "../components/Header";
-import { postCreatePost, getPostsList } from "../services/API";
+import { postCreatePost, getPostsFromUsersThatIFollow, getUsersThatIFollow } from "../services/API";
 import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../contexts/UserContext";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
 import Swal from "sweetalert2";
 import { IoLocationOutline } from "react-icons/io5"
-
+import YouDontFollowAnyone from '../styled-components/YouDontFollowAnyone'
 
 export default function PageTimeline() {
   const [loading, setLoading] = useState(false);
@@ -17,6 +17,7 @@ export default function PageTimeline() {
   const [postsList, setPostsList] = useState([]);
   const [locationState, setLocationState] = useState(false)
   const [coordinates, setCoordinates] = useState("")
+  const [isFollowingSomeone, setIsFollowingSomeone] = useState(true)
 
   const { user } = useContext(UserContext);
 
@@ -27,9 +28,13 @@ export default function PageTimeline() {
   };
 
   useEffect(() => {
-    getPostsList(config)
+    getUsersThatIFollow(config).then((res) => {
+      setIsFollowingSomeone(res.data.users.length > 0)
+    })
+    getPostsFromUsersThatIFollow(config)
       .then((res) => {
-        setPostsList(res.data.posts);
+        const postsToShow = [...res.data.posts]
+        setPostsList(postsToShow);
         setIsLoadingPosts(false);
         //console.log('listando', res.data.posts)
       })
@@ -125,12 +130,16 @@ export default function PageTimeline() {
                 </Buttons>
               </Form>
             </CreatePost>
-            <Posts
+            {
+              isFollowingSomeone ? <Posts
               postsList={postsList}
               isLoadingPosts={isLoadingPosts}
               setPostsList={setPostsList}
               coordinates={coordinates}
-            />
+              /> : <YouDontFollowAnyone>
+                {'Você não segue ninguém ainda, procure por perfis na busca'}
+              </YouDontFollowAnyone>
+            }
           </TimelineBody>
           <Trending />
         </TimelineBox>
