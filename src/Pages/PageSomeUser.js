@@ -2,12 +2,14 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import { useContext, useState, useEffect } from "react";
 import UserContext from "../contexts/UserContext";
-import { getPostsSomeUser } from "../services/API";
+import { getPostsSomeUser, getUsersThatIFollow } from "../services/API";
 import { useParams } from "react-router-dom";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
+import FollowButton from "../components/FollowButton"
 
 export default function PageSomeUser() {
+
   const [postsSomeUser, setPostsSomeUser] = useState(null);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
 
@@ -33,15 +35,20 @@ export default function PageSomeUser() {
       //eslint-disable-next-line
   }, [postsSomeUser]);
 
+
   return (
     <>
       <Header></Header>
       <TimelineContainer>
         <TimelineBox>
           <TimelineBody>
-            <Title>
-              {postsSomeUser ? `${postsSomeUser[0].user.username}'s posts` : ""}
-            </Title>
+              <TitleContainer>
+                <CircleImg src={postsSomeUser ? postsSomeUser[0].user.avatar : ''}/>
+                <Title>
+                {postsSomeUser ? `${postsSomeUser[0].user.username}'s posts` : ""}
+                </Title>
+              </TitleContainer>
+              
 
             <Posts
               postsList={postsSomeUser}
@@ -50,11 +57,26 @@ export default function PageSomeUser() {
             />
           </TimelineBody>
           <Trending />
+          <FollowButton shouldDisplay={user.user.id !== Number(id)}/>
         </TimelineBox>
       </TimelineContainer>
     </>
   );
 }
+
+const TitleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 35px;
+`
+
+const CircleImg = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+`
 
 const TimelineContainer = styled.div`
   width: 100%;
@@ -83,7 +105,6 @@ const Title = styled.div`
   font-family: "Oswald", sans-serif;
   font-size: 43px;
   color: #ffffff;
-  margin-bottom: 43px;
   max-width: 595px;
   word-break: break-word;
 
