@@ -368,9 +368,8 @@ const MapFrame = styled.div`
   height: 354px;
   background-color: #333333;
   border-radius: 50px;
-  margin-top: 30vh;
   position: relative;
-  margin: 26vh auto 0 auto;
+  margin: 23vh auto 0 auto;
   @media (max-width: 800px) {
     width: 100vw;
     border-radius: 0px;
@@ -384,21 +383,23 @@ const TitleMap = styled.div`
   margin: 0 auto;
   p {
     font-size: 38px;
-    display: flex;
     align-items: center;
     color: #FFFFFF;
     font-family: 'Oswald', sans-serif;
     height: 86px;
+    white-space: nowrap;
+    padding-top: 20px;
   }
   p:first-child {
-    max-width: 25vw;
+    max-width: 35vw;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   @media (max-width: 800px) {
     width: 89vw;
     p {
-      font-size: 25px;
+      font-size: 27px;
+      padding-top: 29px;
     }
   }
 `;
