@@ -16,6 +16,9 @@ import {
 import Avatar from "./Avatar";
 import { Link } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
+import { IoLocationSharp } from "react-icons/io5"
+import MapComponent from "./MapComponent";
+import { IoCloseOutline } from "react-icons/io5"
 
 const PostContainer = styled.div`
   position: relative;
@@ -160,7 +163,8 @@ const HowManyLikes = styled.p`
   font-weight: normal;
   font-size: 11px;
   color: #ffffff;
-
+  cursor: pointer;
+  
   @media (max-width: 635px) {
     font-size: 9px;
   }
@@ -349,6 +353,92 @@ const RepostHeader = styled.div`
   }
 `;
 
+const BackgroundMapScreen = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+  display: ${({map}) => map ? "inherit" : "none"};
+`;
+
+const MapFrame = styled.div`
+  width: 790px;
+  height: 354px;
+  background-color: #333333;
+  border-radius: 50px;
+  position: relative;
+  margin: 23vh auto 0 auto;
+  @media (max-width: 800px) {
+    width: 100vw;
+    border-radius: 0px;
+  }
+`;
+
+const TitleMap = styled.div`
+  display: flex;
+  white-space: nowrap;
+  width: 713px;
+  margin: 0 auto;
+  p {
+    font-size: 38px;
+    align-items: center;
+    color: #FFFFFF;
+    font-family: 'Oswald', sans-serif;
+    height: 86px;
+    white-space: nowrap;
+    padding-top: 20px;
+  }
+  p:first-child {
+    max-width: 35vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (max-width: 800px) {
+    width: 89vw;
+    p {
+      font-size: 27px;
+      padding-top: 29px;
+    }
+  }
+`;
+
+const MapBox = styled.div`
+  width: 713px;
+  height: 240px;
+  margin: 0 auto;
+  @media (max-width: 800px) {
+    width: 89vw;
+  }
+`;
+
+const IconLocationSharp = styled(IoLocationSharp )`
+  color: #ffff;
+  size: 16px;
+  &:hover {
+    cursor: pointer;
+    color: #1877f2;
+  }
+`;
+
+const CloseIcon = styled(IoCloseOutline)`
+  position: absolute;
+  color: white;
+  right: 36px;
+  top: 25px;
+  height: 40px;
+  width: 40px;
+  &:hover {
+    cursor: pointer;
+    color: #1877f2;
+  }
+  @media (max-width: 800px) {
+    right: 3vw;
+  }
+`;
+
 const TextWithClickableHashTags = ({ renderHashtag, text }) => {
   let splittedText = text.split("#");
   splittedText = splittedText.map((string, index) => {
@@ -382,7 +472,7 @@ const TextWithClickableHashTags = ({ renderHashtag, text }) => {
   );
 };
 
-const Post = ({ post, postRender, id }) => {
+const Post = ({ post, postRender, id, coordinates }) => {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(post.text);
@@ -390,6 +480,7 @@ const Post = ({ post, postRender, id }) => {
   const { user } = useContext(UserContext);
   const [reallyDeletePost, setReallyDeletePost] = useState(false);
   const [reallyRepost, setReallyRepost] = useState(false);
+  const [map, setMap] = useState(false) 
 
   const config = {
     headers: {
@@ -651,9 +742,24 @@ const Post = ({ post, postRender, id }) => {
           </RepostIcon>
         </LeftContainer>
         <RightContainer>
-          <Link to={`/user/${post.user.id}`}>
-            <UserName>{post.user.username}</UserName>
-          </Link>
+          <BackgroundMapScreen map={map}>
+              <MapFrame>
+                <TitleMap>
+                  <p>{post.user.username.split(" ")[0]}</p>
+                  <p>'s location</p>
+                </TitleMap>
+                <CloseIcon onClick={() => setMap(false)} />
+                <MapBox>
+                  {post.geolocation ? <MapComponent post={post.geolocation} /> : ""}
+                </MapBox>
+              </MapFrame>
+            </BackgroundMapScreen>
+          <UserName>
+            <Link to={`/user/${post.user.id}`}>
+              {post.user.username}
+            </Link>
+            {post.geolocation ? <span> <IconLocationSharp onClick={() => setMap(true)} /></span> : ""}
+          </UserName> 
           {editing ? (
             <EditingInput
               ref={inputRef}

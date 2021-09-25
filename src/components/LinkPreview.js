@@ -15,6 +15,7 @@ const LinkPreviewContainer = styled.div`
 `;
 
 const LinkTitle = styled.p`
+  padding-bottom: 4px;
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
@@ -22,7 +23,15 @@ const LinkTitle = styled.p`
   color: #cecece;
   margin-top: 24px;
   margin-bottom: 5px;
-  word-break: break-word;
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+  &:hover {
+    cursor: pointer;
+    color: #1877f2;
+  } 
 
   @media (max-width: 635px) {
     margin-top: 7px;
@@ -32,13 +41,23 @@ const LinkTitle = styled.p`
 `;
 
 const LinkDescription = styled.p`
+  line-height: 1.5;
+  padding-bottom: 2px;
   font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 11px;
   color: #9b9595;
   margin-bottom: 13px;
-  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; 
+  &:hover {
+    cursor: pointer;
+    color: #1877f2;
+  }
 
   @media (max-width: 635px) {
     font-size: 9px;
@@ -46,13 +65,23 @@ const LinkDescription = styled.p`
   }
 `;
 
-const LinkAnchor = styled.p`
+const LinkAnchor = styled.p` 
+  line-height: 1.25;
+  padding-bottom: 2px;
   font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 11px;
   color: #cecece;
-  word-break: break-word;
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; 
+  &:hover {
+    cursor: pointer;
+    color: #1877f2;
+  }
 
   @media (max-width: 635px) {
     font-size: 9px;
@@ -81,7 +110,8 @@ const LinkImg = styled.img`
   right: 0;
   top: 0;
   border-radius: 0px 12px 13px 0px;
-
+  cursor: pointer;
+ 
   @media (max-width: 635px) {
     width: 95px;
     height: 115px;
@@ -99,6 +129,10 @@ const YoutubeContainer = styled.div`
     font-family: "Lato", sans-serif;
     margin-top: 6px;
     word-break: break-word;
+    &:hover {
+    cursor: pointer;
+    color: #1877f2;
+  }
   }
 
   @media (max-width: 635px) {
