@@ -49,7 +49,7 @@ export default function PageTimeline() {
       navigator.geolocation.getCurrentPosition(function(position) {
         setCoordinates(!locationState ? position.coords : "")
       }, function(error){
-        setLocationState(!locationState);
+        setLocationState(locationState);
       })      
     }
     else {
