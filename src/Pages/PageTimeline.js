@@ -6,8 +6,8 @@ import UserContext from "../contexts/UserContext";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
 import Swal from "sweetalert2";
-import { IoLocationOutline } from "react-icons/io5"
-import YouDontFollowAnyone from '../styled-components/YouDontFollowAnyone'
+import { IoLocationOutline } from "react-icons/io5";
+import YouDontFollowAnyone from '../styled-components/YouDontFollowAnyone';
 
 export default function PageTimeline() {
   const [loading, setLoading] = useState(false);
