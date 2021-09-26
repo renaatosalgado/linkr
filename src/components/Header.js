@@ -12,7 +12,9 @@ export default function Header() {
   const [quickAccess, setQuickAccess] = useState(false);
   const { user } = useContext(UserContext);
   const [searchName, setSearchName] = useState("");
-  const [foundUser, serFoundUser] = useState([]);
+  const [foundUser, setFoundUser] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+
   let ref = useRef();
 
   const history = useHistory();
@@ -40,9 +42,16 @@ export default function Header() {
     };
   }, [quickAccess]);
 
-  const searchUser = () => {
-    getSearchUser(searchName, config).then((res) => console.log(res));
-  };
+  useEffect(() => {
+    getSearchUser(searchName, config).then((res) => {
+      setIsSearching(true);
+      setFoundUser(res.data.users);
+    });
+    if(searchName.length < 3)
+    return setIsSearching(false);
+  }, [searchName]);
+
+  
 
   return (
     <HeaderContainer ref={ref}>
@@ -60,28 +69,25 @@ export default function Header() {
           placeholder="Search for people and friends"
           required
         />
-        <SearchIcon onClick={searchUser}>
+        <SearchIcon>
           <AiOutlineSearch size="25px" />
         </SearchIcon>
-        <FoundUsers>
-          <SingleUser>
-            <SingleUserAvatar>
-              <img src={user.user.avatar} alt="profile" />
-            </SingleUserAvatar>
-            <p>Testando um usuário 1</p>
-          </SingleUser>
-          <SingleUser>
-            <SingleUserAvatar>
-              <img src={user.user.avatar} alt="profile" />
-            </SingleUserAvatar>
-            <p>Testando um usuário 2</p>
-          </SingleUser>
-          <SingleUser>
-            <SingleUserAvatar>
-              <img src={user.user.avatar} alt="profile" />
-            </SingleUserAvatar>
-            <p>Testando um usuário 3</p>
-          </SingleUser>
+        <FoundUsers isSearching={isSearching}>
+          {foundUser.map((user) => (
+            <SingleUser>
+              <Link to={`/user/${user.id}`}>
+                <SingleUserAvatar>
+                  <img src={user.avatar} alt="profile" />
+                </SingleUserAvatar>
+              </Link>
+              <Link to={`/user/${user.id}`}>
+                <p>
+                  {user.username}{" "}
+                  {user.isFollowingLoggedUser ? <span> • following</span> : ""}
+                </p>
+              </Link>
+            </SingleUser>
+          ))}
         </FoundUsers>
       </SearchContainer>
 
@@ -192,15 +198,23 @@ const DivQuickAccess = styled.div`
 
 const SearchContainer = styled.div`
   position: relative;
-  margin: 0 auto;
+  width: 400px;
+  height: 45px;
+  margin-left: calc((100vw - 400px) / 3);
   font-family: "Lato";
   font-size: 19px;
   line-height: 22.8px;
+
+  @media(max-width: 635px) {
+    font-size: 17px;
+    line-height: 20.4px;
+    width: calc((100vw - 330px) / 2)
+  }
 `;
 
 const SearchInput = styled.input`
   background-color: #ffffff;
-  min-width: 563px;
+  width: 400px;
   height: 45px;
   border-radius: 8px;
   padding-left: 17px;
@@ -215,6 +229,16 @@ const SearchInput = styled.input`
   &:focus {
     outline: none;
   }
+
+  @media(max-width: 635px) {
+    margin-top: 82px;
+    width: calc(100vw - 30px);
+
+    &::placeholder{
+      font-size: 17px;
+      line-height: 20.4px;
+    }
+  }
 `;
 
 const SearchIcon = styled.div`
@@ -222,45 +246,64 @@ const SearchIcon = styled.div`
   position: absolute;
   top: 11px;
   right: 15px;
-
-  &:hover {
-    cursor: pointer;
-    color: #1877f2;
-  }
 `;
 
 const FoundUsers = styled.div`
-  width: 563px;
+  width: 400px;
   background-color: #e7e7e7;
   border-radius: 8px;
   position: absolute;
   top: 45px;
   right: 0;
   z-index: 1;
-  //display: none;
+  display: ${(props) => (props.isSearching ? "inherit" : "none")};
+
+  @media(max-width: 635px) {
+    width: 350px;
+    top: 127px;
+  }
 `;
 
 const SingleUser = styled.div`
   position: relative;
-  height: 45px;
   width: 100%;
   display: flex;
   align-items: center;
   color: #515151;
 
   p {
+    font-size: 19px;
+    font-family: "Lato";
     margin-left: 30px;
+    word-break: break-word;
+  }
+
+  span {
+    color: #c5c5c5;
+    font-size: 19px;
+    font-family: "Lato";
+  }
+
+  @media(max-width: 635px) {
+    p {
+      font-size: 17px;
+    }
+
+    span {
+      font-size: 17px;
+    }
   }
 `;
 
 const SingleUserAvatar = styled.div`
   width: 39px;
   height: 39px;
+  margin-bottom: 5px;
+
   img {
     width: 39px;
     height: 39px;
     border-radius: 50%;
-    //position: absolute;
     top: calc((45px - 39px) / 2);
     left: 17px;
   }

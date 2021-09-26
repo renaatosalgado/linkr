@@ -31,22 +31,22 @@ export default function PageRegistration() {
       pictureUrl,
     };
 
-    function Error(res) {
-      if (res.response.status === 403) {
-        Swal.fire({
-          icon: "error",
-          title: "OOPS...",
-          text: "O email inserido já está em uso, cria outro aí 😉",
-        });
-      }
-      if (res.response.status === 400) {
-        Swal.fire({
-          icon: "error",
-          title: "OOPS...",
-          text: "Insira um email válido, por favor",
-        });
-      }
-    }
+    // function Error(res) {
+    //   if (res.response.status === 403) {
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "OOPS...",
+    //       text: "O email inserido já está em uso, cria outro aí 😉",
+    //     });
+    //   }
+    //   if (res.response.status === 400) {
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "OOPS...",
+    //       text: "Insira um email válido, por favor",
+    //     });
+    //   }
+    // }
     setCondition(true);
     postSignUp(body)
       .then(() => {
@@ -54,7 +54,12 @@ export default function PageRegistration() {
         setCondition(false);
       })
       .catch((res) => {
-        Error(res);
+        Swal.fire({
+          icon: "error",
+          title: "Ops...",
+          text: "An error has ocurred while signing you up! Please, try again 😉",
+        });
+
         setCondition(false);
       });
   }

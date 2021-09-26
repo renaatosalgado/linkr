@@ -155,10 +155,6 @@ const TimelineContainer = styled.div`
   padding-top: 150px;
   display: flex;
   justify-content: center;
-
-  @media (max-width: 635px) {
-    padding-top: 100px;
-  }
 `;
 
 const TimelineBox = styled.div`
