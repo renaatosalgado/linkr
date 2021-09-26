@@ -18,8 +18,21 @@ import { Link } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import { IoLocationSharp } from "react-icons/io5"
 import MapComponent from "./MapComponent";
-import { IoCloseOutline } from "react-icons/io5"
+import { IoCloseOutline } from "react-icons/io5";
+import { AiOutlineComment } from "react-icons/ai";
+import CommentsComponent from "./CommentsComponent";
 
+
+const PostBox = styled.div`
+  background-color: #1E1E1E;
+  width: 610px;
+  border-radius: 16px;
+  
+  @media (max-width: 635px) {
+    width: 100%;
+    border-radius: 0;
+  }
+`;
 const PostContainer = styled.div`
   position: relative;
   width: 610px;
@@ -37,7 +50,9 @@ const PostContainer = styled.div`
 `;
 
 const LeftContainer = styled.div`
-  padding: 17px 18px;
+  /* padding: 17px 18px; */
+  padding: 17px 0 17px 0;
+  width: 87px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -58,7 +73,10 @@ const LeftContainer = styled.div`
   }
 
   @media (max-width: 635px) {
-    padding: 9px 15px;
+    /* padding: 9px 15px; */
+    padding: 9px 3px;
+    width: 70px;
+    text-align: center;
   }
 `;
 
@@ -157,6 +175,21 @@ const LikeIcon = styled.div`
 `;
 
 const HowManyLikes = styled.p`
+  margin-top: 5px;
+  margin-bottom: 10px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  color: #ffffff;
+  cursor: pointer;
+  
+  @media (max-width: 635px) {
+    font-size: 9px;
+  }
+`;
+
+const HowManyComments = styled.p`
   margin-top: 5px;
   font-family: Lato;
   font-style: normal;
@@ -481,6 +514,8 @@ const Post = ({ post, postRender, id, coordinates }) => {
   const [reallyDeletePost, setReallyDeletePost] = useState(false);
   const [reallyRepost, setReallyRepost] = useState(false);
   const [map, setMap] = useState(false) 
+  const [commentState, setCommentState] = useState(false)
+  const [commentsList, setCommentsList] = useState([])
 
   const config = {
     headers: {
@@ -632,6 +667,15 @@ const Post = ({ post, postRender, id, coordinates }) => {
       window.location.reload();
     });
   }
+  function showComments() {
+    if (commentState) {
+      setCommentState(!commentState)
+    }
+    else {
+      setCommentState(!commentState)
+    }
+  }
+
 
   return (
     <>
@@ -699,87 +743,105 @@ const Post = ({ post, postRender, id, coordinates }) => {
         </RepostHeader>
       </RepostContainer>
 
-      <PostContainer>
-        <Icons hide={post.user.id === user.user.id ? false : true}>
-          <EditIcon onClick={editPost}>
-            <RiPencilFill />
-          </EditIcon>
-          <DeleteIcon onClick={() => setReallyDeletePost(true)}>
-            <FaTrash />
-          </DeleteIcon>
-        </Icons>
+      <PostBox>
+        <PostContainer>
+          <Icons hide={post.user.id === user.user.id ? false : true}>
+            <EditIcon onClick={editPost}>
+              <RiPencilFill />
+            </EditIcon>
+            <DeleteIcon onClick={() => setReallyDeletePost(true)}>
+              <FaTrash />
+            </DeleteIcon>
+          </Icons>
 
-        <LeftContainer>
-          <Avatar src={post.user.avatar} userId={post.user.id} />
-          <LikeIcon onClick={like}>
-            {id === 1 ? (
-              <IoIosHeart size="20px" color="#AC0000" />
-            ) : isLiked ? (
-              <IoIosHeart size="20px" color="#AC0000" />
+          <LeftContainer>
+            <Avatar src={post.user.avatar} userId={post.user.id} />
+            <LikeIcon onClick={like}>
+              {id === 1 ? (
+                <IoIosHeart size="20px" color="#AC0000" />
+              ) : isLiked ? (
+                <IoIosHeart size="20px" color="#AC0000" />
+              ) : (
+                <IoIosHeartEmpty size="20px" color="#FFF" />
+              )}
+            </LikeIcon>
+            <HowManyLikes data-tip={createTooltip()}>
+              {post.likes.length === 0
+                ? ""
+                : post.likes.length === 1
+                ? `${post.likes.length} like`
+                : `${post.likes.length} likes`}
+            </HowManyLikes>
+            <ReactTooltip
+              place="bottom"
+              type="light"
+              effect="float"
+            ></ReactTooltip>
+            <AiOutlineComment size="25px" color="#FFF" cursor="pointer" onClick={showComments} />
+            <HowManyComments>
+              {commentsList.comments ? 
+                commentsList.comments.length === 0
+                ? ""
+                : commentsList.comments.length === 1
+                ? `${commentsList.comments.length} comment`
+                : `${commentsList.comments.length} comments`
+              : ""}
+            </HowManyComments>
+            <RepostIcon onClick={() => setReallyRepost(true)}>
+              <BiRepost size="25px" />
+              {post.repostCount === 0
+                ? "re-post"
+                : post.repostCount === 1
+                ? `${post.repostCount} re-post`
+                : `${post.repostCount} re-posts`}
+            </RepostIcon>
+          </LeftContainer>
+          <RightContainer>
+            <BackgroundMapScreen map={map}>
+                <MapFrame>
+                  <TitleMap>
+                    <p>{post.user.username.split(" ")[0]}</p>
+                    <p>'s location</p>
+                  </TitleMap>
+                  <CloseIcon onClick={() => setMap(false)} />
+                  <MapBox>
+                    {post.geolocation ? <MapComponent post={post.geolocation} /> : ""}
+                  </MapBox>
+                </MapFrame>
+              </BackgroundMapScreen>
+            <UserName>
+              <Link to={`/user/${post.user.id}`}>
+                {post.user.username}
+              </Link>
+              {post.geolocation ? <span> <IconLocationSharp onClick={() => setMap(true)} /></span> : ""}
+            </UserName> 
+            {editing ? (
+              <EditingInput
+                ref={inputRef}
+                disabled={loading ? true : false}
+                onKeyDown={analyseKeys}
+                type="text"
+                value={newText}
+                onChange={(e) => setNewtext(e.target.value)}
+              ></EditingInput>
             ) : (
-              <IoIosHeartEmpty size="20px" color="#FFF" />
+              <TextWithClickableHashTags text={post.text} key={post.id} />
             )}
-          </LikeIcon>
-          <HowManyLikes data-tip={createTooltip()}>
-            {post.likes.length === 0
-              ? ""
-              : post.likes.length === 1
-              ? `${post.likes.length} like`
-              : `${post.likes.length} likes`}
-          </HowManyLikes>
-          <ReactTooltip
-            place="bottom"
-            type="light"
-            effect="float"
-          ></ReactTooltip>
-          <RepostIcon onClick={() => setReallyRepost(true)}>
-            <BiRepost size="25px" />
-            {post.repostCount === 0
-              ? "re-post"
-              : post.repostCount === 1
-              ? `${post.repostCount} re-post`
-              : `${post.repostCount} re-posts`}
-          </RepostIcon>
-        </LeftContainer>
-        <RightContainer>
-          <BackgroundMapScreen map={map}>
-              <MapFrame>
-                <TitleMap>
-                  <p>{post.user.username.split(" ")[0]}</p>
-                  <p>'s location</p>
-                </TitleMap>
-                <CloseIcon onClick={() => setMap(false)} />
-                <MapBox>
-                  {post.geolocation ? <MapComponent post={post.geolocation} /> : ""}
-                </MapBox>
-              </MapFrame>
-            </BackgroundMapScreen>
-          <UserName>
-            <Link to={`/user/${post.user.id}`}>
-              {post.user.username}
-            </Link>
-            {post.geolocation ? <span> <IconLocationSharp onClick={() => setMap(true)} /></span> : ""}
-          </UserName> 
-          {editing ? (
-            <EditingInput
-              ref={inputRef}
-              disabled={loading ? true : false}
-              onKeyDown={analyseKeys}
-              type="text"
-              value={newText}
-              onChange={(e) => setNewtext(e.target.value)}
-            ></EditingInput>
-          ) : (
-            <TextWithClickableHashTags text={post.text} key={post.id} />
-          )}
-          <LinkPreview
-            link={post.link}
-            linkTitle={post.linkTitle}
-            linkDescription={post.linkDescription}
-            linkImage={post.linkImage}
-          />
-        </RightContainer>
-      </PostContainer>
+            <LinkPreview
+              link={post.link}
+              linkTitle={post.linkTitle}
+              linkDescription={post.linkDescription}
+              linkImage={post.linkImage}
+            />
+          </RightContainer>
+        </PostContainer>
+        <CommentsComponent
+          post={post}
+          commentState={commentState}
+          commentsList={commentsList}
+          setCommentsList={setCommentsList}
+        />
+      </PostBox>  
     </>
   );
 };

@@ -79,6 +79,14 @@ function getSearchUser(searchName, config) {
   return promise;
 }
 
+function getComments(postId, config) {
+  return axios.get(`${BASE_URL}/posts/${postId}/comments`, config);
+}
+
+function postComment(postId, body, config) {
+  return axios.post(`${BASE_URL}/posts/${postId}/comment`, body, config);
+}
+
 export {
   postLogin,
   postSignUp,
@@ -96,5 +104,7 @@ export {
   getUsersThatIFollow,
   getPostsFromUsersThatIFollow,
   postRepost,
-  getSearchUser
-};
+  getSearchUser,
+  getComments,
+  postComment,
+}
