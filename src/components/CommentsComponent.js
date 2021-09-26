@@ -1,9 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { getComments, postComment, getUsersThatIFollow } from "../services/API";
 import UserContext from "../contexts/UserContext";
-import { useState } from "react/cjs/react.development";
 import { Link } from "react-router-dom";
 
 export default function CommentsComponent({post, commentState, commentsList, setCommentsList }) {
@@ -34,7 +33,7 @@ export default function CommentsComponent({post, commentState, commentsList, set
         getUsersThatIFollow(config).then((resp) => {
             setFollowing(resp.data)
         })
-        .catch((err) => err)
+        .catch((err) => console.log(err))
     }, [])
 
     function SendComment() {
