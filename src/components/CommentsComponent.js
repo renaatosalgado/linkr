@@ -36,7 +36,9 @@ export default function CommentsComponent({post, commentState, commentsList, set
         .catch((err) => console.log(err))
     }, [])
 
-    function SendComment() {
+
+    function SendComment(event) {
+        event.preventDefault()
         const body = {
             text
         }
@@ -49,6 +51,8 @@ export default function CommentsComponent({post, commentState, commentsList, set
             console.log(err)
         })
     }
+
+
      
     const idsFollowing = following.users ? following.users.map((e) => e.username) : "";    
     
@@ -79,7 +83,7 @@ export default function CommentsComponent({post, commentState, commentsList, set
                     </Comment>    
                     )) : ""} 
                 </BoxScroller>    
-                    <BoxWriteComment>
+                <BoxWriteComment onSubmit={SendComment}>
                     <img src={user.user.avatar} alt="foto do usuário" />
                     <input 
                         type="text" 
@@ -88,7 +92,9 @@ export default function CommentsComponent({post, commentState, commentsList, set
                         onChange={(e) => setText(e.target.value)}
                         required
                     />
-                    <IconSendComment onClick={SendComment}/>
+                    <ButtonSendComment type="submit">
+                        <IconSendComment/>
+                    </ButtonSendComment>
                 </BoxWriteComment>
             </CommentsBox>
         </>
@@ -110,14 +116,28 @@ const CommentsBox = styled.div`
 const BoxScroller = styled.div`
     max-height: 200px;   
     overflow-y: auto;
+    overflow-x: hidden;
     ::-webkit-scrollbar {
-        display: none;
+        width: 5px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #1E1E1E; 
     }    
+    &:hover {
+        ::-webkit-scrollbar-thumb {
+            background: #575757; 
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1877f2; 
+        }
+    }
     
     @media (max-width: 635px) {
         width: 85vw;
     }
 `;
+
 const Comment = styled.div`
     border-bottom: 1px solid #353535;
     display: flex;
@@ -152,8 +172,8 @@ const Comment = styled.div`
     div {
         margin-left: 15px;
         @media (max-width: 635px) {
-        width: 85vw;
-    }
+            width: 85vw;
+        }
     }
 
     @media (max-width: 635px) {
@@ -161,7 +181,7 @@ const Comment = styled.div`
     }
 `;
 
-const BoxWriteComment = styled.div`
+const BoxWriteComment = styled.form`
     height: 83px;
     width: 570px;
     position: relative;
@@ -196,16 +216,19 @@ const BoxWriteComment = styled.div`
     }
 `;
 
+const ButtonSendComment = styled.button`
+    background-color: Transparent;
+    position: absolute;
+    top: 32px;
+    right: 15px;
+`;
+
 const IconSendComment = styled(IoPaperPlaneOutline)`
     color: #F3F3F3;
     width: 18px;
     height: 18px;
-    position: absolute;
-    top: 32px;
-    right: 20px;
     &:hover {
     cursor: pointer;
     color: #1877f2;
-  }
-   
+  }   
 `;
