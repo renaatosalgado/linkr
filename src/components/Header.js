@@ -49,6 +49,7 @@ export default function Header() {
     });
     if(searchName.length < 3)
     return setIsSearching(false);
+    //eslint-disable-next-line
   }, [searchName]);
 
   

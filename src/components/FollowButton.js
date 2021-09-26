@@ -22,6 +22,7 @@ const FollowButton = ({ shouldDisplay }) => {
 
     getUsersThatIFollow(config).then((res) => {
       let isInTheList = false;
+      //eslint-disable-next-line
       res.data.users.map((thisUser) => {
         if (thisUser.id === Number(id)) isInTheList = true;
       });
