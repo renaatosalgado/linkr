@@ -43,7 +43,7 @@ export default function PageRegistration() {
         Swal.fire({
           icon: "error",
           title: "OOPS...",
-          text: "Insira um email válido, por favor",
+          text: "Ocorreu um erro 🤔, tenta de novo aí 🙂",
         });
       }
     }
