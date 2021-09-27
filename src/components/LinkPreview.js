@@ -263,7 +263,7 @@ const ModalContainer = ({ link, display, setDisplay }) => {
     borderRadius: '20px',
     boxSizing: 'border-box'
   }
-  /*<div style={display ? modalStyles : {display: 'none'}}>*/
+
   return (
     <ModalFullScreen width={width} height={height} display={display}>
       <InnerModal>
@@ -292,6 +292,7 @@ const ModalContainer = ({ link, display, setDisplay }) => {
 const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
   const [youtubeId, setYoutubeId] = useState("");
   const [display, setDisplay] = useState(false)
+  const { width } = useWindowDimensions()
 
   useEffect(() => {
     if (link.includes("youtube.com")) {
@@ -300,9 +301,14 @@ const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
     //eslint-disable-next-line
   }, []);
 
+  useEffect(() => {if (width <= 635) {setDisplay(false)}}, [width])
+
   const handleClick = () => {
-    //window.open(link, "_blank")
-    setDisplay(true)
+    if (width <= 635) {
+      window.open(link, "_blank")
+    } else {
+      setDisplay(true)
+    }
   }
 
   return link.includes("youtube.com") ? (

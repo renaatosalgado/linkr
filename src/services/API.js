@@ -78,6 +78,14 @@ function getUserInformation(id, config) {
   return axios.get(`${BASE_URL}/users/${id}`, config)
 }
 
+function getComments(postId, config) {
+  return axios.get(`${BASE_URL}/posts/${postId}/comments`, config);
+}
+
+function postComment(postId, body, config) {
+  return axios.post(`${BASE_URL}/posts/${postId}/comment`, body, config);
+}
+
 export {
   postLogin,
   postSignUp,
@@ -95,5 +103,7 @@ export {
   getUsersThatIFollow,
   getPostsFromUsersThatIFollow,
   postRepost,
-  getUserInformation
+  getUserInformation,
+  getComments,
+  postComment
 };

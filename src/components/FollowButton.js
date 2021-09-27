@@ -111,6 +111,10 @@ const FollowButtonContainer = styled.div`
   display: ${({display}) => display};
   justify-content: center;
   align-items: center;
+  &:hover {
+    cursor: pointer;
+    filter: brightness(90%);
+  }
 `
 
 export default FollowButton
