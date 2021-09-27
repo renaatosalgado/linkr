@@ -27,7 +27,7 @@ export default function CommentsComponent({post, commentState, commentsList, set
         .catch((err) => console.log(err))
     }
 
-    useEffect(listComments, [])
+    useEffect(listComments, [commentsList])
 
     useEffect(() => {
         getUsersThatIFollow(config).then((resp) => {

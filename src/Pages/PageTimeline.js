@@ -8,13 +8,13 @@ import Posts from "../components/Posts";
 import Swal from "sweetalert2";
 import { IoLocationOutline } from "react-icons/io5";
 import YouDontFollowAnyone from '../styled-components/YouDontFollowAnyone';
+import useInterval from "react-useinterval";
 
-export default function PageTimeline() {
+export default function PageTimeline({ postsList, setPostsList }) {
   const [loading, setLoading] = useState(false);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
   const [link, setLink] = useState("");
   const [text, setText] = useState("");
-  const [postsList, setPostsList] = useState([]);
   const [locationState, setLocationState] = useState(false)
   const [coordinates, setCoordinates] = useState("")
   const [isFollowingSomeone, setIsFollowingSomeone] = useState(true)
@@ -26,8 +26,7 @@ export default function PageTimeline() {
       Authorization: `Bearer ${user.token}`,
     },
   };
-
-  useEffect(() => {
+  function postRender() {
     getUsersThatIFollow(config).then((res) => {
       setIsFollowingSomeone(res.data.users.length > 0)
     })
@@ -36,7 +35,7 @@ export default function PageTimeline() {
         const postsToShow = [...res.data.posts]
         setPostsList(postsToShow);
         setIsLoadingPosts(false);
-        //console.log('listando', res.data.posts)
+        console.log('atualizando')
       })
       .catch(() => {
         Swal.fire({
@@ -45,8 +44,15 @@ export default function PageTimeline() {
           text: "Houve uma falha ao obter os posts, por favor atualize a página",
         });
       });
-    //eslint-disable-next-line
-  }, [postsList]);
+  }
+
+  useEffect(postRender , []);
+  
+  
+
+  useInterval(() => {
+    postRender()
+  }, 15000);
 
   function activeLocation () {
     if ("geolocation" in navigator) {
@@ -136,6 +142,7 @@ export default function PageTimeline() {
               isLoadingPosts={isLoadingPosts}
               setPostsList={setPostsList}
               coordinates={coordinates}
+              postRender={postRender}
               /> : <YouDontFollowAnyone>
                 {'Você não segue ninguém ainda, procure por perfis na busca'}
               </YouDontFollowAnyone>
