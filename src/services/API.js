@@ -12,8 +12,8 @@ function postLogin(body) {
   return promise;
 }
 
-function getPostsList(config) {
-  const promise = axios.get(`${BASE_URL}/posts`, config);
+function getPostsList(config, idi) {
+  const promise = axios.get(`${BASE_URL}/posts${idi ? `?olderThan=${idi}` : ''}`, config);
   return promise;
 }
 

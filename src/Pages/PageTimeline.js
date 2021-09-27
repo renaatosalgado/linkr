@@ -54,10 +54,20 @@ export default function PageTimeline() {
     }
   }, []);
 
+  const lastId = () => {
+    const lastItem = postsList[postsList.length - 1];
+    if (lastItem) {
+      if (!!lastItem.respostId) {
+        return lastItem.respostId
+      }
+      return lastItem.id
+    }
+  };
+
   useEffect( () => {
     if (scrollRadio > 0 ) {
       console.log('ue, entrei nesse useEffect' + scrollRadio);
-      getPostsList(config)
+      getPostsList(config, lastId() )
       .then((res) => {
         const newHashtagPost = [...postsList]
         newHashtagPost.push(...res.data.posts)
