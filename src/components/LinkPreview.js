@@ -332,7 +332,7 @@ const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
       </LeftContainer>
       <LinkImg src={linkImage}></LinkImg>
     </LinkPreviewContainer>
-    <ModalContainer link={link} display={display} setDisplay={setDisplay} />
+    <ModalContainer link={display ? link : ''} display={display} setDisplay={setDisplay} />
     </>
   );
 };
