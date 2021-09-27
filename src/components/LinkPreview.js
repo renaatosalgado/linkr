@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import getYouTubeID from "get-youtube-id";
 import React, { useEffect, useState } from "react";
-import { IoClose } from 'react-icons/io5'
-import Iframe from 'react-iframe'
+import { IoClose } from "react-icons/io5";
+import Iframe from "react-iframe";
 
 const LinkPreviewContainer = styled.div`
   height: 155px;
@@ -25,15 +25,15 @@ const LinkTitle = styled.p`
   color: #cecece;
   margin-top: 24px;
   margin-bottom: 5px;
-  overflow: hidden; 
-  text-overflow: ellipsis; 
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3; 
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   &:hover {
     cursor: pointer;
     color: #1877f2;
-  } 
+  }
 
   @media (max-width: 635px) {
     margin-top: 7px;
@@ -55,7 +55,7 @@ const LinkDescription = styled.p`
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical; 
+  -webkit-box-orient: vertical;
   &:hover {
     cursor: pointer;
     color: #1877f2;
@@ -67,7 +67,7 @@ const LinkDescription = styled.p`
   }
 `;
 
-const LinkAnchor = styled.p` 
+const LinkAnchor = styled.p`
   line-height: 1.25;
   padding-bottom: 2px;
   font-family: "Lato", sans-serif;
@@ -75,11 +75,11 @@ const LinkAnchor = styled.p`
   font-weight: normal;
   font-size: 11px;
   color: #cecece;
-  overflow: hidden; 
-  text-overflow: ellipsis; 
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical; 
+  -webkit-box-orient: vertical;
   &:hover {
     cursor: pointer;
     color: #1877f2;
@@ -113,7 +113,7 @@ const LinkImg = styled.img`
   top: 0;
   border-radius: 0px 12px 13px 0px;
   cursor: pointer;
- 
+
   @media (max-width: 635px) {
     width: 95px;
     height: 115px;
@@ -132,9 +132,9 @@ const YoutubeContainer = styled.div`
     margin-top: 6px;
     word-break: break-word;
     &:hover {
-    cursor: pointer;
-    color: #1877f2;
-  }
+      cursor: pointer;
+      color: #1877f2;
+    }
   }
 
   @media (max-width: 635px) {
@@ -160,59 +160,59 @@ function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
   return {
     width,
-    height
+    height,
   };
 }
 
 function useWindowDimensions() {
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  );
 
   useEffect(() => {
     function handleResize() {
       setWindowDimensions(getWindowDimensions());
     }
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return windowDimensions;
 }
 
-
 const ContainerButtonGoToPage = styled.div`
-background: #1877F2;
-border-radius: 5px;
-position: absolute;
-top: 12px;
-left: 12px;
-padding: 3px;
-font-family: Lato;
-font-style: normal;
-font-weight: bold;
-font-size: 14px;
-color: #FFFFFF;
-
-`
+  background: #1877f2;
+  border-radius: 5px;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 3px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  color: #ffffff;
+`;
 
 const ButtonGoToPage = ({ link }) => {
   return (
     <ContainerButtonGoToPage onClick={() => window.open(link, "_blank")}>
       Open in new tab
     </ContainerButtonGoToPage>
-  )
-}
+  );
+};
 
 const ModalFullScreen = styled.div`
   z-index: 98;
   position: fixed;
-  ${({display}) => display ? '' : 'display: none;'}
+  ${({ display }) => (display ? "" : "display: none;")}
   top: 0;
   left: 0;
-  width: ${({width}) => `${width}px`};
-  height: ${({height}) => `${height}px`};
+  width: ${({ width }) => `${width}px`};
+  height: ${({ height }) => `${height}px`};
   background-color: rgba(255, 255, 255, 0.5);
-`
+`;
 
 const InnerModal = styled.div`
   z-index: 99;
@@ -227,72 +227,73 @@ const InnerModal = styled.div`
   background-color: #333333;
   border-radius: 20px;
   box-sizing: border-box;
-`
+`;
 
 const CloseIconWrapper = styled.div`
   position: absolute;
   top: 12px;
   right: 12px;
-`
+`;
 
 const ModalContainer = ({ link, display, setDisplay }) => {
-  const { height, width } = useWindowDimensions()
+  const { height, width } = useWindowDimensions();
 
   const modalStyles = {
     zIndex: 98,
-    position: 'fixed',
-    top: '0',
-    left: '0',
+    position: "fixed",
+    top: "0",
+    left: "0",
     width: `${width}px`,
     height: `${height}px`,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)'
-  }
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
+  };
 
   const innerModalStyles = {
     zIndex: 99,
-    position: 'absolute',
+    position: "absolute",
 
-    padding: '40px 16px 20px 16px',
+    padding: "40px 16px 20px 16px",
 
     top: `${60}px`,
     left: `${237}px`,
     right: `${237}px`,
     bottom: `${60}px`,
     opacity: 1,
-    backgroundColor: '#333333',
-    borderRadius: '20px',
-    boxSizing: 'border-box'
-  }
+    backgroundColor: "#333333",
+    borderRadius: "20px",
+    boxSizing: "border-box",
+  };
 
   return (
     <ModalFullScreen width={width} height={height} display={display}>
       <InnerModal>
-        <ButtonGoToPage link={link}/>
+        <ButtonGoToPage link={link} />
         <CloseIconWrapper>
-          <IoClose style={{
-              color: 'white',
-              width: '25px',
-              height: '25px'
+          <IoClose
+            style={{
+              color: "white",
+              width: "25px",
+              height: "25px",
             }}
-            onClick={() => setDisplay(false)} />
+            onClick={() => setDisplay(false)}
+          />
         </CloseIconWrapper>
         <Iframe
           url={link}
-          display='flex'
-          position='relative'
-          width={`${width - 2*237 -16 -16}px`}
-          height={`${height - 2*60 -40 -20}px`}
-          
+          display="flex"
+          position="relative"
+          width={`${width - 2 * 237 - 16 - 16}px`}
+          height={`${height - 2 * 60 - 40 - 20}px`}
         />
       </InnerModal>
     </ModalFullScreen>
-  )
-}
+  );
+};
 
 const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
   const [youtubeId, setYoutubeId] = useState("");
-  const [display, setDisplay] = useState(false)
-  const { width } = useWindowDimensions()
+  const [display, setDisplay] = useState(false);
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     if (link.includes("youtube.com")) {
@@ -301,15 +302,19 @@ const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
     //eslint-disable-next-line
   }, []);
 
-  useEffect(() => {if (width <= 635) {setDisplay(false)}}, [width])
+  useEffect(() => {
+    if (width <= 635) {
+      setDisplay(false);
+    }
+  }, [width]);
 
   const handleClick = () => {
     if (width <= 635) {
-      window.open(link, "_blank")
+      window.open(link, "_blank");
     } else {
-      setDisplay(true)
+      setDisplay(true);
     }
-  }
+  };
 
   return link.includes("youtube.com") ? (
     <YoutubeContainer>

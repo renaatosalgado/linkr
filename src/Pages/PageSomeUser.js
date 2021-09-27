@@ -6,20 +6,19 @@ import { getPostsSomeUser, getUserInformation } from "../services/API";
 import { useParams } from "react-router-dom";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
-import FollowButton from "../components/FollowButton"
+import FollowButton from "../components/FollowButton";
 
 export default function PageSomeUser() {
-
   const [postsSomeUser, setPostsSomeUser] = useState(null);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
- 
+
   const { id } = useParams();
 
   const [thisUserInfo, setThisUserInfo] = useState({
     id: id,
-    username: '',
-    avatar: ''
-  })
+    username: "",
+    avatar: "",
+  });
 
   const { user } = useContext(UserContext);
 
@@ -30,13 +29,15 @@ export default function PageSomeUser() {
   };
 
   useEffect(() => {
-    getUserInformation(id, config).then((res) => {
-      setThisUserInfo({
-        id: id,
-        username: res.data.user.username,
-        avatar: res.data.user.avatar
+    getUserInformation(id, config)
+      .then((res) => {
+        setThisUserInfo({
+          id: id,
+          username: res.data.user.username,
+          avatar: res.data.user.avatar,
+        });
       })
-    }).catch()
+      .catch();
     getPostsSomeUser(id, config)
       .then((res) => {
         setPostsSomeUser(res.data.posts);
@@ -45,9 +46,8 @@ export default function PageSomeUser() {
       .catch((res) => {
         console.log("erro!");
       });
-      //eslint-disable-next-line
+    //eslint-disable-next-line
   }, [postsSomeUser]);
-
 
   return (
     <>
@@ -55,13 +55,10 @@ export default function PageSomeUser() {
       <TimelineContainer>
         <TimelineBox>
           <TimelineBody>
-              <TitleContainer>
-                <CircleImg src={thisUserInfo.avatar}/>
-                <Title>
-                {`${thisUserInfo.username}'s posts`}
-                </Title>
-              </TitleContainer>
-              
+            <TitleContainer>
+              <CircleImg src={thisUserInfo.avatar} />
+              <Title>{`${thisUserInfo.username}'s posts`}</Title>
+            </TitleContainer>
 
             <Posts
               postsList={postsSomeUser}
@@ -70,7 +67,7 @@ export default function PageSomeUser() {
             />
           </TimelineBody>
           <Trending />
-          <FollowButton shouldDisplay={user.user.id !== Number(id)}/>
+          <FollowButton shouldDisplay={user.user.id !== Number(id)} />
         </TimelineBox>
       </TimelineContainer>
     </>
@@ -82,14 +79,14 @@ const TitleContainer = styled.div`
   flex-direction: row;
   align-items: center;
   margin-bottom: 35px;
-`
+`;
 
 const CircleImg = styled.img`
   width: 50px;
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
-`
+`;
 
 const TimelineContainer = styled.div`
   width: 100%;

@@ -50,23 +50,23 @@ function getHashtagPost(hashtag, config, idi) {
 }
 
 function postLikeDislike(type, id, config) {
-  return axios.post(`${BASE_URL}/posts/${id}/${type}`,{}, config);
+  return axios.post(`${BASE_URL}/posts/${id}/${type}`, {}, config);
 }
 
 function followUser(userId, config) {
-  return axios.post(`${BASE_URL}/users/${userId}/follow`, {}, config)
+  return axios.post(`${BASE_URL}/users/${userId}/follow`, {}, config);
 }
 
 function unfollowUser(userId, config) {
-  return axios.post(`${BASE_URL}/users/${userId}/unfollow`, {}, config)
+  return axios.post(`${BASE_URL}/users/${userId}/unfollow`, {}, config);
 }
 
 function getUsersThatIFollow(config) {
-  return axios.get(`${BASE_URL}/users/follows`, config)
+  return axios.get(`${BASE_URL}/users/follows`, config);
 }
 
 function getPostsFromUsersThatIFollow(config) {
-  return axios.get(`${BASE_URL}/following/posts`, config)
+  return axios.get(`${BASE_URL}/following/posts`, config);
 }
 
 function postRepost(postId, config) {
@@ -74,8 +74,16 @@ function postRepost(postId, config) {
   return promise;
 }
 
+function getSearchUser(searchName, config) {
+  const promise = axios.get(
+    `${BASE_URL}/users/search?username=${searchName}`,
+    config
+  );
+  return promise;
+}
+
 function getUserInformation(id, config) {
-  return axios.get(`${BASE_URL}/users/${id}`, config)
+  return axios.get(`${BASE_URL}/users/${id}`, config);
 }
 
 function getComments(postId, config) {
@@ -103,7 +111,8 @@ export {
   getUsersThatIFollow,
   getPostsFromUsersThatIFollow,
   postRepost,
+  getSearchUser,
   getUserInformation,
   getComments,
-  postComment
+  postComment,
 };

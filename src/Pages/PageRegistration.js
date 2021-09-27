@@ -54,7 +54,12 @@ export default function PageRegistration() {
         setCondition(false);
       })
       .catch((res) => {
-        Error(res);
+        Swal.fire({
+          icon: "error",
+          title: "Ops...",
+          text: "An error has ocurred while signing you up! Please, try again 😉",
+        });
+
         setCondition(false);
       });
   }
