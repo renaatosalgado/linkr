@@ -13,6 +13,7 @@ import PageHashtag from "../Pages/PageHashtag";
 export default function App() {
   const UserData = JSON.parse(localStorage.getItem("LinkrUserData"));
   const [user, setUser] = useState(UserData);
+  const [postsList, setPostsList] = useState([]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
@@ -26,7 +27,7 @@ export default function App() {
             <PageRegistration />
           </Route>
           <Route path="/timeline" exact>
-            <PageTimeline />
+            <PageTimeline postsList={postsList} setPostsList={setPostsList} />
           </Route>
           <Route path="/my-posts" exact>
             <PageMyPosts />
@@ -35,7 +36,7 @@ export default function App() {
             <PageSomeUser />
           </Route>
           <Route path="/my-likes" exact>
-            <PageMyLikes />
+            <PageMyLikes postsList={postsList} />
           </Route>
           <Route path="/hashtag/:hashtag" exact>
             <PageHashtag />

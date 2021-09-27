@@ -6,7 +6,7 @@ import { getPostsLiked } from "../services/API";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
 
-export default function PageMyLikes() {
+export default function PageMyLikes({postsList}) {
   const { user } = useContext(UserContext);
 
   const [postsLikedList, setPostsLikedList] = useState([]);
@@ -75,7 +75,7 @@ export default function PageMyLikes() {
       postRender()
     }
     //eslint-disable-next-line
-  }, [user])
+  }, [user, postsLikedList, postsList])
  
   return (
     <>
