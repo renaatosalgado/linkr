@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import getYouTubeID from "get-youtube-id";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { IoClose } from 'react-icons/io5'
+import Iframe from 'react-iframe'
 
 const LinkPreviewContainer = styled.div`
   height: 155px;
@@ -154,8 +156,143 @@ const YoutubePlayer = styled.iframe`
   }
 `;
 
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
+
+function useWindowDimensions() {
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowDimensions;
+}
+
+
+const ContainerButtonGoToPage = styled.div`
+background: #1877F2;
+border-radius: 5px;
+position: absolute;
+top: 12px;
+left: 12px;
+padding: 3px;
+font-family: Lato;
+font-style: normal;
+font-weight: bold;
+font-size: 14px;
+color: #FFFFFF;
+
+`
+
+const ButtonGoToPage = ({ link }) => {
+  return (
+    <ContainerButtonGoToPage onClick={() => window.open(link, "_blank")}>
+      Open in new tab
+    </ContainerButtonGoToPage>
+  )
+}
+
+const ModalFullScreen = styled.div`
+  z-index: 98;
+  position: fixed;
+  ${({display}) => display ? '' : 'display: none;'}
+  top: 0;
+  left: 0;
+  width: ${({width}) => `${width}px`};
+  height: ${({height}) => `${height}px`};
+  background-color: rgba(255, 255, 255, 0.5);
+`
+
+const InnerModal = styled.div`
+  z-index: 99;
+  position: absolute;
+  padding: 40px 16px 20px 16px;
+
+  top: 60px;
+  left: 237px;
+  right: 237px;
+  bottom: 60px;
+  opacity: 1;
+  background-color: #333333;
+  border-radius: 20px;
+  box-sizing: border-box;
+`
+
+const CloseIconWrapper = styled.div`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+`
+
+const ModalContainer = ({ link, display, setDisplay }) => {
+  const { height, width } = useWindowDimensions()
+
+  const modalStyles = {
+    zIndex: 98,
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    width: `${width}px`,
+    height: `${height}px`,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)'
+  }
+
+  const innerModalStyles = {
+    zIndex: 99,
+    position: 'absolute',
+
+    padding: '40px 16px 20px 16px',
+
+    top: `${60}px`,
+    left: `${237}px`,
+    right: `${237}px`,
+    bottom: `${60}px`,
+    opacity: 1,
+    backgroundColor: '#333333',
+    borderRadius: '20px',
+    boxSizing: 'border-box'
+  }
+
+  return (
+    <ModalFullScreen width={width} height={height} display={display}>
+      <InnerModal>
+        <ButtonGoToPage link={link}/>
+        <CloseIconWrapper>
+          <IoClose style={{
+              color: 'white',
+              width: '25px',
+              height: '25px'
+            }}
+            onClick={() => setDisplay(false)} />
+        </CloseIconWrapper>
+        <Iframe
+          url={link}
+          display='flex'
+          position='relative'
+          width={`${width - 2*237 -16 -16}px`}
+          height={`${height - 2*60 -40 -20}px`}
+          
+        />
+      </InnerModal>
+    </ModalFullScreen>
+  )
+}
+
 const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
   const [youtubeId, setYoutubeId] = useState("");
+  const [display, setDisplay] = useState(false)
+  const { width } = useWindowDimensions()
 
   useEffect(() => {
     if (link.includes("youtube.com")) {
@@ -163,6 +300,16 @@ const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
     }
     //eslint-disable-next-line
   }, []);
+
+  useEffect(() => {if (width <= 635) {setDisplay(false)}}, [width])
+
+  const handleClick = () => {
+    if (width <= 635) {
+      window.open(link, "_blank")
+    } else {
+      setDisplay(true)
+    }
+  }
 
   return link.includes("youtube.com") ? (
     <YoutubeContainer>
@@ -176,7 +323,8 @@ const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
       <p>{link}</p>
     </YoutubeContainer>
   ) : (
-    <LinkPreviewContainer onClick={() => window.open(link, "_blank")}>
+    <>
+    <LinkPreviewContainer onClick={handleClick}>
       <LeftContainer>
         <LinkTitle>{linkTitle}</LinkTitle>
         <LinkDescription>{linkDescription}</LinkDescription>
@@ -184,6 +332,8 @@ const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
       </LeftContainer>
       <LinkImg src={linkImage}></LinkImg>
     </LinkPreviewContainer>
+    <ModalContainer link={link} display={display} setDisplay={setDisplay} />
+    </>
   );
 };
 

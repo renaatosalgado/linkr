@@ -74,6 +74,10 @@ function postRepost(postId, config) {
   return promise;
 }
 
+function getUserInformation(id, config) {
+  return axios.get(`${BASE_URL}/users/${id}`, config)
+}
+
 function getComments(postId, config) {
   return axios.get(`${BASE_URL}/posts/${postId}/comments`, config);
 }
@@ -99,6 +103,7 @@ export {
   getUsersThatIFollow,
   getPostsFromUsersThatIFollow,
   postRepost,
+  getUserInformation,
   getComments,
   postComment
 };
