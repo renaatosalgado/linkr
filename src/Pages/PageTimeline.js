@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import Header from "../components/Header";
-import { postCreatePost, getPostsList } from "../services/API";
 import React, { useContext, useEffect, useState, useRef } from "react";
+import { postCreatePost, getPostsFromUsersThatIFollow, getUsersThatIFollow, getPostsList} from "../services/API";
 import UserContext from "../contexts/UserContext";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
 import Swal from "sweetalert2";
-
+import { IoLocationOutline } from "react-icons/io5";
+import YouDontFollowAnyone from '../styled-components/YouDontFollowAnyone';
 
 export default function PageTimeline() {
   const [loading, setLoading] = useState(false);
@@ -16,6 +17,9 @@ export default function PageTimeline() {
   const [postsList, setPostsList] = useState([]);
   const [scrollRadio, setScrollRadio] = useState (null);
   const scrollObserve = useRef();
+  const [locationState, setLocationState] = useState(false)
+  const [coordinates, setCoordinates] = useState("")
+  const [isFollowingSomeone, setIsFollowingSomeone] = useState(true)
 
   const { user } = useContext(UserContext);
 
@@ -26,10 +30,15 @@ export default function PageTimeline() {
   };
 
   useEffect(() => {
-    getPostsList(config)
+    getUsersThatIFollow(config).then((res) => {
+      setIsFollowingSomeone(res.data.users.length > 0)
+    })
+    getPostsFromUsersThatIFollow(config)
       .then((res) => {
-        setPostsList(res.data.posts);
+        const postsToShow = [...res.data.posts]
+        setPostsList(postsToShow);
         setIsLoadingPosts(false);
+        //console.log('listando', res.data.posts)
       })
       .catch(() => {
         Swal.fire({
@@ -80,6 +89,21 @@ export default function PageTimeline() {
     
   },[scrollRadio]);
 
+  function activeLocation () {
+    if ("geolocation" in navigator) {
+      setLocationState(!locationState)
+      navigator.geolocation.getCurrentPosition(function(position) {
+        setCoordinates(!locationState ? position.coords : "")
+      }, function(error){
+        setLocationState(locationState);
+      })      
+    }
+    else {
+      alert("Não foi possível encontrar a localização")
+      setLocationState(false)
+    }
+  }
+
   function publishPost(event) {
     event.preventDefault();
     setLoading(true);
@@ -87,6 +111,10 @@ export default function PageTimeline() {
     const body = {
       text,
       link,
+      geolocation: {
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude
+      }
     };
 
     postCreatePost(body, config)
@@ -94,10 +122,12 @@ export default function PageTimeline() {
         setLoading(false);
         setText("");
         setLink("");
+        setLocationState(!locationState)
         window.location.reload();
+        
       })
       .catch(() => {
-        alert("Houve um erro ao publicar seu link. Repita o procedimento.");
+        alert("There was an error while posting your link. Repeat the procedure.");
         setLoading(false);
       });
   }
@@ -114,7 +144,7 @@ export default function PageTimeline() {
                 <ProfilePic src={user.user.avatar} alt="" />
               </CreatePostImg>
               <Form onSubmit={publishPost}>
-                <p>O que você tem pra favoritar hoje?</p>
+                <p>What do you have to share today?</p>
                 <Link
                   type="url"
                   placeholder="http://"
@@ -128,21 +158,29 @@ export default function PageTimeline() {
                   disabled={loading ? true : false}
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  placeholder="Muito irado esse link falando de
-                  #javascript"
+                  placeholder="Very cool this link talking about #javascript"
                 ></Description>
                 <Buttons>
+                  <LocationButton locationState={locationState}  onClick={activeLocation}>
+                    <LocationICon />
+                    {locationState ? "Localização ativada" : "Localização desativada"}
+                  </LocationButton>
                   <Publish type={"submit"} disabled={loading ? true : false}>
-                    {loading ? "Publicando..." : "Publicar"}
+                    {loading ? "Publishing..." : "Publish"}
                   </Publish>
                 </Buttons>
               </Form>
             </CreatePost>
-            <Posts
+            {
+              isFollowingSomeone ? <Posts
               postsList={postsList}
               isLoadingPosts={isLoadingPosts}
               setPostsList={setPostsList}
-            />
+              coordinates={coordinates}
+              /> : <YouDontFollowAnyone>
+                {'Você não segue ninguém ainda, procure por perfis na busca'}
+              </YouDontFollowAnyone>
+            }
             <div ref={scrollObserve}></div>
           </TimelineBody>
           <Trending />
@@ -317,7 +355,7 @@ const Description = styled.textarea`
 
 const Buttons = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 
 const Publish = styled.button`
@@ -341,4 +379,22 @@ const Publish = styled.button`
   @media (max-width: 635px) {
     height: 22px;
   }
+`;
+
+const LocationButton = styled.div`
+  background-color: #ffffff;
+  color: ${({locationState}) => locationState ? "#238700" : "#949494"};
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  width: 160px;
+  display: flex;
+  align-items: center;
+  &:hover {
+    cursor: pointer;
+  } 
+`;
+
+const LocationICon = styled(IoLocationOutline)`
+  width: 18px;
+  height: 18px;
 `;

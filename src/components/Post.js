@@ -4,34 +4,55 @@ import { FaTrash } from "react-icons/fa";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoIosHeart } from "react-icons/io";
 import { RiPencilFill } from "react-icons/ri";
+import { BiRepost } from "react-icons/bi";
 import UserContext from "../contexts/UserContext";
 import { useContext, useRef, useState } from "react";
 import {
   deleteDeletePost,
   putEditPost,
   postLikeDislike,
+  postRepost,
 } from "../services/API";
 import Avatar from "./Avatar";
 import { Link } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
+import { IoLocationSharp } from "react-icons/io5"
+import MapComponent from "./MapComponent";
+import { IoCloseOutline } from "react-icons/io5";
+import { AiOutlineComment } from "react-icons/ai";
+import CommentsComponent from "./CommentsComponent";
 
-const PostContainer = styled.div`
-  position: relative;
+
+const PostBox = styled.div`
+  background-color: #1E1E1E;
   width: 610px;
-  padding-bottom: 20px;
-  background-color: #171717;
   border-radius: 16px;
-  margin-top: 29px;
-  display: flex;
+  
   @media (max-width: 635px) {
     width: 100%;
     border-radius: 0;
-    margin-top: 16px;
+  }
+`;
+const PostContainer = styled.div`
+  position: relative;
+  width: 610px;
+  padding-bottom: ${(props) => (props.isReposted ? "0" : "16px")};
+  background-color: #171717;
+  border-radius: 16px;
+  margin-top: ${(props) => (props.isReposted ? "0" : "38px")};
+  display: flex;
+
+  @media (max-width: 635px) {
+    width: 100%;
+    border-radius: 0;
+    //margin-top: 16px;
   }
 `;
 
 const LeftContainer = styled.div`
-  padding: 17px 18px;
+  /* padding: 17px 18px; */
+  padding: 17px 0 17px 0;
+  width: 87px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -52,7 +73,10 @@ const LeftContainer = styled.div`
   }
 
   @media (max-width: 635px) {
-    padding: 9px 15px;
+    /* padding: 9px 15px; */
+    padding: 9px 3px;
+    width: 70px;
+    text-align: center;
   }
 `;
 
@@ -152,18 +176,34 @@ const LikeIcon = styled.div`
 
 const HowManyLikes = styled.p`
   margin-top: 5px;
+  margin-bottom: 10px;
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
   font-size: 11px;
   color: #ffffff;
-
+  cursor: pointer;
+  
   @media (max-width: 635px) {
     font-size: 9px;
   }
 `;
 
-const Overlay = styled.div`
+const HowManyComments = styled.p`
+  margin-top: 5px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  color: #ffffff;
+  cursor: pointer;
+  
+  @media (max-width: 635px) {
+    font-size: 9px;
+  }
+`;
+
+const DeleteOverlay = styled.div`
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -171,10 +211,21 @@ const Overlay = styled.div`
   left: 0;
   background-color: rgba(255, 255, 255, 0.8);
   z-index: 1;
-  display: ${(props) => (props.reallyDeleteHabit ? "inherit" : "none")};
+  display: ${(props) => (props.reallyDeletePost ? "inherit" : "none")};
 `;
 
-const DeleteScreen = styled.div`
+const RepostOverlay = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 2;
+  display: ${(props) => (props.reallyRepost ? "inherit" : "none")};
+`;
+
+const OverlayScreen = styled.div`
   position: relative;
   top: calc((100vh - 262px) / 2);
   left: calc((100vw - 597px) / 2);
@@ -224,7 +275,7 @@ const CancelBtn = styled.button`
 
   &:hover {
     cursor: pointer;
-    border: 5px solid #1877f2;
+    filter: brightness(90%);
   }
 
   &:disabled {
@@ -246,7 +297,7 @@ const ConfirmBtn = styled.button`
 
   &:hover {
     cursor: pointer;
-    border: 5px solid crimson;
+    filter: brightness(90%);
   }
 
   &:disabled {
@@ -277,6 +328,150 @@ const EditingInput = styled.input`
   }
 `;
 
+const RepostIcon = styled.div`
+  color: #ffffff;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11px;
+  font-family: "Lato";
+  line-height: 13px;
+  text-align: center;
+
+  &:hover {
+    cursor: pointer;
+    color: #1877f2;
+  }
+
+  @media (max-width: 635px) {
+    font-size: 9px;
+    line-height: 11px;
+  }
+`;
+
+const RepostContainer = styled.div`
+  width: 610px;
+  height: 53px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  background-color: #1e1e1e;
+  position: relative;
+  top: 53px;
+  display: ${(props) => (props.isReposted ? "inherit" : "none")};
+
+  @media (max-width: 635px) {
+    width: 100%;
+  }
+`;
+
+const RepostHeader = styled.div`
+  color: #ffffff;
+  font-family: "Lato";
+  font-size: 11px;
+  line-height: 13.2px;
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+  padding-top: 8px;
+
+  p {
+    margin-left: 6px;
+    word-break: break-all;
+    font-weight: bold;
+  }
+
+  @media (max-width: 635px) {
+    padding-top: 8px;
+  }
+`;
+
+const BackgroundMapScreen = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+  display: ${({map}) => map ? "inherit" : "none"};
+`;
+
+const MapFrame = styled.div`
+  width: 790px;
+  height: 354px;
+  background-color: #333333;
+  border-radius: 50px;
+  position: relative;
+  margin: 23vh auto 0 auto;
+  @media (max-width: 800px) {
+    width: 100vw;
+    border-radius: 0px;
+  }
+`;
+
+const TitleMap = styled.div`
+  display: flex;
+  white-space: nowrap;
+  width: 713px;
+  margin: 0 auto;
+  p {
+    font-size: 38px;
+    align-items: center;
+    color: #FFFFFF;
+    font-family: 'Oswald', sans-serif;
+    height: 86px;
+    white-space: nowrap;
+    padding-top: 20px;
+  }
+  p:first-child {
+    max-width: 35vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (max-width: 800px) {
+    width: 89vw;
+    p {
+      font-size: 27px;
+      padding-top: 29px;
+    }
+  }
+`;
+
+const MapBox = styled.div`
+  width: 713px;
+  height: 240px;
+  margin: 0 auto;
+  @media (max-width: 800px) {
+    width: 89vw;
+  }
+`;
+
+const IconLocationSharp = styled(IoLocationSharp )`
+  color: #ffff;
+  size: 16px;
+  &:hover {
+    cursor: pointer;
+    color: #1877f2;
+  }
+`;
+
+const CloseIcon = styled(IoCloseOutline)`
+  position: absolute;
+  color: white;
+  right: 36px;
+  top: 25px;
+  height: 40px;
+  width: 40px;
+  &:hover {
+    cursor: pointer;
+    color: #1877f2;
+  }
+  @media (max-width: 800px) {
+    right: 3vw;
+  }
+`;
+
 const TextWithClickableHashTags = ({ renderHashtag, text }) => {
   let splittedText = text.split("#");
   splittedText = splittedText.map((string, index) => {
@@ -290,7 +485,7 @@ const TextWithClickableHashTags = ({ renderHashtag, text }) => {
       let hastagText = string.slice(0, firstSpaceIndex);
       return (
         <>
-          <Link key={index} to={`/hashtag/${hastagText.slice(1)}`}>
+          <Link key={`hashtag-${index}`} to={`/hashtag/${hastagText.slice(1)}`}>
             {hastagText.toLowerCase()}
           </Link>
           {string.slice(firstSpaceIndex)}
@@ -310,14 +505,18 @@ const TextWithClickableHashTags = ({ renderHashtag, text }) => {
   );
 };
 
-const Post = ({ post, postRender, id }) => {
+const Post = ({ post, postRender, id, coordinates }) => {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(post.text);
   const [newText, setNewtext] = useState(post.text);
   const { user } = useContext(UserContext);
-  const [reallyDeleteHabit, setReallyDeleteHabit] = useState(false);
-  
+  const [reallyDeletePost, setReallyDeletePost] = useState(false);
+  const [reallyRepost, setReallyRepost] = useState(false);
+  const [map, setMap] = useState(false) 
+  const [commentState, setCommentState] = useState(false)
+  const [commentsList, setCommentsList] = useState([])
+
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -342,7 +541,7 @@ const Post = ({ post, postRender, id }) => {
         })
         .catch(() => {
           alert(
-            "Não foi possível salvar as alterações. Por favor, repita o procedimento."
+            "It was not possible to save your changes. Please, repeat the procedure."
           );
           setEditing(true);
           setLoading(false);
@@ -368,17 +567,17 @@ const Post = ({ post, postRender, id }) => {
     deleteDeletePost(postId, config)
       .then(() => {
         setLoading(false);
-        setReallyDeleteHabit(false);
+        setReallyDeletePost(false);
         window.location.reload();
       })
       .catch(() => {
         setLoading(false);
         setTimeout(() => {
           alert(
-            "Não foi possível excluir seu post! Por favor, repita o procedimento."
+            "It was not possible to delete you post! Please, repeat the procedure."
           );
         }, 500);
-        setReallyDeleteHabit(false);
+        setReallyDeletePost(false);
       });
   }
 
@@ -462,86 +661,187 @@ const Post = ({ post, postRender, id }) => {
     return tooltip;
   }
 
+  function sharePost(postId) {
+    postRepost(postId, config).then((res) => {
+      console.log(res.data.post.repostedBy.username);
+      window.location.reload();
+    });
+  }
+  function showComments() {
+    if (commentState) {
+      setCommentState(!commentState)
+    }
+    else {
+      setCommentState(!commentState)
+    }
+  }
+
+
   return (
     <>
-      <Overlay reallyDeleteHabit={reallyDeleteHabit}>
-        <DeleteScreen>
+      <DeleteOverlay reallyDeletePost={reallyDeletePost}>
+        <OverlayScreen>
           <p>
-            Tem certeza que deseja <br /> excluir essa publicação?
+            Are you sure about <br /> deleting this post?
           </p>
           <OverlayButtons>
             <CancelBtn
               disabled={loading ? true : false}
-              onClick={() => setReallyDeleteHabit(false)}
+              onClick={() => {
+                setReallyDeletePost(false);
+              }}
             >
-              Não, voltar
+              No, cancel
             </CancelBtn>
             <ConfirmBtn
               disabled={loading ? true : false}
-              onClick={() => deletePost(post.id)}
+              onClick={() => {
+                deletePost(post.id);
+                setReallyDeletePost(false);
+              }}
             >
-              {loading ? "Excluindo..." : "Sim, excluir"}
+              {loading ? "Deleting..." : "Yes, delete!"}
             </ConfirmBtn>
           </OverlayButtons>
-        </DeleteScreen>
-      </Overlay>
-      <PostContainer>
-        <Icons hide={post.user.id === user.user.id ? false : true}>
-          <EditIcon onClick={editPost}>
-            <RiPencilFill />
-          </EditIcon>
-          <DeleteIcon onClick={() => setReallyDeleteHabit(true)}>
-            <FaTrash />
-          </DeleteIcon>
-        </Icons>
-        <LeftContainer>
-          <Avatar src={post.user.avatar} userId={post.user.id} />
-          <LikeIcon onClick={like}>
-            {id === 1 ? (
-              <IoIosHeart size="20px" color="#AC0000" />
-            ) : isLiked ? (
-              <IoIosHeart size="20px" color="#AC0000" />
-            ) : (
-              <IoIosHeartEmpty size="20px" color="#FFF" />
-            )}
-          </LikeIcon>
-          <HowManyLikes data-tip={createTooltip()}>
-            {post.likes.length === 0
-              ? ""
-              : post.likes.length === 1
-              ? `${post.likes.length} like`
-              : `${post.likes.length} likes`}
-          </HowManyLikes>
-          <ReactTooltip
-            place="bottom"
-            type="light"
-            effect="float"
-          ></ReactTooltip>
-        </LeftContainer>
-        <RightContainer>
-          <Link to={`/user/${post.user.id}`}>
-            <UserName>{post.user.username}</UserName>
-          </Link>
-          {editing ? (
-            <EditingInput
-              ref={inputRef}
+        </OverlayScreen>
+      </DeleteOverlay>
+      <RepostOverlay reallyRepost={reallyRepost}>
+        <OverlayScreen>
+          <p>
+            Do you want to re-post <br /> this link?
+          </p>
+          <OverlayButtons>
+            <CancelBtn
               disabled={loading ? true : false}
-              onKeyDown={analyseKeys}
-              type="text"
-              value={newText}
-              onChange={(e) => setNewtext(e.target.value)}
-            ></EditingInput>
-          ) : (
-            <TextWithClickableHashTags text={post.text} key={post.id}/>
-          )}
-          <LinkPreview
-            link={post.link}
-            linkTitle={post.linkTitle}
-            linkDescription={post.linkDescription}
-            linkImage={post.linkImage}
-          />
-        </RightContainer>
-      </PostContainer>
+              onClick={() => setReallyRepost(false)}
+            >
+              No, cancel
+            </CancelBtn>
+            <ConfirmBtn
+              disabled={loading ? true : false}
+              onClick={() => {
+                sharePost(post.id);
+                setReallyRepost(false);
+              }}
+            >
+              {loading ? "Sharing..." : "Yes, share!"}
+            </ConfirmBtn>
+          </OverlayButtons>
+        </OverlayScreen>
+      </RepostOverlay>
+
+      <RepostContainer isReposted={post.repostedBy ? true : false}>
+        <RepostHeader>
+          <BiRepost size="25px" />
+          <p>{`Re-posted by ${
+            post.repostedBy
+              ? post.repostedBy.username === user.user.username
+                ? "you"
+                : post.repostedBy.username
+              : ""
+          }`}</p>
+        </RepostHeader>
+      </RepostContainer>
+
+      <PostBox>
+        <PostContainer>
+          <Icons hide={post.user.id === user.user.id ? false : true}>
+            <EditIcon onClick={editPost}>
+              <RiPencilFill />
+            </EditIcon>
+            <DeleteIcon onClick={() => setReallyDeletePost(true)}>
+              <FaTrash />
+            </DeleteIcon>
+          </Icons>
+
+          <LeftContainer>
+            <Avatar src={post.user.avatar} userId={post.user.id} />
+            <LikeIcon onClick={like}>
+              {id === 1 ? (
+                <IoIosHeart size="20px" color="#AC0000" />
+              ) : isLiked ? (
+                <IoIosHeart size="20px" color="#AC0000" />
+              ) : (
+                <IoIosHeartEmpty size="20px" color="#FFF" />
+              )}
+            </LikeIcon>
+            <HowManyLikes data-tip={createTooltip()}>
+              {post.likes.length === 0
+                ? ""
+                : post.likes.length === 1
+                ? `${post.likes.length} like`
+                : `${post.likes.length} likes`}
+            </HowManyLikes>
+            <ReactTooltip
+              place="bottom"
+              type="light"
+              effect="float"
+            ></ReactTooltip>
+            <AiOutlineComment size="25px" color="#FFF" cursor="pointer" onClick={showComments} />
+            <HowManyComments>
+              {commentsList.comments ? 
+                commentsList.comments.length === 0
+                ? ""
+                : commentsList.comments.length === 1
+                ? `${commentsList.comments.length} comment`
+                : `${commentsList.comments.length} comments`
+              : ""}
+            </HowManyComments>
+            <RepostIcon onClick={() => setReallyRepost(true)}>
+              <BiRepost size="25px" />
+              {post.repostCount === 0
+                ? "re-post"
+                : post.repostCount === 1
+                ? `${post.repostCount} re-post`
+                : `${post.repostCount} re-posts`}
+            </RepostIcon>
+          </LeftContainer>
+          <RightContainer>
+            <BackgroundMapScreen map={map}>
+                <MapFrame>
+                  <TitleMap>
+                    <p>{post.user.username.split(" ")[0]}</p>
+                    <p>'s location</p>
+                  </TitleMap>
+                  <CloseIcon onClick={() => setMap(false)} />
+                  <MapBox>
+                    {post.geolocation ? <MapComponent post={post.geolocation} /> : ""}
+                  </MapBox>
+                </MapFrame>
+              </BackgroundMapScreen>
+            <UserName>
+              <Link to={`/user/${post.user.id}`}>
+                {post.user.username}
+              </Link>
+              {post.geolocation ? <span> <IconLocationSharp onClick={() => setMap(true)} /></span> : ""}
+            </UserName> 
+            {editing ? (
+              <EditingInput
+                ref={inputRef}
+                disabled={loading ? true : false}
+                onKeyDown={analyseKeys}
+                type="text"
+                value={newText}
+                onChange={(e) => setNewtext(e.target.value)}
+              ></EditingInput>
+            ) : (
+              <TextWithClickableHashTags text={post.text} key={post.id} />
+            )}
+            <LinkPreview
+              link={post.link}
+              linkTitle={post.linkTitle}
+              linkDescription={post.linkDescription}
+              linkImage={post.linkImage}
+            />
+          </RightContainer>
+        </PostContainer>
+        <CommentsComponent
+          post={post}
+          commentState={commentState}
+          commentsList={commentsList}
+          setCommentsList={setCommentsList}
+        />
+      </PostBox>  
     </>
   );
 };
