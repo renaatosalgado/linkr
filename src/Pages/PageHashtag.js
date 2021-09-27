@@ -55,7 +55,7 @@ export default function PageHashtag() {
       getHashtagPost(hashtag, config)
       .then((res) => {
         const newHashtagPost = [...hashtagPost]
-        newHashtagPost.push(...res.data.posts + 1)
+        newHashtagPost.push(...res.data.posts)
         setHashtagPost(newHashtagPost);
         console.log(newHashtagPost)
         setIsLoadingPosts(false);
