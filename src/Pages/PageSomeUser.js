@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import { useContext, useState, useEffect } from "react";
 import UserContext from "../contexts/UserContext";
-import { getPostsSomeUser, getUsersThatIFollow } from "../services/API";
+import { getPostsSomeUser, getUserInformation } from "../services/API";
 import { useParams } from "react-router-dom";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
@@ -12,8 +12,14 @@ export default function PageSomeUser() {
 
   const [postsSomeUser, setPostsSomeUser] = useState(null);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
-
+ 
   const { id } = useParams();
+
+  const [thisUserInfo, setThisUserInfo] = useState({
+    id: id,
+    username: '',
+    avatar: ''
+  })
 
   const { user } = useContext(UserContext);
 
@@ -24,6 +30,13 @@ export default function PageSomeUser() {
   };
 
   useEffect(() => {
+    getUserInformation(id, config).then((res) => {
+      setThisUserInfo({
+        id: id,
+        username: res.data.user.username,
+        avatar: res.data.user.avatar
+      })
+    }).catch()
     getPostsSomeUser(id, config)
       .then((res) => {
         setPostsSomeUser(res.data.posts);
@@ -43,9 +56,9 @@ export default function PageSomeUser() {
         <TimelineBox>
           <TimelineBody>
               <TitleContainer>
-                <CircleImg src={postsSomeUser ? postsSomeUser[0].user.avatar : ''}/>
+                <CircleImg src={thisUserInfo.avatar}/>
                 <Title>
-                {postsSomeUser ? `${postsSomeUser[0].user.username}'s posts` : ""}
+                {`${thisUserInfo.username}'s posts`}
                 </Title>
               </TitleContainer>
               

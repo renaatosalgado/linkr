@@ -74,6 +74,10 @@ function postRepost(postId, config) {
   return promise;
 }
 
+function getUserInformation(id, config) {
+  return axios.get(`${BASE_URL}/users/${id}`, config)
+}
+
 export {
   postLogin,
   postSignUp,
@@ -90,5 +94,6 @@ export {
   unfollowUser,
   getUsersThatIFollow,
   getPostsFromUsersThatIFollow,
-  postRepost
+  postRepost,
+  getUserInformation
 };
