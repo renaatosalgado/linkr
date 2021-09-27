@@ -37,16 +37,16 @@ function getHashtagTrending(config) {
   return promisse;
 }
 
-function getPostsSomeUser(id, config) {
-  return axios.get(`${BASE_URL}/users/${id}/posts`, config);
+function getPostsSomeUser(id, config, idi) {
+  return axios.get(`${BASE_URL}/users/${id}/posts${idi ? `?olderThan=${idi}` : ''}`, config);
 }
 
-function getPostsLiked(config) {
-  return axios.get(`${BASE_URL}/posts/liked`, config);
+function getPostsLiked(config, idi ) {
+  return axios.get(`${BASE_URL}/posts/liked${idi ? `?olderThan=${idi}` : ''}`, config);
 }
 
-function getHashtagPost(hashtag, config, id) {
-  return axios.get(`${BASE_URL}/hashtags/${hashtag}/posts${id ? `?olderThan=${id}` : ''}`, config);
+function getHashtagPost(hashtag, config, idi) {
+  return axios.get(`${BASE_URL}/hashtags/${hashtag}/posts${idi ? `?olderThan=${idi}` : ''}`, config);
 }
 
 function postLikeDislike(type, id, config) {

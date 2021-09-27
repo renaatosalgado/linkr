@@ -35,7 +35,7 @@ export default function PageTimeline() {
         });
       });
       //eslint-disable-next-line
-  }, []);
+  }, [myPosts]);
 
   const intersectionObserve = new IntersectionObserver( (entries) => {
     const radio = entries[0].intersectionRatio;
@@ -50,10 +50,20 @@ export default function PageTimeline() {
     }
   }, []);
 
+  const lastId = () => {
+    const lastItem = myPosts[myPosts.length - 1];
+    if (lastItem) {
+      if (!!lastItem.respostId) {
+        return lastItem.respostId
+      }
+      return lastItem.id
+    }
+  };
+
   useEffect( () => {
     if (scrollRadio > 0 ) {
       console.log('ue, entrei nesse useEffect' + scrollRadio);
-      getPostsSomeUser(user.user.id, config)
+      getPostsSomeUser(user.user.id, config, lastId())
       .then((res) => {
         let newPost = [...myPosts]
         newPost.push(...res.data.posts)

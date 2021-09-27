@@ -44,10 +44,20 @@ export default function PageMyLikes() {
     }
   }, []);
 
+  const lastId = () => {
+    const lastItem = postsLikedList[postsLikedList.length - 1];
+    if (lastItem) {
+      if (!!lastItem.respostId) {
+        return lastItem.respostId
+      }
+      return lastItem.id
+    }
+  };
+
   useEffect( () => {
     if (scrollRadio > 0 ) {
       console.log('ue, entrei nesse useEffect' + scrollRadio);
-      getPostsLiked(config)
+      getPostsLiked(config, lastId() )
       .then((res) => {
         const Liked = [...postsLikedList]
         Liked.push(...res.data.posts)
