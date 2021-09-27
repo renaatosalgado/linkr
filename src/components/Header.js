@@ -77,12 +77,18 @@ export default function Header() {
           {foundUser.map((user) => (
             <SingleUser>
               <Link to={`/user/${user.id}`}>
-                <SingleUserAvatar>
+                <SingleUserAvatar onClick={() => {
+                  setIsSearching(false);
+                  setSearchName("");
+                }}>
                   <img src={user.avatar} alt="profile" />
                 </SingleUserAvatar>
               </Link>
               <Link to={`/user/${user.id}`}>
-                <p>
+                <p onClick={() => {
+                  setIsSearching(false);
+                  setSearchName("");
+                }}>
                   {user.username}{" "}
                   {user.isFollowingLoggedUser ? <span> • following</span> : ""}
                 </p>
@@ -207,9 +213,7 @@ const SearchContainer = styled.div`
   line-height: 22.8px;
 
   @media(max-width: 635px) {
-    font-size: 17px;
-    line-height: 20.4px;
-    width: calc((100vw - 330px) / 2)
+    display: none;
   }
 `;
 
@@ -230,16 +234,6 @@ const SearchInput = styled.input`
   &:focus {
     outline: none;
   }
-
-  @media(max-width: 635px) {
-    margin-top: 82px;
-    width: calc(100vw - 30px);
-
-    &::placeholder{
-      font-size: 17px;
-      line-height: 20.4px;
-    }
-  }
 `;
 
 const SearchIcon = styled.div`
@@ -258,11 +252,6 @@ const FoundUsers = styled.div`
   right: 0;
   z-index: 1;
   display: ${(props) => (props.isSearching ? "inherit" : "none")};
-
-  @media(max-width: 635px) {
-    width: 350px;
-    top: 127px;
-  }
 `;
 
 const SingleUser = styled.div`
@@ -283,16 +272,6 @@ const SingleUser = styled.div`
     color: #c5c5c5;
     font-size: 19px;
     font-family: "Lato";
-  }
-
-  @media(max-width: 635px) {
-    p {
-      font-size: 17px;
-    }
-
-    span {
-      font-size: 17px;
-    }
   }
 `;
 
