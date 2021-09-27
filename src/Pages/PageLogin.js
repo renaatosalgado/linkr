@@ -59,7 +59,7 @@ export default function PageLogin() {
         Swal.fire({
           icon: "error",
           title: "OOPS...",
-          text: "Seu email é invalido",
+          text: "Seu email é inválido",
         });
       }
       if (res.response.status === 403) {

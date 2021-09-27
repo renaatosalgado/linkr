@@ -12,8 +12,8 @@ function postLogin(body) {
   return promise;
 }
 
-function getPostsList(config) {
-  const promise = axios.get(`${BASE_URL}/posts`, config);
+function getPostsList(config, idi) {
+  const promise = axios.get(`${BASE_URL}/posts${idi ? `?olderThan=${idi}` : ''}`, config);
   return promise;
 }
 
@@ -37,36 +37,36 @@ function getHashtagTrending(config) {
   return promisse;
 }
 
-function getPostsSomeUser(id, config) {
-  return axios.get(`${BASE_URL}/users/${id}/posts`, config);
+function getPostsSomeUser(id, config, idi) {
+  return axios.get(`${BASE_URL}/users/${id}/posts${idi ? `?olderThan=${idi}` : ''}`, config);
 }
 
-function getPostsLiked(config) {
-  return axios.get(`${BASE_URL}/posts/liked`, config);
+function getPostsLiked(config, idi ) {
+  return axios.get(`${BASE_URL}/posts/liked${idi ? `?olderThan=${idi}` : ''}`, config);
 }
 
-function getHashtagPost(hashtag, config) {
-  return axios.get(`${BASE_URL}/hashtags/${hashtag}/posts`, config);
+function getHashtagPost(hashtag, config, idi) {
+  return axios.get(`${BASE_URL}/hashtags/${hashtag}/posts${idi ? `?olderThan=${idi}` : ''}`, config);
 }
 
 function postLikeDislike(type, id, config) {
-  return axios.post(`${BASE_URL}/posts/${id}/${type}`,{}, config);
+  return axios.post(`${BASE_URL}/posts/${id}/${type}`, {}, config);
 }
 
 function followUser(userId, config) {
-  return axios.post(`${BASE_URL}/users/${userId}/follow`, {}, config)
+  return axios.post(`${BASE_URL}/users/${userId}/follow`, {}, config);
 }
 
 function unfollowUser(userId, config) {
-  return axios.post(`${BASE_URL}/users/${userId}/unfollow`, {}, config)
+  return axios.post(`${BASE_URL}/users/${userId}/unfollow`, {}, config);
 }
 
 function getUsersThatIFollow(config) {
-  return axios.get(`${BASE_URL}/users/follows`, config)
+  return axios.get(`${BASE_URL}/users/follows`, config);
 }
 
 function getPostsFromUsersThatIFollow(config) {
-  return axios.get(`${BASE_URL}/following/posts`, config)
+  return axios.get(`${BASE_URL}/following/posts`, config);
 }
 
 function postRepost(postId, config) {
@@ -74,8 +74,16 @@ function postRepost(postId, config) {
   return promise;
 }
 
+function getSearchUser(searchName, config) {
+  const promise = axios.get(
+    `${BASE_URL}/users/search?username=${searchName}`,
+    config
+  );
+  return promise;
+}
+
 function getUserInformation(id, config) {
-  return axios.get(`${BASE_URL}/users/${id}`, config)
+  return axios.get(`${BASE_URL}/users/${id}`, config);
 }
 
 function getComments(postId, config) {
@@ -103,7 +111,8 @@ export {
   getUsersThatIFollow,
   getPostsFromUsersThatIFollow,
   postRepost,
+  getSearchUser,
   getUserInformation,
   getComments,
-  postComment
+  postComment,
 };

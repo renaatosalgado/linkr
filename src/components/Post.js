@@ -377,7 +377,7 @@ const RepostHeader = styled.div`
 
   p {
     margin-left: 6px;
-    word-break: break-all;
+    word-break: break-word;
     font-weight: bold;
   }
 

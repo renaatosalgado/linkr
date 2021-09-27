@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Header from "../components/Header";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef} from "react";
 import UserContext from "../contexts/UserContext";
 import { getPostsLiked } from "../services/API";
 import Trending from "../components/Trending";
@@ -11,16 +11,16 @@ export default function PageMyLikes({postsList}) {
 
   const [postsLikedList, setPostsLikedList] = useState([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
- 
+  const [scrollRadio, setScrollRadio] = useState (null);
+  const scrollObserve = useRef();
 
-  
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
 
   function postRender() {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
     getPostsLiked(config)
       .then((res) => {
         setPostsLikedList(res.data.posts);
@@ -30,6 +30,45 @@ export default function PageMyLikes({postsList}) {
         console.log("erro!");
       });
   }
+
+  const intersectionObserve = new IntersectionObserver( (entries) => {
+    const radio = entries[0].intersectionRatio;
+    setScrollRadio(radio)
+  } );
+
+  useEffect( () => {
+    intersectionObserve.observe(scrollObserve.current);
+
+    return () => {
+      intersectionObserve.disconnect();
+    }
+  }, []);
+
+  const lastId = () => {
+    const lastItem = postsLikedList[postsLikedList.length - 1];
+    if (lastItem) {
+      if (!!lastItem.respostId) {
+        return lastItem.respostId
+      }
+      return lastItem.id
+    }
+  };
+
+  useEffect( () => {
+    if (scrollRadio > 0 ) {
+      console.log('ue, entrei nesse useEffect' + scrollRadio);
+      getPostsLiked(config, lastId() )
+      .then((res) => {
+        const Liked = [...postsLikedList]
+        Liked.push(...res.data.posts)
+        setPostsLikedList(Liked);
+        console.log(Liked)
+        setIsLoadingPosts(false);
+        console.log(res);
+      });
+    }  
+    
+  },[scrollRadio]);
 
   useEffect(() => {
     if (user) {
@@ -53,6 +92,7 @@ export default function PageMyLikes({postsList}) {
               postRender={postRender}
               id={1}
             />
+            <div ref={scrollObserve}></div>
           </TimelineBody>
           <Trending />
         </TimelineBox>

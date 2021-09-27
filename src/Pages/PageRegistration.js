@@ -43,7 +43,7 @@ export default function PageRegistration() {
         Swal.fire({
           icon: "error",
           title: "OOPS...",
-          text: "Insira um email válido, por favor",
+          text: "Ocorreu um erro 🤔, tenta de novo aí 🙂",
         });
       }
     }
@@ -54,7 +54,12 @@ export default function PageRegistration() {
         setCondition(false);
       })
       .catch((res) => {
-        Error(res);
+        Swal.fire({
+          icon: "error",
+          title: "Ops...",
+          text: "An error has ocurred while signing you up! Please, try again 😉",
+        });
+
         setCondition(false);
       });
   }

@@ -106,6 +106,7 @@ section {
 }
 body {
   line-height: 1;
+  background-color: #333333;
 }
 ol,
 ul {

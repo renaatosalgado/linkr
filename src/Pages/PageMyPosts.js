@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Header from "../components/Header";
 import { getPostsSomeUser } from "../services/API";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import UserContext from "../contexts/UserContext";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
@@ -9,7 +9,9 @@ import Swal from "sweetalert2";
 
 export default function PageTimeline() {
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
-  const [myPosts, setMyPosts] = useState(null);
+  const [myPosts, setMyPosts] = useState([]);
+  const [scrollRadio, setScrollRadio] = useState (null);
+  const scrollObserve = useRef();
 
   const { user } = useContext(UserContext);
 
@@ -35,6 +37,45 @@ export default function PageTimeline() {
       //eslint-disable-next-line
   }, [myPosts]);
 
+  const intersectionObserve = new IntersectionObserver( (entries) => {
+    const radio = entries[0].intersectionRatio;
+    setScrollRadio(radio)
+  } );
+
+  useEffect( () => {
+    intersectionObserve.observe(scrollObserve.current);
+
+    return () => {
+      intersectionObserve.disconnect();
+    }
+  }, []);
+
+  const lastId = () => {
+    const lastItem = myPosts[myPosts.length - 1];
+    if (lastItem) {
+      if (!!lastItem.respostId) {
+        return lastItem.respostId
+      }
+      return lastItem.id
+    }
+  };
+
+  useEffect( () => {
+    if (scrollRadio > 0 ) {
+      console.log('ue, entrei nesse useEffect' + scrollRadio);
+      getPostsSomeUser(user.user.id, config, lastId())
+      .then((res) => {
+        let newPost = [...myPosts]
+        newPost.push(...res.data.posts)
+        setMyPosts(newPost);
+        console.log(newPost)
+        setIsLoadingPosts(false);
+        console.log(res);
+      });
+    }  
+    
+  },[scrollRadio]);
+
   return (
     <>
       <Header />
@@ -47,6 +88,7 @@ export default function PageTimeline() {
               isLoadingPosts={isLoadingPosts}
               setPostsList={setMyPosts}
             />
+            <div ref={scrollObserve}></div>
           </TimelineBody>
           <Trending />
         </TimelineBox>

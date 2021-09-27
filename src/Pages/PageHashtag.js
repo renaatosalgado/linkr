@@ -5,7 +5,7 @@ import { useParams } from "react-router";
 import { getHashtagPost } from "../services/API";
 import Swal from "sweetalert2";
 import UserContext from "../contexts/UserContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef} from "react";
 import Post from "../components/Post";
 import NoPostFound from "../styled-components/NoPostsFound";
 import Loader from "react-loader-spinner";
@@ -15,6 +15,9 @@ export default function PageHashtag() {
   const { user } = useContext(UserContext);
   const [hashtagPost, setHashtagPost] = useState([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
+  const [scrollRadio, setScrollRadio] = useState (null);
+  const scrollObserve = useRef();
+
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -32,6 +35,45 @@ export default function PageHashtag() {
         Error();
       });
   }
+
+  const intersectionObserve = new IntersectionObserver( (entries) => {
+    const radio = entries[0].intersectionRatio;
+    setScrollRadio(radio)
+  } );
+
+  useEffect( () => {
+    intersectionObserve.observe(scrollObserve.current);
+
+    return () => {
+      intersectionObserve.disconnect();
+    }
+  }, []);
+
+  const lastId = () => {
+    const lastItem = hashtagPost[hashtagPost.length - 1];
+    if (lastItem) {
+      if (!!lastItem.respostId) {
+        return lastItem.respostId
+      }
+      return lastItem.id
+    }
+  };
+
+  useEffect( () => {
+    if (scrollRadio > 0) {
+      console.log('ue, entrei nesse useEffect' + scrollRadio);
+      getHashtagPost(hashtag, config, lastId() )
+      .then((res) => {
+        const newHashtagPost = [...hashtagPost]
+        newHashtagPost.push(...res.data.posts)
+        setHashtagPost(newHashtagPost);
+        console.log(newHashtagPost)
+        setIsLoadingPosts(false);
+        console.log(res);
+      });
+    }  
+    
+  },[scrollRadio]);
 
   useEffect(() => {
     if (user) {
@@ -84,6 +126,7 @@ export default function PageHashtag() {
           <TimelineBody>
             <Title>{`# ${hashtag}`}</Title>
             <HashtagPost />
+            <div ref={scrollObserve}></div>
           </TimelineBody>
           <Trending />
         </TimelineBox>
