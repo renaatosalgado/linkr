@@ -122,6 +122,10 @@ const FollowButtonContainer = styled.div`
     cursor: pointer;
     filter: brightness(80%);
   }
+
+  @media(max-width: 635px) {
+    bottom: -50px;
+  }
 `;
 
 export default FollowButton;
