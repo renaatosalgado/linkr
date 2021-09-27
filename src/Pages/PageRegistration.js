@@ -31,22 +31,22 @@ export default function PageRegistration() {
       pictureUrl,
     };
 
-    // function Error(res) {
-    //   if (res.response.status === 403) {
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "OOPS...",
-    //       text: "O email inserido já está em uso, cria outro aí 😉",
-    //     });
-    //   }
-    //   if (res.response.status === 400) {
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "OOPS...",
-    //       text: "Insira um email válido, por favor",
-    //     });
-    //   }
-    // }
+    function Error(res) {
+      if (res.response.status === 403) {
+        Swal.fire({
+          icon: "error",
+          title: "OOPS...",
+          text: "O email inserido já está em uso, cria outro aí 😉",
+        });
+      }
+      if (res.response.status === 400) {
+        Swal.fire({
+          icon: "error",
+          title: "OOPS...",
+          text: "Ocorreu um erro 🤔, tenta de novo aí 🙂",
+        });
+      }
+    }
     setCondition(true);
     postSignUp(body)
       .then(() => {

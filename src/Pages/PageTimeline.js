@@ -5,8 +5,9 @@ import {
   getPostsFromUsersThatIFollow,
   getUsersThatIFollow,
   getSearchUser,
+  getPostsList
 } from "../services/API";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import UserContext from "../contexts/UserContext";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
@@ -29,6 +30,8 @@ export default function PageTimeline() {
   const [searchName, setSearchName] = useState("");
   const [foundUser, setFoundUser] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [scrollRadio, setScrollRadio] = useState (null);
+  const scrollObserve = useRef();
 
   const { user } = useContext(UserContext);
 
@@ -57,7 +60,46 @@ export default function PageTimeline() {
         });
       });
     //eslint-disable-next-line
-  }, [postsList]);
+  }, []);
+
+  const intersectionObserve = new IntersectionObserver( (entries) => {
+    const radio = entries[0].intersectionRatio;
+    setScrollRadio(radio)
+  } );
+
+  useEffect( () => {
+    intersectionObserve.observe(scrollObserve.current);
+
+    return () => {
+      intersectionObserve.disconnect();
+    }
+  }, []);
+
+  const lastId = () => {
+    const lastItem = postsList[postsList.length - 1];
+    if (lastItem) {
+      if (!!lastItem.respostId) {
+        return lastItem.respostId
+      }
+      return lastItem.id
+    }
+  };
+
+  useEffect( () => {
+    if (scrollRadio > 0 ) {
+      console.log('ue, entrei nesse useEffect' + scrollRadio);
+      getPostsList(config, lastId() )
+      .then((res) => {
+        const newHashtagPost = [...postsList]
+        newHashtagPost.push(...res.data.posts)
+        setPostsList(newHashtagPost);
+        console.log(newHashtagPost)
+        setIsLoadingPosts(false);
+        console.log(res);
+      });
+    }  
+    
+  },[scrollRadio]);
 
   function activeLocation() {
     if ("geolocation" in navigator) {
@@ -211,6 +253,7 @@ export default function PageTimeline() {
                 {"Você não segue ninguém ainda, procure por perfis na busca"}
               </YouDontFollowAnyone>
             )}
+            <div ref={scrollObserve}></div>
           </TimelineBody>
           <Trending />
         </TimelineBox>

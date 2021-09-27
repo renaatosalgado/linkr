@@ -329,15 +329,15 @@ const LinkPreview = ({ link, linkTitle, linkDescription, linkImage }) => {
     </YoutubeContainer>
   ) : (
     <>
-      <LinkPreviewContainer onClick={handleClick}>
-        <LeftContainer>
-          <LinkTitle>{linkTitle}</LinkTitle>
-          <LinkDescription>{linkDescription}</LinkDescription>
-          <LinkAnchor>{link}</LinkAnchor>
-        </LeftContainer>
-        <LinkImg src={linkImage}></LinkImg>
-      </LinkPreviewContainer>
-      <ModalContainer link={link} display={display} setDisplay={setDisplay} />
+    <LinkPreviewContainer onClick={handleClick}>
+      <LeftContainer>
+        <LinkTitle>{linkTitle}</LinkTitle>
+        <LinkDescription>{linkDescription}</LinkDescription>
+        <LinkAnchor>{link}</LinkAnchor>
+      </LeftContainer>
+      <LinkImg src={linkImage}></LinkImg>
+    </LinkPreviewContainer>
+    <ModalContainer link={display ? link : ''} display={display} setDisplay={setDisplay} />
     </>
   );
 };
