@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Header from "../components/Header";
 import { postCreatePost, getPostsList } from "../services/API";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import UserContext from "../contexts/UserContext";
 import Trending from "../components/Trending";
 import Posts from "../components/Posts";
@@ -14,6 +14,8 @@ export default function PageTimeline() {
   const [link, setLink] = useState("");
   const [text, setText] = useState("");
   const [postsList, setPostsList] = useState([]);
+  const [scrollRadio, setScrollRadio] = useState (null);
+  const scrollObserve = useRef();
 
   const { user } = useContext(UserContext);
 
@@ -37,7 +39,36 @@ export default function PageTimeline() {
         });
       });
     //eslint-disable-next-line
-  }, [postsList]);
+  }, []);
+
+  const intersectionObserve = new IntersectionObserver( (entries) => {
+    const radio = entries[0].intersectionRatio;
+    setScrollRadio(radio)
+  } );
+
+  useEffect( () => {
+    intersectionObserve.observe(scrollObserve.current);
+
+    return () => {
+      intersectionObserve.disconnect();
+    }
+  }, []);
+
+  useEffect( () => {
+    if (scrollRadio > 0 ) {
+      console.log('ue, entrei nesse useEffect' + scrollRadio);
+      getPostsList(config)
+      .then((res) => {
+        const newHashtagPost = [...postsList]
+        newHashtagPost.push(...res.data.posts)
+        setPostsList(newHashtagPost);
+        console.log(newHashtagPost)
+        setIsLoadingPosts(false);
+        console.log(res);
+      });
+    }  
+    
+  },[scrollRadio]);
 
   function publishPost(event) {
     event.preventDefault();
@@ -102,6 +133,7 @@ export default function PageTimeline() {
               isLoadingPosts={isLoadingPosts}
               setPostsList={setPostsList}
             />
+            <div ref={scrollObserve}></div>
           </TimelineBody>
           <Trending />
         </TimelineBox>

@@ -49,10 +49,20 @@ export default function PageHashtag() {
     }
   }, []);
 
+  const lastId = () => {
+    const lastItem = hashtagPost[hashtagPost.length - 1];
+    if (lastItem) {
+      if (!!lastItem.respostId) {
+        return lastItem.respostId
+      }
+      return lastItem.id
+    }
+  };
+
   useEffect( () => {
-    if (scrollRadio > 0 ) {
+    if (scrollRadio > 0) {
       console.log('ue, entrei nesse useEffect' + scrollRadio);
-      getHashtagPost(hashtag, config)
+      getHashtagPost(hashtag, config, lastId() )
       .then((res) => {
         const newHashtagPost = [...hashtagPost]
         newHashtagPost.push(...res.data.posts)
@@ -183,6 +193,3 @@ const CenteredContainer = styled.div`
     min-width: 100%;
   }
 `;
-const Loading = styled.div`
-  width: auto;
-`

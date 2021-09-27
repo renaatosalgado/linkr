@@ -45,8 +45,8 @@ function getPostsLiked(config) {
   return axios.get(`${BASE_URL}/posts/liked`, config);
 }
 
-function getHashtagPost(hashtag, config) {
-  return axios.get(`${BASE_URL}/hashtags/${hashtag}/posts`, config);
+function getHashtagPost(hashtag, config, id) {
+  return axios.get(`${BASE_URL}/hashtags/${hashtag}/posts${id ? `?olderThan=${id}` : ''}`, config);
 }
 
 function postLikeDislike(type, id, config) {
